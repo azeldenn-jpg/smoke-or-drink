@@ -12,7 +12,7 @@
  * incrémente simplement VERSION.
  * ==============================================================================
  */
-const VERSION = 'sod-v4.1.0';
+const VERSION = 'sod-v4.2.0';
 const NETWORK_TIMEOUT = 2500;
 
 const CORE = [

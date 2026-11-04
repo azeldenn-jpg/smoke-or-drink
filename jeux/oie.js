@@ -34,6 +34,8 @@ const OIE = {
     malus:      { icon: '😬', name: 'Pas de chance',   color: '#ff8855' },
     cadeau:     { icon: '🎁', name: 'Cadeau',          color: '#7ee07a' },
     tous:       { icon: '🍾', name: 'Tournée générale', color: '#ffa845' },
+    clope:      { icon: '🚬', name: 'Pause clope',     color: '#7ee07a', text: 'Tous les fumeurs prennent +2 de jauge, les buveurs boivent 1.' },
+    sante:      { icon: '🥂', name: 'Santé !',         color: '#ffa845', text: 'Les buveurs trinquent (cul sec pour les braves), chaque fumeur distribue 1 malus.' },
     avance:     { icon: '⏩', name: 'Raccourci',       color: '#7ee0b8', text: 'Tu avances de 3 cases.' },
     recule:     { icon: '⏪', name: 'Glissade',        color: '#ff8855', text: 'Tu recules de 3 cases.' },
     echange:    { icon: '🔄', name: 'Échange',         color: '#5ec8ff', text: 'Choisis un joueur : vous échangez vos places.' },
@@ -45,12 +47,14 @@ const OIE = {
   },
   SPECIAL: { 6: 'pont', 19: 'auberge', 31: 'puits', 42: 'labyrinthe', 52: 'prison', 58: 'mort' },
   GEESE: [9, 18, 27, 36, 45, 54],
+  // Cases propres à chaque camp (Mashup uniquement ; sinon Tournée générale)
+  CAMP: { 16: 'clope', 47: 'clope', 28: 'sante', 59: 'sante' },
   // Les autres cases reçoivent ces événements dans cet ordre (le plateau est toujours le même)
   CYCLE: ['quiz', 'verite', 'jamais', 'malus', 'theme', 'cadeau', 'verite', 'quiz', 'probable', 'duel', 'verite', 'avance',
     'quiz', 'tous', 'jamais', 'verite', 'recule', 'echange', 'theme', 'quiz', 'verite', 'probable', 'malus', 'cadeau'],
 };
 
-function buildOieBoard() {
+function buildOieBoard(mashup = false) {
   const board = [];
   let k = 0;
   for (let i = 0; i <= OIE.LAST; i++) {
@@ -59,6 +63,7 @@ function buildOieBoard() {
     else if (i === OIE.LAST) type = 'finish';
     else if (OIE.SPECIAL[i]) type = OIE.SPECIAL[i];
     else if (OIE.GEESE.includes(i)) type = 'oie';
+    else if (OIE.CAMP[i]) { type = mashup ? OIE.CAMP[i] : 'tous'; k += 1; }
     else { type = OIE.CYCLE[k % OIE.CYCLE.length]; k += 1; }
     board.push(type);
   }
@@ -71,7 +76,7 @@ addGame(class {
   /* ---------------------------------------------------------------------- */
   oieStart() {
     const g = this.game;
-    g.board = buildOieBoard();
+    g.board = buildOieBoard(this.isMashup);
     g.busy = false;
     g.mult = OIE.MULT[this.settings.intensity] || 2;
     g.pending = []; // effets à afficher dans le prochain panneau (rebond, case occupée…)
@@ -416,6 +421,8 @@ addGame(class {
         this.oiePanel({ ...base, text: 'Tout le monde trinque, toi compris !', effects, actions: [done()] });
         return;
       }
+      case 'clope': return this.oieClope(p, base);
+      case 'sante': return this.oieSante(p, base);
       case 'cadeau': {
         this.sound.reward();
         flash();
@@ -664,17 +671,81 @@ addGame(class {
         onChange: (s) => {
           const loser = [p, rival].find((x) => s.has(x.id));
           if (!loser) return;
+          if (g.busy) return;
+          g.busy = true;
+          const winner = loser === p ? rival : p;
           const fx = this.oieMalus(loser, 2);
           this.sound.bad();
           this.fx.shake();
-          this.renderScores('oie');
-          this.oiePanel({ ...base, text: `${loser.name} perd le duel.`, effects: [fx],
-            actions: [h('button', { class: 'btn-primary', text: 'JOUEUR SUIVANT →', onclick: once(() => this.oieNext()) })] });
+          this.oiePanel({ ...base, text: `${winner.name} gagne et vole une case à ${loser.name} !`, effects: [fx] });
+          (async () => {
+            await wait(500);
+            if (winner.pos < OIE.LAST) await this.oieMove(winner, 1);
+            if (loser.pos > 0) await this.oieMove(loser, -1);
+            g.busy = false;
+            this.renderScores('oie');
+            if (winner.pos === OIE.LAST) { this.oieResolve(winner, 3); return; }
+            this.oiePanel({ ...base, text: `${winner.name} passe case ${winner.pos}, ${loser.name} recule case ${loser.pos}.`, effects: [fx],
+              actions: [h('button', { class: 'btn-primary', text: 'JOUEUR SUIVANT →', onclick: once(() => this.oieNext()) })] });
+          })();
         },
       });
       void loserSel;
       this.oiePanel({ ...base, big: `${p.name} ⚔️ ${rival.name}`, text: 'Chi-fou-mi ! Qui a perdu ?', body: h('div', { class: 'op-body' }, pick) });
     }));
+  }
+
+  /** Pause clope : +2 de jauge pour chaque fumeur, 1 malus pour chaque buveur */
+  oieClope(p, base) {
+    const g = this.game;
+    const effects = [];
+    const lucky = [];
+    g.players.forEach((x) => {
+      if (x.camp === 'fumette') {
+        x.gauge += 2;
+        let gained = 0;
+        while (x.gauge >= this.gaugeMax) { x.gauge -= this.gaugeMax; x.taffs += 1; gained += 1; }
+        effects.push(`🌿 ${x.name} +2 jauge${gained ? ` → TAFF !` : ` (${x.gauge}/${this.gaugeMax})`}`);
+        if (gained) lucky.push(x.name);
+      } else {
+        effects.push(this.oieMalus(x, 1));
+      }
+    });
+    this.sound.reward();
+    this.fx.flash('rgba(126,224,122,.3)');
+    this.fx.burstFrom($('#oie-panel'), { colors: ['#7ee07a', '#d4ff5e', '#fff'], count: 70, power: 9 });
+    this.renderScores('oie');
+    this.oiePanel({ ...base, text: lucky.length ? `${lucky.join(', ')} : jauge pleine, allez fumer !` : base.text || OIE.CELL_TYPES.clope.text, effects,
+      actions: [h('button', { class: 'btn-primary', text: lucky.length ? '✓ C’EST FUMÉ →' : 'JOUEUR SUIVANT →', onclick: once(() => this.oieNext()) })] });
+  }
+
+  /** Santé ! : les buveurs boivent 1 (cul sec facultatif), puis chaque fumeur distribue 1 malus */
+  oieSante(p, base) {
+    const g = this.game;
+    const drinkers = g.players.filter((x) => x.camp === 'alcool');
+    const smokers = g.players.filter((x) => x.camp === 'fumette');
+    const effects = drinkers.map((x) => this.oieMalus(x, 1));
+    this.sound.good();
+    this.fx.flash('rgba(255,168,69,.3)');
+    this.renderScores('oie');
+    // Les fumeurs distribuent ensuite chacun 1 malus, à tour de rôle
+    const giveRound = (i) => {
+      if (i >= smokers.length) { this.oieNext(); return; }
+      const s = smokers[i];
+      this.oieBonus(s, 1, { ...base, title: `${base.title} · ${s.name}` }, `${s.name} distribue 1 malus.`, () => giveRound(i + 1), { keep: false });
+    };
+    const chips = h('div', { class: 'chips' });
+    const sel = drinkers.length ? this.renderChips(chips, drinkers, { multi: true }) : new Set();
+    const next = h('button', { class: 'btn-primary', text: smokers.length ? 'AUX FUMEURS →' : 'JOUEUR SUIVANT →' });
+    next.addEventListener('click', once(() => {
+      const brave = drinkers.filter((x) => sel.has(x.id));
+      brave.forEach((x) => { x.taken += 5; });
+      if (brave.length) this.toast(`🥃 Cul sec : ${brave.map((x) => x.name).join(', ')} 👏`, 'good');
+      this.renderScores('oie');
+      giveRound(0);
+    }));
+    this.oiePanel({ ...base, text: drinkers.length ? 'Qui fait cul sec ? (facultatif)' : 'Pas de buveur autour de la table…', effects,
+      body: h('div', { class: 'op-body' }, drinkers.length ? chips : null, next) });
   }
 
   oieExchange(p, base) {
