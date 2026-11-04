@@ -7,7 +7,7 @@
    1. CONFIG
    ========================================================================== */
 const CONFIG = {
-  VERSION: '4.3.0',
+  VERSION: '4.4.0',
   STORAGE_KEY: 'sod_v3',
   MAX_PLAYERS: 10,
   PLAYER_COLORS: ['#7ee07a', '#ff5e9e', '#6dc7e8', '#ffc857', '#a667d4', '#ff8855', '#5fb878', '#e85a8c', '#5ec8ff', '#f48fb1'],

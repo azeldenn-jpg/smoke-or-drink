@@ -12,7 +12,7 @@
  * incrémente simplement VERSION.
  * ==============================================================================
  */
-const VERSION = 'sod-v4.3.0';
+const VERSION = 'sod-v4.4.0';
 const NETWORK_TIMEOUT = 2500;
 // Cache séparé pour les images de memes : il survit aux mises à jour de l'appli
 const IMG_CACHE = 'sod-images-v1';
@@ -77,6 +77,8 @@ self.addEventListener('fetch', (event) => {
   if (url.hostname === 'i.imgflip.com') { event.respondWith(cacheFirst(req, IMG_CACHE)); return; }
   if (url.origin !== self.location.origin) return; // on ne touche pas aux autres requêtes externes
 
+  // Images de memes hébergées sur le dépôt : même cache que celles d'Imgflip, chargées à la demande
+  if (/\/memes\/[^/]+\.jpg$/.test(url.pathname)) { event.respondWith(cacheFirst(req, IMG_CACHE)); return; }
   const isStatic = /\/(fonts|icons)\//.test(url.pathname);
   event.respondWith(isStatic ? cacheFirst(req) : networkFirst(req));
 });
