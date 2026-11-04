@@ -12,14 +12,24 @@
  * incrémente simplement VERSION.
  * ==============================================================================
  */
-const VERSION = 'sod-v3.2.0';
+const VERSION = 'sod-v4.0.0';
 const NETWORK_TIMEOUT = 2500;
 
 const CORE = [
   './',
   './index.html',
   './style.css',
-  './script.js',
+  './js/config.js',
+  './js/core.js',
+  './js/roulette.js',
+  './js/seance.js',
+  './js/app.js',
+  './js/main.js',
+  './jeux/quiz.js',
+  './jeux/cartes.js',
+  './jeux/bombe.js',
+  './jeux/roulette.js',
+  './jeux/oie.js',
   './data.json',
   './cards.json',
   './manifest.json',

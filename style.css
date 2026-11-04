@@ -560,6 +560,94 @@ body.is-muted .snd-off { display: inline; }
 .legend i { width: 9px; height: 9px; border-radius: 50%; background: var(--rc); box-shadow: 0 0 8px var(--rc); }
 
 /* ==========================================================================
+   JEU DE L'OIE (format téléphone : plateau vertical + caméra qui suit le pion)
+   ========================================================================== */
+.oie-map { position: relative; height: 22px; margin: -6px 4px 0; }
+.oie-map-line { position: absolute; left: 0; right: 0; top: 50%; height: 4px; transform: translateY(-50%); border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.08) 98%, #ffc857 98%); }
+.oie-map .mdot { position: absolute; top: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--pc);
+  box-shadow: 0 0 10px var(--pc); border: 2px solid var(--bg); transform: translateY(-50%); transition: left .5s var(--ease-out); }
+.oie-map .mdot.is-turn { width: 16px; height: 16px; margin-left: -8px; z-index: 2; }
+
+.oie-viewport {
+  position: relative; height: clamp(250px, 40vh, 420px); overflow-y: auto; overflow-x: hidden; border-radius: 22px;
+  background: radial-gradient(120% 70% at 50% 100%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%), rgba(255,255,255,.02);
+  border: 1px solid var(--line); -webkit-overflow-scrolling: touch; overscroll-behavior: contain; scrollbar-width: none;
+  -webkit-mask: linear-gradient(180deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
+          mask: linear-gradient(180deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
+}
+.oie-viewport::-webkit-scrollbar { display: none; }
+.oie-board { position: relative; width: 100%; }
+.oie-path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.oie-path path { fill: none; stroke: rgba(244,236,216,.12); stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+.oie-path path.glow { stroke: var(--accent); stroke-width: 2; opacity: .35; filter: drop-shadow(0 0 4px var(--accent)); stroke-dasharray: 2 8; animation: pathFlow 1.6s linear infinite; }
+@keyframes pathFlow { to { stroke-dashoffset: -20; } }
+
+.oie-cell {
+  --cc: rgba(244,236,216,.25);
+  position: absolute; width: var(--cs); height: var(--cs); transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  border-radius: 16px; background: linear-gradient(160deg, color-mix(in srgb, var(--cc) 22%, #1a1024), #120a1b);
+  border: 1px solid color-mix(in srgb, var(--cc) 55%, transparent);
+  box-shadow: 0 6px 16px -8px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.05);
+  transition: transform .3s var(--ease-spring), box-shadow .3s;
+}
+.oie-cell .cn { font-family: var(--font-pixel); font-size: 14px; color: var(--ink-dim); line-height: 1; }
+.oie-cell .ci { font-size: 20px; line-height: 1.1; }
+.oie-cell.t-calm { background: rgba(255,255,255,.025); border-color: var(--line); box-shadow: none; }
+.oie-cell.t-calm .ci { font-size: 0; }
+.oie-cell.t-calm .cn { font-size: 18px; }
+.oie-cell.is-special { box-shadow: 0 0 22px -8px var(--cc), inset 0 0 14px -8px var(--cc); }
+.oie-cell.t-finish { border-radius: 50%; box-shadow: 0 0 34px -4px #ffc857; animation: finishGlow 2.4s ease-in-out infinite; }
+@keyframes finishGlow { 50% { box-shadow: 0 0 50px 2px #ffc857; } }
+.oie-cell.hit { transform: translate(-50%, -50%) scale(1.14); box-shadow: 0 0 34px -2px var(--cc); z-index: 1; }
+
+.pawn {
+  position: absolute; z-index: 3; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 700; font-size: 12px; color: #0a0612;
+  background: radial-gradient(circle at 35% 30%, #fff 0 8%, var(--pc) 45%, color-mix(in srgb, var(--pc) 60%, #000));
+  border: 2px solid rgba(10,6,18,.85); box-shadow: 0 4px 10px rgba(0,0,0,.6), 0 0 12px var(--pc);
+  transition: left .22s var(--ease-out), top .22s var(--ease-out);
+}
+.pawn.is-turn { z-index: 4; width: 32px; height: 32px; margin: -16px 0 0 -16px; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,.6), 0 0 22px var(--pc), 0 0 0 3px color-mix(in srgb, var(--pc) 35%, transparent); }
+.pawn.hop { animation: hop .22s ease-out; }
+@keyframes hop { 50% { translate: 0 -14px; scale: 1.12; } }
+
+.oie-turn { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.oie-turn .turn-name { margin: 0; font-size: clamp(22px, 6.5vw, 28px); min-width: 0; }
+.oie-turn .turn-name .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.oie-dice { display: flex; gap: 10px; padding: 6px; border-radius: 16px; flex-shrink: 0; transition: transform .2s var(--ease-spring); }
+.oie-dice:disabled { opacity: 1; }
+.oie-dice.can-roll { animation: diceCall 1.6s ease-in-out infinite; }
+@keyframes diceCall { 0%, 100% { transform: none; } 10% { transform: rotate(-6deg) scale(1.05); } 20% { transform: rotate(6deg) scale(1.05); } 30% { transform: none; } }
+.oie-dice:active { transform: scale(.92); }
+.die {
+  position: relative; width: 46px; height: 46px; border-radius: 12px;
+  background: linear-gradient(145deg, #fff, #e8dfcb); box-shadow: inset 0 -4px 0 rgba(0,0,0,.18), 0 8px 16px -6px rgba(0,0,0,.8), 0 0 18px -8px var(--accent);
+  display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr); padding: 7px;
+}
+.die i { width: 8px; height: 8px; border-radius: 50%; background: #1a1024; place-self: center; box-shadow: inset 0 1px 1px rgba(255,255,255,.3); }
+.die.rolling { animation: dieRoll .5s ease-out; }
+@keyframes dieRoll { 0% { transform: rotate(0) translateY(0); } 30% { transform: rotate(200deg) translateY(-18px) scale(1.1); } 70% { transform: rotate(330deg) translateY(2px); } 100% { transform: rotate(360deg); } }
+
+.oie-panel { min-height: 96px; }
+.op-card { position: relative; padding: 16px; border-radius: 20px; text-align: center; overflow: hidden;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cc, var(--accent)) 14%, #1a1024), #120a1b);
+  border: 1px solid color-mix(in srgb, var(--cc, var(--accent)) 45%, transparent);
+  box-shadow: 0 0 30px -16px var(--cc, var(--accent)); animation: opIn .45s var(--ease-spring) both; }
+@keyframes opIn { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+.op-head { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.op-icon { font-size: 28px; filter: drop-shadow(0 0 10px var(--cc, var(--accent))); }
+.op-title { font-family: var(--font-display); font-size: 19px; color: var(--cc, var(--accent)); }
+.op-text { margin-top: 8px; font-size: 15px; line-height: 1.45; text-wrap: balance; }
+.op-text b { color: var(--ink); }
+.op-big { margin-top: 10px; font-size: 19px; font-weight: 600; line-height: 1.35; text-wrap: balance; }
+.op-effects { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; font-family: var(--font-pixel); font-size: 20px; letter-spacing: .04em; }
+.op-body { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.op-body .choices { text-align: left; }
+.op-count { font-family: var(--font-pixel); font-size: 64px; line-height: 1; color: var(--cc, var(--accent)); text-shadow: 0 0 20px var(--cc, var(--accent)); }
+
+/* ==========================================================================
    SÉANCE (roulette calée sur un film)
    ========================================================================== */
 .film-custom { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 6px 4px 14px;
