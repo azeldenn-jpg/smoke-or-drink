@@ -21,7 +21,7 @@
    1. CONFIG
    ========================================================================== */
 const CONFIG = {
-  VERSION: '3.0.0',
+  VERSION: '3.1.0',
   STORAGE_KEY: 'sod_v3',
   MAX_PLAYERS: 10,
   PLAYER_COLORS: ['#7ee07a', '#ff5e9e', '#6dc7e8', '#ffc857', '#a667d4', '#ff8855', '#5fb878', '#e85a8c', '#5ec8ff', '#f48fb1'],
@@ -549,8 +549,11 @@ class Roulette {
     }
   }
 
+  /** En Mashup, la roue suit le camp du joueur (ctx.mode) */
+  get mode() { return (this.ctx && this.ctx.mode) || this.app.mode; }
+
   renderLegend() {
-    const mode = this.app.mode;
+    const mode = this.mode;
     const dur = CONFIG.ROULETTE.DURATIONS[this.app.settings.duration] || CONFIG.ROULETTE.DURATIONS.rapide;
     const fmt = ([a, b]) => (b >= 60 ? `${Math.round(a / 60 * 10) / 10}–${Math.round(b / 60 * 10) / 10} min` : `${a}–${b} s`);
     const rows = [
@@ -594,7 +597,7 @@ class Roulette {
   onMain() {
     switch (this.state) {
       case 'idle': return this.spin();
-      case 'result': return this.app.mode === 'fumette' ? this.startCountdown() : this.finish();
+      case 'result': return this.mode === 'fumette' ? this.startCountdown() : this.finish();
       case 'counting': return this.stopCountdown(false);
       case 'done': return this.finish();
       default: return undefined; // pendant la rotation : on ignore
@@ -651,7 +654,7 @@ class Roulette {
 
   /** Valeur "fantôme" qui défile dans le moyeu pendant la rotation */
   preview(tierKey) {
-    if (this.app.mode === 'fumette') {
+    if (this.mode === 'fumette') {
       const d = CONFIG.ROULETTE.DURATIONS[this.app.settings.duration] || CONFIG.ROULETTE.DURATIONS.rapide;
       return formatTime(randInt(...d[tierKey]));
     }
@@ -673,7 +676,7 @@ class Roulette {
     this.rarity.replaceChildren(badge);
 
     const player = this.ctx.player;
-    if (this.app.mode === 'fumette') {
+    if (this.mode === 'fumette') {
       const d = CONFIG.ROULETTE.DURATIONS[this.app.settings.duration] || CONFIG.ROULETTE.DURATIONS.rapide;
       const secs = randInt(...d[tierKey]);
       this.result = { tierKey, secs };
@@ -773,8 +776,8 @@ class SmokeOrDrinkApp {
   constructor() {
     const saved = Store.load();
     this.players = Array.isArray(saved.players) && saved.players.length
-      ? saved.players.slice(0, CONFIG.MAX_PLAYERS).map((p) => ({ id: p.id || uid(), name: String(p.name || '') }))
-      : [{ id: uid(), name: '' }, { id: uid(), name: '' }];
+      ? saved.players.slice(0, CONFIG.MAX_PLAYERS).map((p) => ({ id: p.id || uid(), name: String(p.name || ''), camp: p.camp === 'alcool' ? 'alcool' : 'fumette' }))
+      : [{ id: uid(), name: '', camp: 'fumette' }, { id: uid(), name: '', camp: 'alcool' }];
     this.settings = {
       sound: true,
       cats: ['all'],
@@ -852,7 +855,7 @@ class SmokeOrDrinkApp {
 
   save() {
     Store.save({
-      players: this.players.map((p) => ({ id: p.id, name: p.name })),
+      players: this.players.map((p) => ({ id: p.id, name: p.name, camp: p.camp })),
       settings: this.settings,
     });
   }
@@ -968,15 +971,25 @@ class SmokeOrDrinkApp {
   /* ---------------------------------------------------------------------- */
   /* MODE & HUB                                                              */
   /* ---------------------------------------------------------------------- */
-  get unitEmoji() { return this.mode === 'fumette' ? '🌿' : '🥃'; }
+  get isMashup() { return this.mode === 'mashup'; }
+  get unitEmoji() { return this.isMashup ? '🌿🥃' : this.mode === 'fumette' ? '🌿' : '🥃'; }
+  /** Camp d'un joueur : le sien en Mashup, sinon celui de la partie */
+  campOf(p) { return this.isMashup ? p.camp : this.mode; }
+  /** Pile d'écrans jusqu'à la configuration (le Mashup saute le hub) */
+  get setupPath() { return this.isMashup ? ['home', 'setup'] : ['home', 'hub', 'setup']; }
+  /** Thème vert/orange : en Mashup il suit le joueur dont c'est le tour */
+  setTheme(name) {
+    document.body.classList.remove('mode-none', 'mode-fumette', 'mode-alcool', 'mode-mashup');
+    document.body.classList.add(`mode-${name}`);
+  }
   unit(n) { return this.mode === 'fumette' ? plural(n, 'taff') : plural(n, 'gorgée'); }
   get gameDef() { return CONFIG.GAMES.find((g) => g.id === this.gameId); }
 
   chooseMode(mode) {
     this.mode = mode;
-    document.body.classList.remove('mode-none', 'mode-fumette', 'mode-alcool');
-    document.body.classList.add(`mode-${mode}`);
+    this.setTheme(mode);
     haptic(20);
+    if (mode === 'mashup') { this.chooseGame('quiz'); return; }
     this.renderHub();
     this.router.go('hub');
   }
@@ -1001,14 +1014,14 @@ class SmokeOrDrinkApp {
 
   goHub() {
     this.endGame();
+    if (this.isMashup) { this.renderSetup(); this.router.resetTo(['home', 'setup']); return; }
     this.renderHub();
     this.router.resetTo(['home', 'hub']);
   }
 
   goHome() {
     this.endGame();
-    document.body.classList.remove('mode-fumette', 'mode-alcool');
-    document.body.classList.add('mode-none');
+    this.setTheme('none');
     this.router.resetTo(['home']);
   }
 
@@ -1021,17 +1034,18 @@ class SmokeOrDrinkApp {
   renderSetup() {
     const g = this.gameDef;
     if (!g) return;
-    $('#setup-title').textContent = `${g.icon} ${g.title.toUpperCase()}`;
-    $('#setup-sub').textContent = `// mode ${this.mode} · ${g.min}+ joueurs`;
+    $('#setup-title').textContent = this.isMashup ? '🌿🥃 MASHUP' : `${g.icon} ${g.title.toUpperCase()}`;
+    $('#setup-sub').textContent = this.isMashup ? '// quiz · chacun choisit son camp' : `// mode ${this.mode} · ${g.min}+ joueurs`;
+    $('#end-hub').textContent = this.isMashup ? 'changer les joueurs' : 'changer de jeu';
 
     $$('.setup-section[data-for]').forEach((sec) => {
       const tags = sec.dataset.for.split(' ');
-      sec.hidden = !(tags.includes(g.id) || (g.id === 'roulette' && this.mode === 'fumette' && tags.includes('roulette-fumette')));
+      sec.hidden = !(tags.includes(g.id) || (tags.includes('roulette-fumette') && ((g.id === 'roulette' && this.mode === 'fumette') || this.isMashup)));
     });
 
     this.renderPlayers();
     if (g.id === 'quiz') { this.renderCategories(); this.renderDiffs(); }
-    if (g.id === 'roulette') this.renderDurations();
+    if (g.id === 'roulette' || this.isMashup) this.renderDurations();
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
   }
@@ -1054,8 +1068,23 @@ class SmokeOrDrinkApp {
         else if (this.players.length < CONFIG.MAX_PLAYERS && input.value.trim()) this.addPlayer();
         else input.blur();
       });
+      const camp = this.isMashup
+        ? h('button', {
+          class: `camp-toggle is-${p.camp}`, 'aria-label': `Camp de ${p.name || `joueur ${i + 1}`}`,
+          onclick: (e) => {
+            p.camp = p.camp === 'fumette' ? 'alcool' : 'fumette';
+            const b = e.currentTarget;
+            b.className = `camp-toggle is-${p.camp}`;
+            b.replaceChildren(h('span', { text: p.camp === 'fumette' ? '🌿' : '🥃' }), p.camp === 'fumette' ? 'fume' : 'boit');
+            replay(b, 'flip');
+            haptic(10);
+            this.save();
+            this.validateSetup();
+          },
+        }, h('span', { text: p.camp === 'fumette' ? '🌿' : '🥃' }), p.camp === 'fumette' ? 'fume' : 'boit')
+        : null;
       const row = h('div', { class: 'player-row', style: { '--pc': color } },
-        h('span', { class: 'pdot' }), input,
+        h('span', { class: 'pdot' }), input, camp,
         this.players.length > 1
           ? h('button', { class: 'remove', 'aria-label': `Retirer ${p.name || `le joueur ${i + 1}`}`, text: '×', onclick: () => this.removePlayer(p.id, row) })
           : null);
@@ -1071,7 +1100,8 @@ class SmokeOrDrinkApp {
 
   addPlayer() {
     if (this.players.length >= CONFIG.MAX_PLAYERS) return;
-    this.players.push({ id: uid(), name: '' });
+    const last = this.players[this.players.length - 1];
+    this.players.push({ id: uid(), name: '', camp: last ? last.camp : 'fumette' });
     this.save();
     this.renderPlayers(this.players.length - 1);
     this.validateSetup();
@@ -1168,8 +1198,9 @@ class SmokeOrDrinkApp {
     }
     btn.disabled = Boolean(reason);
     btn.textContent = reason || 'LANCER LA PARTIE';
+    const mix = this.isMashup ? ` · ${this.players.filter((p) => p.camp === 'fumette').length} 🌿 · ${this.players.filter((p) => p.camp === 'alcool').length} 🥃` : '';
     info.textContent = !this.dataReady ? '' : g.id === 'quiz'
-      ? `// ${count} questions dispo`
+      ? `// ${count} questions dispo${mix}`
       : g.kind === 'roulette' ? '// 50 cases · 70 / 24 / 6 %' : `// ${count} cartes dans le paquet`;
   }
 
@@ -1188,12 +1219,13 @@ class SmokeOrDrinkApp {
       id: g.id, kind: g.kind, end: endOpt,
       players: this.players.map((p, i) => ({
         id: p.id, name: p.name.trim(), color: CONFIG.PLAYER_COLORS[i % CONFIG.PLAYER_COLORS.length],
-        score: 0, taffs: 0, given: 0, taken: 0, streak: 0, time: 0,
+        camp: this.isMashup ? p.camp : this.mode,
+        score: 0, taffs: 0, given: 0, taken: 0, streak: 0, time: 0, gauge: 0, sabotaged: 0,
       })),
       turn: 0, round: 1, count: 0, over: false,
     };
 
-    $$('[data-game-tag]').forEach((el) => { el.textContent = `${this.unitEmoji} ${g.short}`; });
+    $$('[data-game-tag]').forEach((el) => { el.textContent = this.isMashup ? '🌿🥃 MASHUP' : `${this.unitEmoji} ${g.short}`; });
     this.keepAwake(true);
     const target = { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette' }[g.kind];
 
@@ -1236,10 +1268,11 @@ class SmokeOrDrinkApp {
       played ? 'voir le classement' : 'quitter');
     if (!ok || !this.game) return;
     if (played) this.finish();
-    else { this.endGame(); this.router.resetTo(['home', 'hub', 'setup']); }
+    else { this.endGame(); if (this.isMashup) this.setTheme('mashup'); this.router.resetTo(this.setupPath); }
   }
 
   endGame() {
+    if (this.isMashup) this.setTheme('mashup');
     this.clearTimers();
     this.bombStop();
     this.roulette.cancel();
@@ -1253,7 +1286,7 @@ class SmokeOrDrinkApp {
     this.endGame();
     const fum = this.mode === 'fumette';
     const conf = {
-      quiz:     { kicker: fum ? '// classement des taffeurs' : '// le bourreau de la soirée', crown: 'Le cerveau de la soirée', key: (p) => p.score },
+      quiz:     { kicker: this.isMashup ? '// mashup · fumeurs vs buveurs' : fum ? '// classement des taffeurs' : '// le bourreau de la soirée', crown: 'Le cerveau de la soirée', key: (p) => p.score },
       jamais:   { kicker: "// je n'ai jamais", crown: 'La vie la plus remplie', key: (p) => p.taken },
       probable: { kicker: '// qui pourrait…', crown: 'La star du groupe', key: (p) => p.taken },
       bombe:    { kicker: '// la bombe', crown: "L'artificier maudit", key: (p) => p.taken },
@@ -1262,12 +1295,17 @@ class SmokeOrDrinkApp {
 
     const ranked = [...g.players].sort((a, b) => conf.key(b) - conf.key(a) || a.taken - b.taken);
     $('#end-kicker').textContent = conf.kicker;
-    $('#end-title').textContent = fum ? 'FIN DE PARTIE' : "C'EST FINI";
+    $('#end-title').textContent = fum || this.isMashup ? 'FIN DE PARTIE' : "C'EST FINI";
     $('#winner').replaceChildren(conf.crown, h('b', { text: `👑 ${ranked[0].name}` }));
 
     $('#podium').replaceChildren(...ranked.map((p, i) => {
       let main, sub = '';
-      if (g.id === 'quiz') {
+      if (g.id === 'quiz' && this.isMashup) {
+        main = `${p.score} pts`;
+        sub = p.camp === 'fumette'
+          ? `🌿 ${plural(p.taffs, 'taff')} · ${plural(p.given, 'balancé')} · ${p.sabotaged} subi${p.sabotaged > 1 ? 's' : ''}`
+          : `🥃 ${p.given} données · ${p.taken} bues`;
+      } else if (g.id === 'quiz') {
         main = `${p.score} pts`;
         sub = fum ? `${plural(p.taffs, 'taff')} 🌿` : `🥃 ${p.given} données · ${p.taken} bues`;
       } else if (g.id === 'roulette') {
@@ -1279,11 +1317,11 @@ class SmokeOrDrinkApp {
       }
       return h('li', { class: i === 0 ? 'first' : '', style: { '--i': i, '--pc': p.color } },
         h('span', { class: 'rank', text: String(i + 1) }),
-        h('span', { class: 'pname', text: p.name }),
+        h('span', { class: 'pname', text: this.isMashup ? `${p.camp === 'fumette' ? '🌿' : '🥃'} ${p.name}` : p.name }),
         h('span', { class: 'pscore' }, main, sub ? h('small', { text: sub }) : null));
     }));
 
-    this.router.resetTo(['home', 'hub', 'setup', 'end'], 'fwd').then(() => {
+    this.router.resetTo([...this.setupPath, 'end'], 'fwd').then(() => {
       this.sound.reward();
       const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#fff';
       this.fx.confetti([accent, '#ff5e9e', '#ffc857', '#ffffff', '#6dc7e8']);
@@ -1302,6 +1340,11 @@ class SmokeOrDrinkApp {
   scoreLine(p) {
     const g = this.game;
     const fum = this.mode === 'fumette';
+    if (g.id === 'quiz' && this.isMashup) {
+      return p.camp === 'fumette'
+        ? { v: `${p.score}|${p.gauge}|${p.taffs}`, main: `${p.score} pts`, small: ` · ${p.taffs} 🌿` }
+        : { v: `${p.score}|${p.given}|${p.taken}`, main: `${p.score} pts`, small: ` · ${p.given}↗ ${p.taken}↘` };
+    }
     if (g.id === 'quiz') {
       return fum
         ? { v: `${p.score}|${p.taffs}`, main: `${p.score} pts · ${p.taffs} 🌿`, small: '' }
@@ -1322,19 +1365,23 @@ class SmokeOrDrinkApp {
     const list = $('[data-score-list]', screen);
     const title = $('[data-score-title]', screen);
     const fum = this.mode === 'fumette';
-    title.textContent = g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Temps de taff' : 'Gorgées') : (fum ? 'Taffs prises' : 'Gorgées bues');
+    title.textContent = g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Temps de taff' : 'Gorgées') : (fum ? 'Taffs prises' : 'Gorgées bues');
 
-    const before = new Map([...list.children].map((li) => [li.dataset.id, { top: li.getBoundingClientRect().top, v: li.dataset.v }]));
+    const before = new Map([...list.children].map((li) => [li.dataset.id, { top: li.getBoundingClientRect().top, v: li.dataset.v, g: li.dataset.g }]));
+    const showGauge = (p) => this.isMashup && g.id === 'quiz' && p.camp === 'fumette';
     const sortKey = (p) => (g.id === 'quiz' ? p.score : g.id === 'roulette' && fum ? p.time : p.taken);
     const sorted = [...g.players].sort((a, b) => sortKey(b) - sortKey(a));
     const current = g.players[g.turn];
 
     list.replaceChildren(...sorted.map((p) => {
       const line = this.scoreLine(p);
-      return h('li', { class: `score-row${current && p.id === current.id && g.kind !== 'cards' ? ' current' : ''}`, dataset: { id: p.id, v: line.v }, style: { '--pc': p.color } },
+      const gauge = showGauge(p);
+      return h('li', { class: `score-row${current && p.id === current.id && g.kind !== 'cards' ? ' current' : ''}${gauge ? ' has-gauge' : ''}`, dataset: { id: p.id, v: line.v, g: gauge ? p.gauge : '' }, style: { '--pc': p.color } },
         h('span', { class: 'sdot' }),
-        h('span', { class: 'sname', text: p.name }),
-        h('span', { class: 'sval' }, line.main, line.small ? h('small', { text: line.small }) : null));
+        h('span', { class: 'sname', text: this.isMashup ? `${p.camp === 'fumette' ? '🌿' : '🥃'} ${p.name}` : p.name }),
+        h('span', { class: 'sval' }, line.main, line.small ? h('small', { text: line.small }) : null),
+        gauge ? h('span', { class: 'gauge', 'aria-label': `Jauge ${p.gauge} sur ${CONFIG.TAFF_EVERY}` },
+          ...Array.from({ length: CONFIG.TAFF_EVERY }, (_, k) => h('i', { class: k < p.gauge ? 'on' : '' }))) : null);
     }));
 
     if (reducedMotion.matches) return;
@@ -1344,15 +1391,16 @@ class SmokeOrDrinkApp {
       const dy = old.top - li.getBoundingClientRect().top;
       if (dy && li.animate) li.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 480, easing: 'cubic-bezier(.16,1,.3,1)' });
       if (old.v !== li.dataset.v) replay($('.sval', li), 'pop-val');
+      if (old.g !== undefined && old.g !== '' && li.dataset.g !== '' && Number(li.dataset.g) < Number(old.g)) replay($('.gauge', li), 'drain');
     });
   }
 
   /** Pastilles joueurs sélectionnables (multi ou simple) */
-  renderChips(container, players, { multi = false, counters = null, onChange = () => {} } = {}) {
+  renderChips(container, players, { multi = false, counters = null, onChange = () => {}, labelOf = null } = {}) {
     const selected = new Set();
     container.replaceChildren(...players.map((p, i) => {
       const chip = h('button', { class: 'chip', style: { '--pc': p.color, '--i': i }, dataset: { id: p.id }, 'aria-pressed': 'false' },
-        h('span', { class: 'cdot' }), p.name, counters ? h('span', { class: 'cbadge', text: '0' }) : null);
+        h('span', { class: 'cdot' }), labelOf ? labelOf(p) : p.name, counters ? h('span', { class: 'cbadge', text: '0' }) : null);
       chip.addEventListener('click', () => {
         haptic(10);
         if (counters) { counters(p, chip); return; }
@@ -1382,6 +1430,7 @@ class SmokeOrDrinkApp {
     if (this.checkEnd()) { this.finish(); return; }
     const p = g.players[g.turn];
     g.answered = false;
+    if (this.isMashup) this.setTheme(p.camp);
     this.setTurnName($('#quiz-player'), p);
     $('#quiz-round').textContent = `MANCHE ${g.round}${g.end.rounds ? '/' + g.end.rounds : ''}`;
     const streak = $('#quiz-streak');
@@ -1400,7 +1449,8 @@ class SmokeOrDrinkApp {
   }
 
   renderBet(p) {
-    const fum = this.mode === 'fumette';
+    const fum = this.campOf(p) === 'fumette';
+    const mash = this.isMashup;
     const cards = Object.entries(CONFIG.DIFFS).map(([key, d], i) => {
       const empty = this.game.decks[key].size === 0;
       return h('button', {
@@ -1415,12 +1465,14 @@ class SmokeOrDrinkApp {
       },
       h('span', { class: 'be', text: d.emoji }),
       h('span', { class: 'bn', text: d.name }),
-      h('span', { class: 'bv', text: fum ? `+${d.value} pt${d.value > 1 ? 's' : ''}` : `${d.value} 🥃` }),
-      h('span', { class: 'bl', text: empty ? 'aucune question' : fum ? 'si bonne réponse' : 'à donner ou à boire' }));
+      h('span', { class: 'bv', text: mash ? `${d.value} ${fum ? '🌿' : '🥃'}` : fum ? `+${d.value} pt${d.value > 1 ? 's' : ''}` : `${d.value} 🥃` }),
+      h('span', { class: 'bl', text: empty ? 'aucune question' : mash ? (fum ? 'garder ou balancer' : 'à donner ou à boire') : fum ? 'si bonne réponse' : 'à donner ou à boire' }));
     });
     $('#quiz-stage').replaceChildren(h('div', { class: 'bet' },
       h('p', { class: 'bet-title', text: `${p.name}, choisis ta mise` }),
-      h('p', { class: 'bet-sub', text: fum ? 'Plus c’est dur, plus ça rapporte.' : 'Plus tu mises, plus tu distribues… ou plus tu bois.' }),
+      h('p', { class: 'bet-sub', text: mash
+        ? (fum ? 'Bonne réponse : des jetons pour ta jauge ou pour saboter. Raté : ta jauge descend.' : 'Bonne réponse : tu distribues. Raté : tu bois ta mise.')
+        : fum ? 'Plus c’est dur, plus ça rapporte.' : 'Plus tu mises, plus tu distribues… ou plus tu bois.' }),
       h('div', { class: 'bet-grid' }, cards)));
   }
 
@@ -1467,7 +1519,9 @@ class SmokeOrDrinkApp {
     const actions = h('div', { class: 'result-actions' });
     const continueBtn = (label = 'CONTINUER →') => h('button', { class: 'btn-primary', text: label, onclick: once(() => this.quizNext()) });
 
-    if (correct) {
+    if (this.isMashup) {
+      this.answerMashup(correct, btnEl, p, q, value, area, actions, continueBtn);
+    } else if (correct) {
       p.score += value;
       p.streak += 1;
       p.best = Math.max(p.best || 0, p.streak);
@@ -1523,12 +1577,21 @@ class SmokeOrDrinkApp {
     this.later(() => area.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'nearest' }), 250);
   }
 
-  /** Mode alcool : distribuer ses gorgées en tapant sur les joueurs */
-  renderGive(area, giver, total) {
-    const targets = this.game.players.filter((t) => t.id !== giver.id);
+  /**
+   * Distribuer ses jetons en tapant sur les joueurs.
+   * Mode alcool : gorgées aux autres. Mashup : effet selon le camp de la cible ;
+   * avec keep=true (fumeur), une pastille "Garder" alimente sa propre jauge.
+   */
+  renderGive(area, giver, total, { keep = false } = {}) {
+    const mash = this.isMashup;
+    const others = this.game.players.filter((t) => t.id !== giver.id);
+    const targets = keep ? [giver, ...others] : others;
     const dist = new Map(targets.map((t) => [t.id, 0]));
     let left = total;
-    const label = h('p', { class: 'give-label' }, 'Tape sur tes victimes · reste ', h('b', { text: String(left) }));
+    const label = h('p', { class: 'give-label' }, keep ? 'Garde ou balance · reste ' : 'Tape sur tes victimes · reste ', h('b', { text: String(left) }));
+    const labelOf = mash ? (t) => (t.id === giver.id
+      ? h('span', { class: 'chip-main' }, '🌿 Garder', h('small', { text: `jauge ${t.gauge}/${CONFIG.TAFF_EVERY}` }))
+      : h('span', { class: 'chip-main' }, t.name, h('small', { text: t.camp === 'alcool' ? '🥃 boit' : `🌿 jauge ${t.gauge}` }))) : null;
     const chips = h('div', { class: 'chips' });
     const validate = h('button', { class: 'btn-primary', text: 'VALIDER →', disabled: true });
     const reset = h('button', { class: 'btn-ghost', text: '↺ recommencer' });
@@ -1544,6 +1607,7 @@ class SmokeOrDrinkApp {
       validate.classList.toggle('pulse', left === 0);
     };
     this.renderChips(chips, targets, {
+      labelOf,
       counters: (p, chip) => {
         if (left <= 0) { replay(label, 'bump'); return; }
         dist.set(p.id, dist.get(p.id) + 1);
@@ -1555,6 +1619,26 @@ class SmokeOrDrinkApp {
     reset.addEventListener('click', () => { targets.forEach((t) => dist.set(t.id, 0)); left = total; refresh(); });
     validate.addEventListener('click', once(() => {
       const recap = [];
+      if (mash) {
+        let gained = 0;
+        targets.forEach((t) => {
+          const n = dist.get(t.id);
+          if (!n) return;
+          const res = this.applyTokens(giver, t, n);
+          gained += res.gained;
+          recap.push(res.text);
+          if (res.sabotage) {
+            const chip = $(`.chip[data-id="${t.id}"]`, chips);
+            this.fx.burstFrom(chip, { colors: ['#ff5e7e', '#7ee07a', '#fff'], count: 30, power: 7, gravity: 0.35 });
+          }
+        });
+        if (recap.some((r) => r.startsWith('🔻'))) { this.sound.bad(); this.fx.shake(); }
+        this.toast(recap.join(' · '), 'good');
+        this.renderScores('quiz');
+        if (gained > 0) this.showTaffUnlocked(giver, gained);
+        else this.quizNext();
+        return;
+      }
       targets.forEach((t) => {
         const n = dist.get(t.id);
         if (n > 0) { t.taken += n; giver.given += n; recap.push(`${t.name} ${n}`); }
@@ -1563,10 +1647,91 @@ class SmokeOrDrinkApp {
       this.quizNext();
     }));
 
-    // Un seul adversaire : distribution automatique
+    // Un seul choix possible : distribution automatique
     if (targets.length === 1) { dist.set(targets[0].id, total); left = 0; }
     refresh();
     area.append(label, chips, h('div', { class: 'result-actions' }, validate, targets.length > 1 ? reset : null));
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* MASHUP : fumeurs et buveurs dans le même quiz                           */
+  /* Chacun gagne et perd dans sa monnaie :                                  */
+  /*  - buveur : distribue ses jetons / boit sa mise                         */
+  /*  - fumeur : jetons → sa jauge (5 = une taff) ou sabotage des autres     */
+  /*  - un jeton reçu = 1 gorgée (buveur) ou -1 point de jauge (fumeur)      */
+  /* ---------------------------------------------------------------------- */
+  answerMashup(correct, btnEl, p, q, value, area, actions, continueBtn) {
+    const smoker = p.camp === 'fumette';
+    const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();
+    const streak = $('#quiz-streak');
+    if (correct) {
+      p.score += value;
+      p.streak += 1;
+      this.sound.good();
+      haptic(25);
+      this.fx.burstFrom(btnEl, { colors: [accent, '#fff'], count: 45, power: 8 });
+      if (p.streak >= 2) { streak.textContent = `🔥 série de ${p.streak}`; replay(streak, 'bump'); }
+      area.replaceChildren(h('div', { class: 'result good' },
+        h('p', { class: 'verdict', text: 'BIEN JOUÉ' }),
+        h('p', { class: 'line' }, `+${value} pt${value > 1 ? 's' : ''} · `, h('span', { class: 'big', text: String(value) }), ` jeton${value > 1 ? 's' : ''} ${smoker ? '🌿' : '🥃'}`),
+        smoker ? h('p', { class: 'sub', text: `Jauge ${p.gauge}/${CONFIG.TAFF_EVERY} · garde pour fumer plus vite, ou balance pour saboter` } ) : null));
+      this.renderGive(area, p, value, { keep: smoker });
+    } else {
+      p.streak = 0;
+      streak.textContent = '';
+      this.sound.bad();
+      haptic([30, 40, 30]);
+      this.fx.flash('rgba(255,94,126,.22)');
+      const lines = [h('p', { class: 'verdict', text: 'RATÉ' }), h('p', { class: 'sub' }, 'La réponse était ', h('b', { text: q.choices[q.answer] }))];
+      if (smoker) {
+        const lost = Math.min(p.gauge, value);
+        p.gauge -= lost;
+        lines.push(h('p', { class: 'line' }, '🔻 Jauge ', h('span', { class: 'big', text: `-${lost}` }), ` · ${p.gauge}/${CONFIG.TAFF_EVERY}`));
+        if (!lost) lines.push(h('p', { class: 'sub', text: 'Ta jauge était déjà vide, tu t’en sors bien.' }));
+      } else {
+        p.taken += value;
+        lines.push(h('p', { class: 'line' }, `🥃 ${p.name} boit `, h('span', { class: 'big', text: String(value) }), ` gorgée${value > 1 ? 's' : ''}`));
+      }
+      actions.append(continueBtn());
+      area.replaceChildren(h('div', { class: 'result bad' }, lines), actions);
+    }
+  }
+
+  /** Applique un paquet de jetons d'un donneur vers une cible (Mashup). Renvoie les taffs gagnées. */
+  applyTokens(giver, target, n) {
+    if (target.id === giver.id) {
+      target.gauge += n;
+      let gained = 0;
+      while (target.gauge >= CONFIG.TAFF_EVERY) { target.gauge -= CONFIG.TAFF_EVERY; target.taffs += 1; gained += 1; }
+      return { gained, text: `🌿 ${giver.name} garde ${n}` };
+    }
+    giver.given += n;
+    if (target.camp === 'alcool') {
+      target.taken += n;
+      return { gained: 0, text: `🥃 ${target.name} boit ${n}` };
+    }
+    const lost = Math.min(target.gauge, n);
+    target.gauge -= lost;
+    target.sabotaged += n;
+    return { gained: 0, text: lost ? `🔻 ${target.name} −${lost} jauge` : `🛡️ ${target.name} : jauge déjà vide`, sabotage: lost ? target : null };
+  }
+
+  /** Mashup : écran "taff débloquée" après distribution */
+  showTaffUnlocked(p, gained) {
+    const area = $('#quiz-stage .result-area');
+    if (!area) { this.quizNext(); return; }
+    area.replaceChildren(
+      h('div', { class: 'result good' },
+        h('p', { class: 'verdict', text: gained > 1 ? `${gained} TAFFS !` : 'TAFF !' }),
+        h('p', { class: 'line', text: `🌿 ${p.name}, ta jauge est pleine` }),
+        h('p', { class: 'sub', text: `Jauge remise à ${p.gauge}/${CONFIG.TAFF_EVERY}` })),
+      h('div', { class: 'result-actions' },
+        h('button', { class: 'btn-primary pulse', text: '🎡 TOURNER LA ROULETTE', onclick: once(() => this.openQuizRoulette(p)) }),
+        h('button', { class: 'btn-ghost', text: 'plus tard', onclick: once(() => this.quizNext()) })));
+    this.sound.reward();
+    this.fx.flash('rgba(126,224,122,.35)');
+    this.fx.burstFrom(area, { colors: ['#7ee07a', '#d4ff5e', '#fff'], count: 90, power: 11 });
+    haptic([40, 30, 80]);
   }
 
   quizNext() {
@@ -1585,6 +1750,7 @@ class SmokeOrDrinkApp {
     this.setTurnName($('#roulette-player'), player);
     this.roulette.setup({
       player,
+      mode: 'fumette',
       doneLabel: '← RETOUR AU QUIZ',
       onDone: (res) => {
         if (res && res.secs) player.time += res.secs;
