@@ -219,8 +219,8 @@ addGame(class {
     dice.onclick = () => this.oieRoll();
     this.oiePanel({
       icon: '🎲', title: 'À toi de jouer',
-      text: p.pos === 0 ? 'Touche les dés pour te lancer sur le plateau.' : `Tu es case ${p.pos}. Touche les dés !`,
-      actions: [h('button', { class: 'btn-primary pulse', text: '🎲 LANCER LES DÉS', onclick: once(() => this.oieRoll()) })],
+      text: p.pos === 0 ? 'Touche le dé pour te lancer sur le plateau.' : `Tu es case ${p.pos}. Touche le dé !`,
+      actions: [h('button', { class: 'btn-primary pulse', text: '🎲 LANCER LE DÉ', onclick: once(() => this.oieRoll()) })],
     });
   }
 
@@ -274,6 +274,7 @@ addGame(class {
       this.sound.bad();
       g.pending.push(`↩️ Rebond de ${surplus} : ${this.oieMalus(p, surplus)}`);
     }
+    g.busy = false;
     this.oieResolve(p, 0);
   }
 
@@ -667,12 +668,13 @@ addGame(class {
     go.addEventListener('click', once(() => {
       const rival = others.find((x) => sel.has(x.id));
       const pick = h('div', { class: 'chips' });
+      let decided = false;
       const loserSel = this.renderChips(pick, [p, rival], {
         onChange: (s) => {
           const loser = [p, rival].find((x) => s.has(x.id));
-          if (!loser) return;
-          if (g.busy) return;
-          g.busy = true;
+          if (!loser || decided) return;
+          decided = true;
+          $$('button', pick).forEach((b) => { b.disabled = true; });
           const winner = loser === p ? rival : p;
           const fx = this.oieMalus(loser, 2);
           this.sound.bad();
@@ -682,7 +684,6 @@ addGame(class {
             await wait(500);
             if (winner.pos < OIE.LAST) await this.oieMove(winner, 1);
             if (loser.pos > 0) await this.oieMove(loser, -1);
-            g.busy = false;
             this.renderScores('oie');
             if (winner.pos === OIE.LAST) { this.oieResolve(winner, 3); return; }
             this.oiePanel({ ...base, text: `${winner.name} passe case ${winner.pos}, ${loser.name} recule case ${loser.pos}.`, effects: [fx],
@@ -752,12 +753,13 @@ addGame(class {
     const g = this.game;
     const others = g.players.filter((x) => x.id !== p.id);
     const chips = h('div', { class: 'chips' });
+    let swapped = false;
     this.renderChips(chips, others, {
       labelOf: (x) => h('span', { class: 'chip-main' }, x.name, h('small', { text: `case ${x.pos}` })),
       onChange: async (s) => {
         const other = others.find((x) => s.has(x.id));
-        if (!other || g.busy) return;
-        g.busy = true;
+        if (!other || swapped) return;
+        swapped = true;
         $$('button', chips).forEach((b) => { b.disabled = true; });
         const a = p.pos;
         const b = other.pos;
@@ -769,7 +771,6 @@ addGame(class {
         replay(g.pawns.get(other.id), 'hop');
         this.oieCamera(p.pos);
         await wait(700);
-        g.busy = false;
         this.renderScores('oie');
         this.oiePanel({ ...base, text: `${p.name} passe case ${p.pos}, ${other.name} case ${other.pos}.`,
           actions: [h('button', { class: 'btn-primary', text: 'JOUEUR SUIVANT →', onclick: once(() => this.oieNext()) })] });
