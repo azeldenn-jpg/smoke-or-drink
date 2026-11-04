@@ -21,7 +21,7 @@
    1. CONFIG
    ========================================================================== */
 const CONFIG = {
-  VERSION: '3.1.0',
+  VERSION: '3.2.0',
   STORAGE_KEY: 'sod_v3',
   MAX_PLAYERS: 10,
   PLAYER_COLORS: ['#7ee07a', '#ff5e9e', '#6dc7e8', '#ffc857', '#a667d4', '#ff8855', '#5fb878', '#e85a8c', '#5ec8ff', '#f48fb1'],
@@ -78,7 +78,7 @@ const CONFIG = {
 
   GAMES: [
     { id: 'quiz', short: "QUIZ", icon: '🧠', title: 'Quiz Culture G', min: 2, kind: 'quiz',
-      desc: { fumette: 'Choisis ta mise, réponds juste, débloque des taffs à la roulette.',
+      desc: { fumette: 'Choisis ta mise, réponds juste : tous les 5 points, une taff débloquée.',
               alcool:  'Choisis ta mise : bonne réponse tu distribues, mauvaise tu bois.' } },
     { id: 'jamais', short: "JE N'AI JAMAIS", icon: '🙊', title: "Je n'ai jamais", min: 2, kind: 'cards',
       desc: { fumette: "Ceux qui l'ont déjà fait prennent une taff. Les secrets tombent.",
@@ -90,7 +90,7 @@ const CONFIG = {
       desc: { fumette: "Un thème, un téléphone qui tourne, une mèche invisible. Celui qui l'a quand ça pète prend une taff.",
               alcool:  "Un thème, un téléphone qui tourne, une mèche invisible. Celui qui l'a quand ça pète boit 3 gorgées." } },
     { id: 'roulette', short: "ROULETTE", icon: '🎡', title: 'Roulette', min: 1, kind: 'roulette',
-      desc: { fumette: 'Fais tourner la roue : la rareté décide de la durée de ta taff.',
+      desc: { fumette: 'Classique : la roue tire le temps avant ta prochaine taff. Séance : tout un plan de taffs calé sur ton film.',
               alcool:  'La roue décide combien tu bois. 6 % de chances de cul sec.' } },
   ],
 
@@ -681,9 +681,9 @@ class Roulette {
       const secs = randInt(...d[tierKey]);
       this.result = { tierKey, secs };
       this.hubValue.textContent = formatTime(secs);
-      this.hubUnit.textContent = 'de taff';
+      this.hubUnit.textContent = 'avant ta taff';
       this.state = 'result';
-      this.setButton('▶ LANCER LE CHRONO', true);
+      this.setButton('▶ LANCER L’ATTENTE', true);
     } else {
       const g = CONFIG.ROULETTE.GORGEES[tierKey];
       const n = g ? randInt(...g) : 5; // cul sec compté comme 5 gorgées dans les stats
@@ -715,7 +715,7 @@ class Roulette {
     this.state = 'counting';
     this.setButton('⏹ ARRÊTER');
     this.mainBtn.classList.remove('pulse');
-    this.hubUnit.textContent = 'restant';
+    this.hubUnit.textContent = 'avant ta taff';
     this.ring.style.transition = 'none';
     this.app.keepAwake(true);
     let lastShown = -1;
@@ -747,11 +747,12 @@ class Roulette {
       this.app.fx.flash(this.result ? CONFIG.ROULETTE.TIERS[this.result.tierKey].color : '#fff');
       this.hub.classList.add('done');
       haptic([200, 100, 200]);
-      this.hubUnit.textContent = 'TERMINÉ !';
+      this.hubValue.textContent = 'À TOI';
+      this.hubUnit.textContent = '🌿 fume !';
     } else {
       this.hubUnit.textContent = 'arrêté';
     }
-    this.setButton(this.ctx.doneLabel || 'SUIVANT →', true);
+    this.setButton(natural ? `✓ C'EST FUMÉ · ${this.ctx.doneLabel || 'SUIVANT →'}` : (this.ctx.doneLabel || 'SUIVANT →'), true);
   }
 
   finish() {
@@ -770,6 +771,365 @@ class Roulette {
 }
 
 /* ==========================================================================
+   7b. SÉANCE — un plan de taffs tiré d'avance et calé sur un film
+   --------------------------------------------------------------------------
+   - Le temps tiré par la roue = l'attente avant la prochaine taff
+     (Commun 70 % = longue attente, Rare 24 %, Légendaire 6 % = presque tout de suite).
+   - "Le joint tourne" : une seule suite d'attentes, les taffs passent de main en main.
+   - "Chacun son joint" : une suite d'attentes par joueur, fusionnées dans le temps.
+   - Tout est calé sur le temps du FILM : pause / recaler suivent la vidéo.
+   - L'état est sauvegardé : fermer l'appli ou verrouiller l'iPad ne perd rien.
+   ========================================================================== */
+const SEANCE_KEY = 'sod_seance';
+
+function fmtClock(totalSeconds) {
+  const s = Math.max(0, Math.floor(totalSeconds));
+  const hh = Math.floor(s / 3600);
+  const mm = Math.floor((s % 3600) / 60);
+  return `${hh}:${String(mm).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+}
+function fmtDuration(totalSeconds) {
+  const m = Math.round(totalSeconds / 60);
+  if (m < 60) return `${m} min`;
+  return `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}`;
+}
+/** "42:10" → 42 min 10 s · "1:02:30" → 1 h 02 min 30 s · "35" → 35 min */
+function parsePosition(str) {
+  const parts = String(str).trim().split(/[:hH.,\s]+/).filter(Boolean).map(Number);
+  if (!parts.length || parts.some((n) => !Number.isFinite(n) || n < 0)) return null;
+  if (parts.length === 1) return parts[0] * 60;
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return parts[0] * 3600 + parts[1] * 60 + parts[2];
+}
+/** Durée de film : "1:52" → 112 min · "95" → 95 min · "2h" → 120 min */
+function parseFilmMinutes(str) {
+  const parts = String(str).trim().split(/[:hH.,\s]+/).filter((x) => x !== '').map(Number);
+  if (!parts.length || parts.some((n) => !Number.isFinite(n) || n < 0)) return null;
+  const min = parts.length === 1 ? parts[0] : parts[0] * 60 + parts[1];
+  return min >= 1 && min <= 600 ? Math.round(min) : null;
+}
+
+class Seance {
+  constructor(app) {
+    this.app = app;
+    this.s = null;          // état sauvegardable
+    this.timer = null;
+    this.lastAlarm = 0;
+    this.alarms = 0;
+    this.RING = 2 * Math.PI * 104;
+    this.el = {
+      dial: $('#se-dial'), ring: $('#se-ring'), time: $('#se-time'), unit: $('#se-unit'), badge: $('#se-badge'),
+      names: $('#se-names'), label: $('#se-label'), next: $('#se-next'), count: $('#se-count'),
+      now: $('#se-film-now'), total: $('#se-film-total'), bar: $('#se-bar'), scores: $('#se-scores'),
+      ready: $('#se-actions-ready'), run: $('#se-actions-run'), pause: $('#se-pause'),
+      resyncBox: $('#se-resync-box'), resyncInput: $('#se-resync-input'),
+    };
+    this.el.dial.addEventListener('click', () => this.onDial());
+    $('#se-start').addEventListener('click', () => this.start());
+    $('#se-reroll').addEventListener('click', () => { this.build(); this.app.sound.good(); this.app.fx.burstFrom(this.el.dial, { colors: ['#7ee07a', '#3498db', '#e74c3c', '#fff'], count: 40, power: 8 }); });
+    this.el.pause.addEventListener('click', () => (this.s && this.s.due ? this.ack() : this.togglePause()));
+    $('#se-resync').addEventListener('click', () => this.openResync());
+    $('#se-resync-cancel').addEventListener('click', () => { this.el.resyncBox.hidden = true; });
+    $('#se-resync-ok').addEventListener('click', () => this.resync());
+    this.el.resyncInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); this.resync(); } });
+  }
+
+  /* ---------- Tirage du plan ---------- */
+  drawTier() {
+    // 50 cases : 3 légendaires, 12 rares, 35 communes
+    const n = randInt(0, CONFIG.ROULETTE.SEGMENTS - 1);
+    const { legendaire, rare } = CONFIG.ROULETTE.TIERS;
+    return n < legendaire.count ? 'legendaire' : n < legendaire.count + rare.count ? 'rare' : 'commun';
+  }
+
+  build() {
+    const set = this.app.settings;
+    const film = set.film * 60;
+    const D = CONFIG.ROULETTE.DURATIONS[set.duration] || CONFIG.ROULETTE.DURATIONS.raisonnable;
+    const players = this.app.game.players;
+    const each = set.joint === 'chacun' && players.length > 1;
+    const events = [];
+    const chain = (only) => {
+      let t = 0;
+      let k = 0;
+      for (;;) {
+        const tier = this.drawTier();
+        const wait = randInt(...D[tier]);
+        t += wait;
+        if (t > film) break;
+        const p = only != null ? players[only] : players[k % players.length];
+        k += 1;
+        events.push({ t, tier, wait, ids: [p.id] });
+      }
+    };
+    if (each) players.forEach((_, i) => chain(i)); else chain(null);
+    events.sort((a, b) => a.t - b.t);
+    // Taffs quasi simultanées (≤ 3 s) : une seule alarme pour tout le monde
+    const plan = [];
+    for (const e of events) {
+      const last = plan[plan.length - 1];
+      if (last && e.t - last.t <= 3) last.ids.push(...e.ids);
+      else plan.push({ ...e, ids: [...e.ids] });
+    }
+    players.forEach((p) => { p.taffs = 0; p.planned = plan.reduce((n, e) => n + (e.ids.includes(p.id) ? 1 : 0), 0); });
+    this.s = { v: 1, film, joint: each ? 'chacun' : 'tourne', rhythm: set.duration, plan, idx: 0, base: 0, runSince: null, started: false, due: false, players };
+    this.render();
+  }
+
+  /* ---------- Horloge du film ---------- */
+  elapsed() {
+    const s = this.s;
+    return s.base + (s.runSince ? (Date.now() - s.runSince) / 1000 : 0);
+  }
+  get running() { return Boolean(this.s && this.s.runSince); }
+
+  start() {
+    if (!this.s || this.s.started) return;
+    this.app.sound.unlock();
+    this.s.started = true;
+    this.s.runSince = Date.now();
+    this.app.keepAwake(true);
+    this.save();
+    this.loop();
+    this.app.sound.good();
+    this.app.toast('🎬 Séance lancée, bon film !', 'good');
+    this.render();
+  }
+
+  togglePause() {
+    const s = this.s;
+    if (!s || !s.started) return;
+    if (s.runSince) { s.base = this.elapsed(); s.runSince = null; this.app.toast('⏸ Séance en pause'); }
+    else { s.runSince = Date.now(); this.app.toast('▶ C’est reparti'); }
+    this.save();
+    this.render();
+  }
+
+  openResync() {
+    this.el.resyncBox.hidden = false;
+    this.el.resyncInput.value = fmtClock(this.elapsed());
+    this.el.resyncInput.focus();
+    this.el.resyncInput.select();
+  }
+
+  resync() {
+    const s = this.s;
+    const pos = parsePosition(this.el.resyncInput.value);
+    if (pos == null || pos > s.film) { this.app.toast('Format attendu : 42:10 ou 1:02:30', 'bad'); return; }
+    s.base = pos;
+    if (s.runSince) s.runSince = Date.now();
+    s.due = false;
+    s.idx = s.plan.findIndex((e) => e.t >= pos);
+    if (s.idx < 0) s.idx = s.plan.length;
+    this.el.resyncBox.hidden = true;
+    this.el.resyncInput.blur();
+    this.save();
+    this.app.toast(`⏱ Recalé sur ${fmtClock(pos)}`, 'good');
+    this.render();
+  }
+
+  /* ---------- Boucle ---------- */
+  loop() {
+    clearInterval(this.timer);
+    this.timer = setInterval(() => this.tick(), 250);
+    this.tick();
+  }
+  stop() {
+    clearInterval(this.timer);
+    this.timer = null;
+  }
+
+  tick() {
+    const s = this.s;
+    if (!s || !s.started) return;
+    const now = this.elapsed();
+    if (!s.due && s.idx < s.plan.length && now >= s.plan[s.idx].t) this.trigger();
+    if (s.due && Date.now() - this.lastAlarm > 9000 && this.alarms < 4) this.ring();
+    if (now >= s.film && s.runSince) {
+      s.base = s.film;
+      s.runSince = null;
+      this.save();
+    }
+    this.render(now);
+  }
+
+  trigger() {
+    const s = this.s;
+    s.due = true;
+    this.alarms = 0;
+    this.save();
+    this.ring();
+    const ev = s.plan[s.idx];
+    const color = CONFIG.ROULETTE.TIERS[ev.tier].color;
+    this.app.fx.flash(color);
+    this.app.fx.burstFrom(this.el.dial, { colors: [color, '#7ee07a', '#fff'], count: ev.tier === 'legendaire' ? 120 : 50, power: 10 });
+    if (ev.tier === 'legendaire') this.app.fx.shake();
+  }
+
+  ring() {
+    this.lastAlarm = Date.now();
+    this.alarms += 1;
+    this.app.sound.alarm();
+    haptic([200, 100, 200]);
+  }
+
+  onDial() {
+    if (!this.s) return;
+    if (!this.s.started) { this.start(); return; }
+    if (this.s.due) this.ack();
+    else if (this.s.idx >= this.s.plan.length) this.app.finish();
+    else this.togglePause();
+  }
+
+  ack() {
+    const s = this.s;
+    if (!s || !s.due) return;
+    const ev = s.plan[s.idx];
+    s.players.forEach((p) => { if (ev.ids.includes(p.id)) p.taffs += 1; });
+    s.due = false;
+    s.idx += 1;
+    this.save();
+    this.app.sound.good();
+    haptic(30);
+    this.render();
+    replay(this.el.dial, 'swap');
+    this.tick(); // si la taff suivante est déjà passée, elle sonne tout de suite
+  }
+
+  /* ---------- Sauvegarde / reprise ---------- */
+  save() {
+    try { localStorage.setItem(SEANCE_KEY, JSON.stringify(this.s)); } catch (e) { /* ignore */ }
+  }
+  clear() {
+    this.stop();
+    this.s = null;
+    try { localStorage.removeItem(SEANCE_KEY); } catch (e) { /* ignore */ }
+  }
+  static loadSaved() {
+    try {
+      const s = JSON.parse(localStorage.getItem(SEANCE_KEY) || 'null');
+      if (s && s.v === 1 && s.started && Array.isArray(s.plan) && Array.isArray(s.players)) return s;
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+  resume(saved) {
+    this.s = saved;
+    this.loop();
+    this.render();
+  }
+
+  /* ---------- Affichage ---------- */
+  namesOf(ids) {
+    return ids.map((id) => this.s.players.find((p) => p.id === id)).filter(Boolean);
+  }
+
+  setNames(players) {
+    const key = players.map((p) => p.id).join(',');
+    if (this._namesKey === key) return;
+    this._namesKey = key;
+    this.el.names.replaceChildren(...players.map((p) => h('span', { class: 'se-n', style: { '--pc': p.color } }, h('span', { class: 'dot' }), h('span', { text: p.name }))));
+  }
+
+  render(now = this.s ? this.elapsed() : 0) {
+    const s = this.s;
+    if (!s) return;
+    const el = this.el;
+    const solo = s.players.length === 1;
+    el.total.textContent = `/ ${fmtClock(s.film)}`;
+    el.now.textContent = fmtClock(now);
+    el.bar.style.width = `${Math.min(100, (now / s.film) * 100)}%`;
+    el.count.textContent = s.started ? `TAFF ${Math.min(s.idx + (s.due ? 1 : 0), s.plan.length)}/${s.plan.length}` : `${s.plan.length} TAFFS`;
+    el.ready.hidden = s.started;
+    el.run.hidden = !s.started || s.idx >= s.plan.length;
+    el.dial.classList.toggle('is-paused', s.started && !s.runSince && !s.due);
+    el.dial.classList.toggle('is-due', s.due);
+    // Le badge n'est recréé que s'il change (sinon son animation rejouerait 4 fois par seconde)
+    let badgeKey = '';
+    const setBadge = (key, make) => { badgeKey = key; if (this._badgeKey !== key) { this._badgeKey = key; el.badge.replaceChildren(...(make ? [make()] : [])); } };
+
+    const setRing = (f, color) => {
+      el.ring.style.strokeDashoffset = String(this.RING * (1 - Math.max(0, Math.min(1, f))));
+      if (color) el.ring.style.setProperty('--rc', color); else el.ring.style.removeProperty('--rc');
+      if (color) el.dial.style.setProperty('--rc', color); else el.dial.style.removeProperty('--rc');
+    };
+    const badge = (tier) => h('span', { class: `badge${tier === 'legendaire' ? ' legend' : ''}`, style: { '--rc': CONFIG.ROULETTE.TIERS[tier].color }, text: CONFIG.ROULETTE.TIERS[tier].name.toUpperCase() });
+
+    // Plan prêt, pas encore lancé
+    if (!s.started) {
+      const leg = s.plan.filter((e) => e.tier === 'legendaire').length;
+      el.label.textContent = s.joint === 'chacun' ? '// chacun son joint' : solo ? '// ta séance' : '// le joint tourne';
+      this.setNames([]);
+      el.time.textContent = String(s.plan.length);
+      el.unit.textContent = `taff${s.plan.length > 1 ? 's' : ''} prévue${s.plan.length > 1 ? 's' : ''}`;
+      setBadge(`ready${leg}`, leg ? () => h('span', { class: 'badge legend', style: { '--rc': '#e74c3c' }, text: `${leg} LÉGENDAIRE${leg > 1 ? 'S' : ''}` }) : null);
+      el.next.replaceChildren('Lance quand tu appuies sur ', h('b', { text: 'Play' }), ' · 🎲 pour un autre plan');
+      setRing(0);
+      this.renderScores();
+      return;
+    }
+
+    // Plus aucune taff au programme
+    if (s.idx >= s.plan.length && !s.due) {
+      el.label.textContent = '// séance terminée';
+      this.setNames([]);
+      el.time.textContent = 'FINI';
+      el.unit.textContent = 'touche pour le bilan';
+      setBadge('end', null);
+      el.next.textContent = now < s.film ? `Plus de taff prévue · encore ${fmtDuration(s.film - now)} de film` : 'Le film est fini 🎬';
+      setRing(1);
+      this.renderScores();
+      return;
+    }
+
+    const ev = s.plan[s.idx];
+    const who = this.namesOf(ev.ids);
+    const color = CONFIG.ROULETTE.TIERS[ev.tier].color;
+
+    if (s.due) {
+      el.label.textContent = who.length > 1 ? '// à vous de fumer' : '// à toi de fumer';
+      this.setNames(who);
+      el.time.textContent = 'À TOI';
+      if (who.length > 1) el.time.textContent = 'À VOUS';
+      el.unit.textContent = 'touche quand c’est fumé';
+      setBadge(`due${s.idx}`, () => badge(ev.tier));
+      el.pause.textContent = '✓ C’EST FUMÉ';
+      el.pause.classList.add('pulse');
+      setRing(1, '#7ee07a');
+    } else {
+      const prev = s.idx > 0 ? s.plan[s.idx - 1].t : 0;
+      const remaining = Math.max(0, ev.t - now);
+      el.label.textContent = s.runSince ? '// prochaine taff' : '// en pause';
+      this.setNames(solo ? [] : who);
+      el.time.textContent = formatTime(remaining);
+      el.unit.textContent = s.runSince ? 'avant la taff' : 'touche pour reprendre';
+      setBadge(`wait${s.idx}`, () => badge(ev.tier));
+      el.pause.textContent = s.runSince ? '⏸ PAUSE' : '▶ REPRENDRE';
+      el.pause.classList.toggle('pulse', !s.runSince);
+      setRing((now - prev) / Math.max(1, ev.t - prev), color);
+    }
+
+    const after = s.plan[s.idx + 1];
+    if (after) {
+      const afterWho = this.namesOf(after.ids).map((p) => p.name).join(' + ');
+      const gap = after.t - ev.t;
+      el.next.replaceChildren('Ensuite : ', h('b', { text: solo ? 'toi' : afterWho }), `, ${gap < 90 ? `${Math.round(gap)} s` : `environ ${fmtDuration(gap)}`} après`);
+    } else {
+      el.next.textContent = 'C’est la dernière taff du film';
+    }
+    if (this._lastScores !== s.idx) this.renderScores();
+  }
+
+  renderScores() {
+    const s = this.s;
+    this._lastScores = s.idx;
+    this.el.scores.replaceChildren(...s.players.map((p) => h('li', { class: 'score-row', style: { '--pc': p.color } },
+      h('span', { class: 'sdot' }),
+      h('span', { class: 'sname', text: p.name }),
+      h('span', { class: 'sval' }, `${p.taffs} 🌿`, h('small', { text: ` / ${p.planned} prévues` })))));
+  }
+}
+
+/* ==========================================================================
    8. APPLICATION
    ========================================================================== */
 class SmokeOrDrinkApp {
@@ -783,6 +1143,9 @@ class SmokeOrDrinkApp {
       cats: ['all'],
       diff: 'bet',            // 'bet' (mise libre) | 'random'
       duration: 'rapide',
+      rtype: 'classique',     // roulette : 'classique' | 'seance'
+      film: 105,              // durée du film en minutes
+      joint: 'tourne',        // 'tourne' | 'chacun'
       end: { quiz: 'free', cards: 'free', bombe: 'free' },
       ...(saved.settings || {}),
     };
@@ -799,6 +1162,7 @@ class SmokeOrDrinkApp {
     this.fx = new FX($('#fx'));
     this.router = new Router((from, to) => this.onLeave(from, to));
     this.roulette = new Roulette(this);
+    this.seance = new Seance(this);
 
     this.init();
   }
@@ -811,6 +1175,25 @@ class SmokeOrDrinkApp {
     this.bindEvents();
     this.registerServiceWorker();
     await this.loadData();
+    this.offerResume();
+  }
+
+  /** Une séance tournait quand l'appli a été fermée : on propose de la reprendre */
+  async offerResume() {
+    const saved = Seance.loadSaved();
+    if (!saved) return;
+    const ok = await this.confirm('Reprendre la séance ?', `Une séance est en cours (${saved.players.map((p) => p.name).join(', ')}). Le chrono a continué pendant ton absence.`, 'reprendre', false);
+    if (!ok) { this.seance.clear(); return; }
+    this.mode = 'fumette';
+    this.setTheme('fumette');
+    this.gameId = 'roulette';
+    this.settings.rtype = 'seance';
+    this.renderHub();
+    this.renderSetup();
+    this.game = { id: 'seance', kind: 'seance', players: saved.players, end: { id: 'free' }, turn: 0, round: 1, count: saved.idx, over: false };
+    this.seance.resume(saved);
+    this.keepAwake(true);
+    this.router.resetTo(['home', 'hub', 'setup', 'seance'], 'fwd');
   }
 
   async loadData() {
@@ -893,7 +1276,10 @@ class SmokeOrDrinkApp {
 
     // Retour au premier plan : on réactive l'écran allumé si une partie tourne
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && this.game && !this.game.over) this.keepAwake(true);
+      if (document.visibilityState === 'visible' && this.game && !this.game.over) {
+        this.keepAwake(true);
+        if (this.game.kind === 'seance') this.seance.tick(); // rattrape une taff tombée pendant la veille
+      }
     });
   }
 
@@ -946,12 +1332,13 @@ class SmokeOrDrinkApp {
     setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 320); }, 2300);
   }
 
-  confirm(title, text, okLabel = 'confirmer') {
+  confirm(title, text, okLabel = 'confirmer', danger = true) {
     return new Promise((resolve) => {
       const sheet = $('#sheet');
       $('#sheet-title').textContent = title;
       $('#sheet-text').textContent = text;
       $('[data-sheet="ok"]', sheet).textContent = okLabel;
+      $('[data-sheet="ok"]', sheet).classList.toggle('danger', danger);
       sheet.hidden = false;
       sheet.classList.remove('closing');
       const close = (val) => {
@@ -1029,6 +1416,8 @@ class SmokeOrDrinkApp {
   /* CONFIGURATION                                                           */
   /* ---------------------------------------------------------------------- */
   get kind() { return this.gameDef ? this.gameDef.kind : 'quiz'; }
+  get isRouletteFumette() { return this.gameId === 'roulette' && this.mode === 'fumette'; }
+  get isSeance() { return this.isRouletteFumette && this.settings.rtype === 'seance'; }
   get endKey() { return this.kind === 'cards' ? 'cards' : this.kind; }
 
   renderSetup() {
@@ -1040,12 +1429,13 @@ class SmokeOrDrinkApp {
 
     $$('.setup-section[data-for]').forEach((sec) => {
       const tags = sec.dataset.for.split(' ');
-      sec.hidden = !(tags.includes(g.id) || (tags.includes('roulette-fumette') && ((g.id === 'roulette' && this.mode === 'fumette') || this.isMashup)));
+      sec.hidden = !(tags.includes(g.id) || (tags.includes('roulette-fumette') && this.isRouletteFumette) || (tags.includes('seance') && this.isSeance));
     });
 
     this.renderPlayers();
     if (g.id === 'quiz') { this.renderCategories(); this.renderDiffs(); }
-    if (g.id === 'roulette' || this.isMashup) this.renderDurations();
+    if (this.isRouletteFumette) { this.renderRType(); this.renderDurations(); }
+    if (this.isSeance) { this.renderFilm(); this.renderJoint(); }
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
   }
@@ -1164,6 +1554,52 @@ class SmokeOrDrinkApp {
     })));
   }
 
+  renderRType() {
+    const opts = [
+      { id: 'classique', emoji: '🎡', label: 'Classique', small: 'on tourne à chaque taff' },
+      { id: 'seance', emoji: '🎬', label: 'Séance', small: 'un plan calé sur un film' },
+    ];
+    $('#rtype-grid').replaceChildren(...opts.map((o) => this.pill({
+      on: this.settings.rtype === o.id, emoji: o.emoji, label: o.label, small: o.small,
+      onClick: () => {
+        this.settings.rtype = o.id;
+        // Sur un film, le rythme Rapide (15-30 s) donnerait des centaines de taffs : on passe en Raisonnable
+        if (o.id === 'seance' && this.settings.duration === 'rapide') this.settings.duration = 'raisonnable';
+        this.save();
+        this.renderSetup();
+      },
+    })));
+  }
+
+  renderFilm() {
+    const presets = [[20, 'Court'], [45, 'Épisode'], [90, 'Film'], [105, 'Film'], [120, 'Film'], [150, 'Long film']];
+    const fmt = (m) => (m < 60 ? `${m} min` : `${Math.floor(m / 60)} h${m % 60 ? ' ' + String(m % 60).padStart(2, '0') : ''}`);
+    $('#film-grid').replaceChildren(...presets.map(([m, l]) => this.pill({
+      on: this.settings.film === m, emoji: fmt(m), label: l,
+      onClick: () => { this.settings.film = m; $('#film-input').value = ''; this.save(); this.renderFilm(); this.validateSetup(); },
+    })));
+    const input = $('#film-input');
+    if (!presets.some(([m]) => m === this.settings.film) && document.activeElement !== input) input.value = `${Math.floor(this.settings.film / 60)}:${String(this.settings.film % 60).padStart(2, '0')}`;
+    if (!input.dataset.bound) {
+      input.dataset.bound = '1';
+      input.addEventListener('input', () => {
+        const m = parseFilmMinutes(input.value);
+        if (m) { this.settings.film = m; this.save(); this.renderFilm(); this.validateSetup(); }
+      });
+    }
+  }
+
+  renderJoint() {
+    const opts = [
+      { id: 'tourne', emoji: '🔄', label: 'Le joint tourne', small: 'un plan, chacun son tour' },
+      { id: 'chacun', emoji: '🙌', label: 'Chacun son joint', small: 'un plan par joueur' },
+    ];
+    $('#joint-grid').replaceChildren(...opts.map((o) => this.pill({
+      on: this.settings.joint === o.id, emoji: o.emoji, label: o.label, small: o.small,
+      onClick: () => { this.settings.joint = o.id; this.save(); this.renderJoint(); this.validateSetup(); },
+    })));
+  }
+
   renderEnds() {
     const key = this.endKey;
     const opts = CONFIG.END_OPTIONS[key];
@@ -1172,6 +1608,16 @@ class SmokeOrDrinkApp {
       on: this.settings.end[key] === o.id, emoji: o.e, label: o.l,
       onClick: () => { this.settings.end[key] = o.id; this.save(); this.renderEnds(); },
     })));
+  }
+
+  /** Estimation du nombre de taffs (moyenne des attentes pondérée 70/24/6) */
+  seanceEstimate() {
+    const D = CONFIG.ROULETTE.DURATIONS[this.settings.duration] || CONFIG.ROULETTE.DURATIONS.raisonnable;
+    const mid = ([a, b]) => (a + b) / 2;
+    const mean = 0.7 * mid(D.commun) + 0.24 * mid(D.rare) + 0.06 * mid(D.legendaire);
+    const n = Math.max(0, Math.round((this.settings.film * 60) / mean) - 0);
+    const each = this.settings.joint === 'chacun' && this.players.length > 1;
+    return `// ≈ ${n} taffs ${each ? 'chacun ' : ''}sur ${fmtDuration(this.settings.film * 60)}`;
   }
 
   quizPool() {
@@ -1201,6 +1647,7 @@ class SmokeOrDrinkApp {
     const mix = this.isMashup ? ` · ${this.players.filter((p) => p.camp === 'fumette').length} 🌿 · ${this.players.filter((p) => p.camp === 'alcool').length} 🥃` : '';
     info.textContent = !this.dataReady ? '' : g.id === 'quiz'
       ? `// ${count} questions dispo${mix}`
+      : this.isSeance ? this.seanceEstimate()
       : g.kind === 'roulette' ? '// 50 cases · 70 / 24 / 6 %' : `// ${count} cartes dans le paquet`;
   }
 
@@ -1227,7 +1674,8 @@ class SmokeOrDrinkApp {
 
     $$('[data-game-tag]').forEach((el) => { el.textContent = this.isMashup ? '🌿🥃 MASHUP' : `${this.unitEmoji} ${g.short}`; });
     this.keepAwake(true);
-    const target = { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette' }[g.kind];
+    const kind = this.isSeance ? 'seance' : g.kind;
+    const target = { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette', seance: 'seance' }[kind];
 
     if (g.kind === 'quiz') {
       const pool = this.quizPool();
@@ -1245,6 +1693,11 @@ class SmokeOrDrinkApp {
       this.game.deck = new Deck(this.data.bombe);
       this.game.turn = randInt(0, this.game.players.length - 1);
       this.bombTurn();
+    } else if (kind === 'seance') {
+      this.game.id = 'seance';
+      this.game.kind = 'seance';
+      this.seance.clear();
+      this.seance.build();
     } else {
       this.rouletteTurn();
     }
@@ -1262,7 +1715,7 @@ class SmokeOrDrinkApp {
 
   async askQuit() {
     if (!this.game || this.game.over) return;
-    const played = this.game.count > 0 || this.game.players.some((p) => p.score || p.taken || p.taffs);
+    const played = this.game.count > 0 || this.game.players.some((p) => p.score || p.taken || p.taffs) || (this.game.kind === 'seance' && this.seance.s && this.seance.s.started);
     const ok = await this.confirm('Terminer la partie ?',
       played ? 'Vous allez voir le classement final.' : 'Aucun tour joué, retour à la configuration.',
       played ? 'voir le classement' : 'quitter');
@@ -1273,6 +1726,7 @@ class SmokeOrDrinkApp {
 
   endGame() {
     if (this.isMashup) this.setTheme('mashup');
+    if (this.game && this.game.kind === 'seance') this.seance.clear();
     this.clearTimers();
     this.bombStop();
     this.roulette.cancel();
@@ -1290,7 +1744,8 @@ class SmokeOrDrinkApp {
       jamais:   { kicker: "// je n'ai jamais", crown: 'La vie la plus remplie', key: (p) => p.taken },
       probable: { kicker: '// qui pourrait…', crown: 'La star du groupe', key: (p) => p.taken },
       bombe:    { kicker: '// la bombe', crown: "L'artificier maudit", key: (p) => p.taken },
-      roulette: { kicker: '// roulette', crown: fum ? 'Le chouchou de la roue' : 'Le plus arrosé', key: (p) => (fum ? p.time : p.taken) },
+      roulette: { kicker: '// roulette', crown: fum ? 'Le chouchou de la roue' : 'Le plus arrosé', key: (p) => (fum ? p.taffs * 1e6 - p.time : p.taken) },
+      seance:   { kicker: '// séance', crown: 'Le plus gros fumeur', key: (p) => p.taffs },
     }[g.id];
 
     const ranked = [...g.players].sort((a, b) => conf.key(b) - conf.key(a) || a.taken - b.taken);
@@ -1309,8 +1764,11 @@ class SmokeOrDrinkApp {
         main = `${p.score} pts`;
         sub = fum ? `${plural(p.taffs, 'taff')} 🌿` : `🥃 ${p.given} données · ${p.taken} bues`;
       } else if (g.id === 'roulette') {
-        main = fum ? formatTime(p.time) : `${p.taken} 🥃`;
-        sub = fum ? `${plural(p.taffs, 'taff')}` : '';
+        main = fum ? `${p.taffs} 🌿` : `${p.taken} 🥃`;
+        sub = fum ? `attente totale ${formatTime(p.time)}` : '';
+      } else if (g.id === 'seance') {
+        main = `${p.taffs} 🌿`;
+        sub = plural(p.taffs, 'taff');
       } else {
         main = `${p.taken} ${this.unitEmoji}`;
         sub = fum ? plural(p.taken, 'taff') + ' prise' + (p.taken > 1 ? 's' : '') : plural(p.taken, 'gorgée') + ' bue' + (p.taken > 1 ? 's' : '');
@@ -1352,7 +1810,7 @@ class SmokeOrDrinkApp {
     }
     if (g.id === 'roulette') {
       return fum
-        ? { v: `${p.time}`, main: formatTime(p.time), small: ` · ${p.taffs} 🌿` }
+        ? { v: `${p.taffs}`, main: `${p.taffs} 🌿`, small: ` · ${formatTime(p.time)} d'attente` }
         : { v: `${p.taken}`, main: `${p.taken} 🥃`, small: '' };
     }
     return { v: `${p.taken}`, main: `${p.taken} ${this.unitEmoji}`, small: '' };
@@ -1365,11 +1823,11 @@ class SmokeOrDrinkApp {
     const list = $('[data-score-list]', screen);
     const title = $('[data-score-title]', screen);
     const fum = this.mode === 'fumette';
-    title.textContent = g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Temps de taff' : 'Gorgées') : (fum ? 'Taffs prises' : 'Gorgées bues');
+    title.textContent = g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Taffs' : 'Gorgées') : (fum ? 'Taffs prises' : 'Gorgées bues');
 
     const before = new Map([...list.children].map((li) => [li.dataset.id, { top: li.getBoundingClientRect().top, v: li.dataset.v, g: li.dataset.g }]));
     const showGauge = (p) => this.isMashup && g.id === 'quiz' && p.camp === 'fumette';
-    const sortKey = (p) => (g.id === 'quiz' ? p.score : g.id === 'roulette' && fum ? p.time : p.taken);
+    const sortKey = (p) => (g.id === 'quiz' ? p.score : g.id === 'roulette' && fum ? p.taffs : p.taken);
     const sorted = [...g.players].sort((a, b) => sortKey(b) - sortKey(a));
     const current = g.players[g.turn];
 
@@ -1540,9 +1998,8 @@ class SmokeOrDrinkApp {
         if (gained > 0) {
           lines.push(h('p', { class: 'line', text: `🌿 ${gained > 1 ? gained + ' TAFFS DÉBLOQUÉES' : 'TAFF DÉBLOQUÉE'} !` }));
           this.later(() => { this.sound.reward(); this.fx.flash('rgba(126,224,122,.35)'); this.fx.burstFrom(area, { colors: ['#7ee07a', '#d4ff5e', '#fff'], count: 90, power: 11 }); }, 350);
-          actions.append(
-            h('button', { class: 'btn-primary pulse', text: '🎡 TOURNER LA ROULETTE', onclick: once(() => this.openQuizRoulette(p)) }),
-            h('button', { class: 'btn-ghost', text: 'plus tard', onclick: once(() => this.quizNext()) }));
+          lines.push(h('p', { class: 'sub', text: 'Va fumer, on t’attend 🌿' }));
+          actions.append(h('button', { class: 'btn-primary pulse', text: '✓ C’EST FUMÉ →', onclick: once(() => this.quizNext()) }));
         } else {
           const left = CONFIG.TAFF_EVERY - (p.score % CONFIG.TAFF_EVERY);
           lines.push(h('p', { class: 'sub', text: `encore ${plural(left, 'point')} avant la prochaine taff` }));
@@ -1724,10 +2181,9 @@ class SmokeOrDrinkApp {
       h('div', { class: 'result good' },
         h('p', { class: 'verdict', text: gained > 1 ? `${gained} TAFFS !` : 'TAFF !' }),
         h('p', { class: 'line', text: `🌿 ${p.name}, ta jauge est pleine` }),
-        h('p', { class: 'sub', text: `Jauge remise à ${p.gauge}/${CONFIG.TAFF_EVERY}` })),
+        h('p', { class: 'sub', text: `Va fumer ! Jauge remise à ${p.gauge}/${CONFIG.TAFF_EVERY}` })),
       h('div', { class: 'result-actions' },
-        h('button', { class: 'btn-primary pulse', text: '🎡 TOURNER LA ROULETTE', onclick: once(() => this.openQuizRoulette(p)) }),
-        h('button', { class: 'btn-ghost', text: 'plus tard', onclick: once(() => this.quizNext()) })));
+        h('button', { class: 'btn-primary pulse', text: '✓ C’EST FUMÉ →', onclick: once(() => this.quizNext()) })));
     this.sound.reward();
     this.fx.flash('rgba(126,224,122,.35)');
     this.fx.burstFrom(area, { colors: ['#7ee07a', '#d4ff5e', '#fff'], count: 90, power: 11 });
@@ -1741,25 +2197,6 @@ class SmokeOrDrinkApp {
     g.turn += 1;
     if (g.turn >= g.players.length) { g.turn = 0; g.round += 1; }
     this.quizTurn();
-  }
-
-  openQuizRoulette(player) {
-    $('#roulette-quit').hidden = true;
-    $('#roulette-label').textContent = '// taff débloquée pour';
-    $('#roulette-round').textContent = '';
-    this.setTurnName($('#roulette-player'), player);
-    this.roulette.setup({
-      player,
-      mode: 'fumette',
-      doneLabel: '← RETOUR AU QUIZ',
-      onDone: (res) => {
-        if (res && res.secs) player.time += res.secs;
-        $('#roulette-quit').hidden = false;
-        this.quizNext(); // prépare le tour suivant pendant la transition
-        if (this.game && !this.game.over) this.router.back();
-      },
-    });
-    this.router.go('roulette');
   }
 
   /* ---------------------------------------------------------------------- */

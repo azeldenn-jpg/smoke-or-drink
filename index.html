@@ -56,7 +56,7 @@
           <span class="mc-glow" aria-hidden="true"></span>
           <span class="mc-icon">🌿</span>
           <span class="mc-title">FUMETTE</span>
-          <span class="mc-desc">Réponds bien, grimpe au score et débloque des taffs à la roulette.</span>
+          <span class="mc-desc">Réponds bien, grimpe au score et débloque des taffs. Ou lance une séance calée sur ton film.</span>
           <span class="mc-arrow" aria-hidden="true">→</span>
         </button>
         <button class="mode-card stagger" data-mode="alcool" style="--i:1">
@@ -76,7 +76,7 @@
         </button>
       </div>
 
-      <p class="home-foot pixel dim">v3.1 · hors-ligne ready</p>
+      <p class="home-foot pixel dim">v3.2 · hors-ligne ready</p>
     </section>
 
     <!-- ================= CHOIX DU JEU ================= -->
@@ -117,7 +117,26 @@
       </div>
 
       <div class="setup-section" data-for="roulette-fumette">
-        <h3 class="section-label">Durée des taffs</h3>
+        <h3 class="section-label">Type de roulette</h3>
+        <div class="pill-grid cols-2" id="rtype-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="seance">
+        <h3 class="section-label">Durée du film / de la vidéo</h3>
+        <div class="pill-grid" id="film-grid"></div>
+        <label class="film-custom">
+          <span>ou durée exacte</span>
+          <input type="text" id="film-input" inputmode="numeric" placeholder="1:52" maxlength="5" autocomplete="off">
+        </label>
+      </div>
+
+      <div class="setup-section" data-for="seance">
+        <h3 class="section-label">Le joint</h3>
+        <div class="pill-grid cols-2" id="joint-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="roulette-fumette">
+        <h3 class="section-label">Rythme · attente entre deux taffs</h3>
         <div class="pill-grid" id="duration-grid"></div>
       </div>
 
@@ -265,6 +284,61 @@
         <button class="btn-primary" id="roulette-main">TOURNER</button>
       </div>
       <ul class="legend" id="roulette-legend"></ul>
+    </section>
+
+    <!-- ================= SÉANCE ================= -->
+    <section class="screen" data-screen="seance">
+      <header class="game-top">
+        <span class="game-tag pixel">🌿 SÉANCE</span>
+        <span class="round-tag pixel" id="se-count"></span>
+        <button class="quit-btn" data-action="quit">quitter ✕</button>
+      </header>
+
+      <div class="turn">
+        <p class="turn-label pixel" id="se-label">// prochaine taff</p>
+        <p class="turn-name se-names" id="se-names"></p>
+      </div>
+
+      <button class="se-dial" id="se-dial" aria-label="Cadran de la séance">
+        <svg class="wheel-ring" viewBox="0 0 220 220" aria-hidden="true">
+          <circle class="ring-track" cx="110" cy="110" r="104"/>
+          <circle class="ring-progress" id="se-ring" cx="110" cy="110" r="104"/>
+        </svg>
+        <span class="se-ticks" aria-hidden="true"></span>
+        <span class="se-core">
+          <span class="se-badge" id="se-badge"></span>
+          <span class="se-time" id="se-time">--:--</span>
+          <span class="se-unit pixel" id="se-unit"></span>
+        </span>
+      </button>
+
+      <p class="se-next" id="se-next"></p>
+
+      <div class="se-film">
+        <div class="se-film-row pixel"><span>🎬 <b id="se-film-now">0:00:00</b></span><span id="se-film-total"></span></div>
+        <div class="se-bar"><i id="se-bar"></i></div>
+      </div>
+
+      <div class="actions" id="se-actions-ready">
+        <button class="btn-ghost" id="se-reroll">🎲 retirer</button>
+        <button class="btn-primary pulse" id="se-start">▶ LANCER AVEC LE FILM</button>
+      </div>
+      <div class="actions" id="se-actions-run" hidden>
+        <button class="btn-ghost" id="se-resync">⏱ recaler</button>
+        <button class="btn-primary" id="se-pause">⏸ PAUSE</button>
+      </div>
+      <div class="se-resync" id="se-resync-box" hidden>
+        <label>Où en est le film ? <input type="text" id="se-resync-input" inputmode="numeric" placeholder="0:42:10" maxlength="8" autocomplete="off"></label>
+        <div class="actions">
+          <button class="btn-ghost" id="se-resync-cancel">annuler</button>
+          <button class="btn-primary" id="se-resync-ok">recaler</button>
+        </div>
+      </div>
+
+      <section class="scoreboard">
+        <h3 class="section-label">Taffs prévues · fumées</h3>
+        <ol class="score-list" id="se-scores"></ol>
+      </section>
     </section>
 
     <!-- ================= FIN ================= -->
