@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "Smoke or Drink",
+  "short_name": "Smoke or Drink",
+  "description": "Jeu de soirée : quiz, Je n'ai jamais, Qui pourrait, la Bombe et la Roulette.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0612",
+  "theme_color": "#0a0612",
+  "lang": "fr-FR",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

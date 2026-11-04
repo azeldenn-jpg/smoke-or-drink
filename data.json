@@ -1,0 +1,3914 @@
+[
+ {
+  "q": "Quel roi français était surnommé le 'Roi Soleil' ?",
+  "choices": [
+   "Louis XIV",
+   "Louis XVI",
+   "Henri IV",
+   "François Ier"
+  ],
+  "answer": 0,
+  "cat": "histoire",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel monument est associé à la Révolution française du 14 juillet 1789 ?",
+  "choices": [
+   "Le Louvre",
+   "La Bastille",
+   "Versailles",
+   "Notre-Dame"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel pays a gagné la Seconde Guerre mondiale du côté allié, parmi ces 4 ?",
+  "choices": [
+   "Allemagne",
+   "Italie",
+   "États-Unis",
+   "Japon"
+  ],
+  "answer": 2,
+  "cat": "histoire",
+  "diff": "easy"
+ },
+ {
+  "q": "Qui était le premier homme à marcher sur la Lune ?",
+  "choices": [
+   "Buzz Aldrin",
+   "Neil Armstrong",
+   "Youri Gagarine",
+   "Michael Collins"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel mur séparait l'Allemagne en deux jusqu'en 1989 ?",
+  "choices": [
+   "Mur de Berlin",
+   "Mur d'Hadrien",
+   "Grande Muraille",
+   "Mur des Lamentations"
+  ],
+  "answer": 0,
+  "cat": "histoire",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle reine d'Angleterre est restée sur le trône plus de 70 ans ?",
+  "choices": [
+   "Victoria",
+   "Élisabeth II",
+   "Mary",
+   "Anne"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel empereur français a perdu à Waterloo ?",
+  "choices": [
+   "Napoléon",
+   "Charlemagne",
+   "Louis XIV",
+   "De Gaulle"
+  ],
+  "answer": 0,
+  "cat": "histoire",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle civilisation a construit les pyramides ?",
+  "choices": [
+   "Romaine",
+   "Grecque",
+   "Égyptienne",
+   "Aztèque"
+  ],
+  "answer": 2,
+  "cat": "histoire",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle est la capitale de la France ?",
+  "choices": [
+   "Lyon",
+   "Paris",
+   "Marseille",
+   "Bordeaux"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle est la capitale de l'Italie ?",
+  "choices": [
+   "Milan",
+   "Naples",
+   "Rome",
+   "Florence"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle est la capitale de l'Espagne ?",
+  "choices": [
+   "Barcelone",
+   "Madrid",
+   "Séville",
+   "Valence"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel océan borde la côte ouest des États-Unis ?",
+  "choices": [
+   "Atlantique",
+   "Pacifique",
+   "Indien",
+   "Arctique"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Sur quel continent se trouve l'Égypte ?",
+  "choices": [
+   "Asie",
+   "Afrique",
+   "Europe",
+   "Océanie"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel pays a la forme d'un hexagone ?",
+  "choices": [
+   "Allemagne",
+   "Espagne",
+   "France",
+   "Belgique"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel est le plus haut sommet du monde ?",
+  "choices": [
+   "Mont Blanc",
+   "Kilimandjaro",
+   "Everest",
+   "K2"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de continents compte-t-on selon le modèle anglo-saxon ?",
+  "choices": [
+   "5",
+   "6",
+   "7",
+   "8"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Dans quelle ville se trouve la Statue de la Liberté ?",
+  "choices": [
+   "Los Angeles",
+   "Chicago",
+   "New York",
+   "Boston"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel pays est traversé par le fleuve Amazone ?",
+  "choices": [
+   "Mexique",
+   "Brésil",
+   "Argentine",
+   "Espagne"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "Tokyo est la capitale de quel pays ?",
+  "choices": [
+   "Chine",
+   "Japon",
+   "Corée",
+   "Vietnam"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "easy"
+ },
+ {
+  "q": "À quelle température l'eau bout-elle (au niveau de la mer) ?",
+  "choices": [
+   "50°C",
+   "100°C",
+   "150°C",
+   "200°C"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel est l'astre autour duquel tourne la Terre ?",
+  "choices": [
+   "La Lune",
+   "Le Soleil",
+   "Mars",
+   "Jupiter"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de pattes a une araignée ?",
+  "choices": [
+   "6",
+   "8",
+   "10",
+   "4"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel animal est le roi de la jungle ?",
+  "choices": [
+   "Tigre",
+   "Lion",
+   "Éléphant",
+   "Loup"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel organe permet de respirer ?",
+  "choices": [
+   "Cœur",
+   "Foie",
+   "Poumons",
+   "Estomac"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de jours dans une année (non bissextile) ?",
+  "choices": [
+   "360",
+   "364",
+   "365",
+   "366"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle est la formule chimique de l'eau ?",
+  "choices": [
+   "O2",
+   "H2O",
+   "CO2",
+   "H2"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Qui a découvert la pénicilline ?",
+  "choices": [
+   "Pasteur",
+   "Fleming",
+   "Curie",
+   "Einstein"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle est la planète la plus proche du Soleil ?",
+  "choices": [
+   "Vénus",
+   "Terre",
+   "Mercure",
+   "Mars"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel animal pond les plus gros œufs au monde ?",
+  "choices": [
+   "Aigle",
+   "Autruche",
+   "Pingouin",
+   "Crocodile"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel sport joue Lionel Messi ?",
+  "choices": [
+   "Basket",
+   "Foot",
+   "Tennis",
+   "Rugby"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de points vaut un panier à 3 points au basket ?",
+  "choices": [
+   "1",
+   "2",
+   "3",
+   "5"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel sport pratique Rafael Nadal ?",
+  "choices": [
+   "Foot",
+   "Tennis",
+   "Golf",
+   "Boxe"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de joueurs dans une équipe de hand sur le terrain ?",
+  "choices": [
+   "6",
+   "7",
+   "8",
+   "11"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel pays a gagné la Coupe du Monde de foot 2018 ?",
+  "choices": [
+   "Allemagne",
+   "Brésil",
+   "France",
+   "Croatie"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel club français est surnommé le PSG ?",
+  "choices": [
+   "Olympique de Marseille",
+   "Paris Saint-Germain",
+   "Lyon",
+   "Monaco"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle distance fait un marathon (environ) ?",
+  "choices": [
+   "10 km",
+   "21 km",
+   "42 km",
+   "100 km"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel sport se joue avec un volant et une raquette ?",
+  "choices": [
+   "Tennis",
+   "Squash",
+   "Badminton",
+   "Ping-pong"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel personnage de Disney perd sa pantoufle de verre ?",
+  "choices": [
+   "Blanche-Neige",
+   "Cendrillon",
+   "La Belle",
+   "Aurore"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel est le nom du jouet cowboy dans Toy Story ?",
+  "choices": [
+   "Buzz",
+   "Woody",
+   "Jessie",
+   "Rex"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Dans Le Roi Lion, comment s'appelle le lionceau héros ?",
+  "choices": [
+   "Mufasa",
+   "Simba",
+   "Scar",
+   "Timon"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Dans Harry Potter, quel est l'animal de compagnie d'Harry ?",
+  "choices": [
+   "Un chat",
+   "Un crapaud",
+   "Une chouette",
+   "Un rat"
+  ],
+  "answer": 2,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Qui sauve la planète dans la plupart des films Marvel ?",
+  "choices": [
+   "Les vilains",
+   "Les Avengers",
+   "Les X-Men",
+   "Les Power Rangers"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel film parle d'un poisson clown perdu ?",
+  "choices": [
+   "Le Monde de Nemo",
+   "Les Indestructibles",
+   "Wall-E",
+   "Bambi"
+  ],
+  "answer": 0,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel acteur joue Jack dans Titanic ?",
+  "choices": [
+   "Brad Pitt",
+   "Leonardo DiCaprio",
+   "Tom Cruise",
+   "Matt Damon"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Comment s'appelle la reine des neiges ?",
+  "choices": [
+   "Elsa",
+   "Anna",
+   "Belle",
+   "Ariel"
+  ],
+  "answer": 0,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Dans Shrek, quel animal est l'âne ?",
+  "choices": [
+   "Un cheval",
+   "Un âne",
+   "Un mulet",
+   "Un chat"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel est le titre de la trilogie avec Frodon et l'anneau ?",
+  "choices": [
+   "Star Wars",
+   "Le Seigneur des Anneaux",
+   "Harry Potter",
+   "Narnia"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel film parle de dinosaures dans un parc ?",
+  "choices": [
+   "King Kong",
+   "Jurassic Park",
+   "Godzilla",
+   "Avatar"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Qui est le célèbre espion 007 ?",
+  "choices": [
+   "Jason Bourne",
+   "James Bond",
+   "Ethan Hunt",
+   "Jack Bauer"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Dans Dragon Ball, quel est le héros ?",
+  "choices": [
+   "Vegeta",
+   "Goku",
+   "Piccolo",
+   "Krillin"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel est le surnom de Beyoncé ?",
+  "choices": [
+   "Queen B",
+   "Lady B",
+   "Miss B",
+   "Princess"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel groupe a chanté 'Let It Be' ?",
+  "choices": [
+   "Rolling Stones",
+   "The Beatles",
+   "Pink Floyd",
+   "Queen"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel chanteur français a popularisé 'Je l'aime à mourir' ?",
+  "choices": [
+   "Goldman",
+   "Cabrel",
+   "Bruel",
+   "Aznavour"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de cordes a une guitare classique ?",
+  "choices": [
+   "4",
+   "5",
+   "6",
+   "7"
+  ],
+  "answer": 2,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel instrument joue principalement Mozart ?",
+  "choices": [
+   "Violon",
+   "Piano",
+   "Guitare",
+   "Trompette"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle chanteuse a sorti l'album '21' ?",
+  "choices": [
+   "Adele",
+   "Rihanna",
+   "Beyoncé",
+   "Lady Gaga"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel rappeur français chante 'Bande Organisée' ?",
+  "choices": [
+   "JuL et le 13 Block",
+   "Booba",
+   "Maitre Gims",
+   "Soprano"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel chanteur a popularisé 'Thriller' ?",
+  "choices": [
+   "Prince",
+   "Michael Jackson",
+   "Lionel Richie",
+   "Stevie Wonder"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel groupe est associé à 'We Will Rock You' ?",
+  "choices": [
+   "Queen",
+   "AC/DC",
+   "KISS",
+   "Aerosmith"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle chanson est l'hymne national français ?",
+  "choices": [
+   "La Marseillaise",
+   "Le Chant des Partisans",
+   "Le Temps des Cerises",
+   "Frère Jacques"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle chanteuse est connue pour 'Bad Romance' et 'Poker Face' ?",
+  "choices": [
+   "Katy Perry",
+   "Lady Gaga",
+   "Rihanna",
+   "Britney Spears"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "easy"
+ },
+ {
+  "q": "Comment s'appelle la princesse à sauver dans Mario ?",
+  "choices": [
+   "Daisy",
+   "Peach",
+   "Rosalina",
+   "Zelda"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel Pokémon est jaune et lance des éclairs ?",
+  "choices": [
+   "Bulbizarre",
+   "Pikachu",
+   "Salamèche",
+   "Carapuce"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel est l'ennemi principal de Mario ?",
+  "choices": [
+   "Wario",
+   "Bowser",
+   "Luigi",
+   "Donkey Kong"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "easy"
+ },
+ {
+  "q": "Sur quelle console se joue 'Super Smash Bros' ?",
+  "choices": [
+   "PlayStation",
+   "Xbox",
+   "Nintendo",
+   "PC uniquement"
+  ],
+  "answer": 2,
+  "cat": "jeuxvideo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel jeu de cubes permet de tout construire ?",
+  "choices": [
+   "Roblox",
+   "Minecraft",
+   "Terraria",
+   "Lego"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel jeu de course met en scène Mario et ses amis ?",
+  "choices": [
+   "Need for Speed",
+   "Mario Kart",
+   "Forza",
+   "Gran Turismo"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "easy"
+ },
+ {
+  "q": "De quelle couleur est la tunique de Link ?",
+  "choices": [
+   "Rouge",
+   "Bleue",
+   "Verte",
+   "Noire"
+  ],
+  "answer": 2,
+  "cat": "jeuxvideo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel jeu se passe à Los Santos ?",
+  "choices": [
+   "GTA V",
+   "Red Dead",
+   "Saints Row",
+   "Watch Dogs"
+  ],
+  "answer": 0,
+  "cat": "jeuxvideo",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel site permet de regarder des vidéos avec un logo rouge et blanc ?",
+  "choices": [
+   "Vimeo",
+   "YouTube",
+   "Dailymotion",
+   "Twitch"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "easy"
+ },
+ {
+  "q": "Sur quelle appli partage-t-on principalement des photos avec des filtres ?",
+  "choices": [
+   "WhatsApp",
+   "Instagram",
+   "LinkedIn",
+   "Telegram"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "easy"
+ },
+ {
+  "q": "Que veut dire 'OMG' en SMS ?",
+  "choices": [
+   "Oh My God",
+   "Open My Game",
+   "Out My Group",
+   "On Mange Gros"
+  ],
+  "answer": 0,
+  "cat": "internet",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel logo a une pomme croquée ?",
+  "choices": [
+   "Microsoft",
+   "Google",
+   "Apple",
+   "Samsung"
+  ],
+  "answer": 2,
+  "cat": "internet",
+  "diff": "easy"
+ },
+ {
+  "q": "Que veut dire 'WTF' ?",
+  "choices": [
+   "What The Fork",
+   "What The Fun",
+   "What The F***",
+   "Where To Find"
+  ],
+  "answer": 2,
+  "cat": "internet",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel moteur de recherche est le plus utilisé au monde ?",
+  "choices": [
+   "Bing",
+   "Yahoo",
+   "Google",
+   "DuckDuckGo"
+  ],
+  "answer": 2,
+  "cat": "internet",
+  "diff": "easy"
+ },
+ {
+  "q": "Sur quelle plateforme tweet-on (avant 2023) ?",
+  "choices": [
+   "Facebook",
+   "Twitter",
+   "TikTok",
+   "YouTube"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "easy"
+ },
+ {
+  "q": "Que veut dire 'IRL' ?",
+  "choices": [
+   "I Really Love",
+   "In Real Life",
+   "I'm Right Lol",
+   "Internet Real Live"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "easy"
+ },
+ {
+  "q": "De quel pays vient le sushi ?",
+  "choices": [
+   "Chine",
+   "Japon",
+   "Corée",
+   "Thaïlande"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "De quelle matière première vient le pain ?",
+  "choices": [
+   "Riz",
+   "Blé",
+   "Maïs",
+   "Pomme de terre"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel fruit est jaune et que les singes adorent ?",
+  "choices": [
+   "Pomme",
+   "Banane",
+   "Orange",
+   "Citron"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle boisson est faite à partir de raisins fermentés ?",
+  "choices": [
+   "Bière",
+   "Cidre",
+   "Vin",
+   "Whisky"
+  ],
+  "answer": 2,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle céréale est principalement utilisée pour faire la bière ?",
+  "choices": [
+   "Riz",
+   "Blé",
+   "Orge",
+   "Maïs"
+  ],
+  "answer": 2,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "De quel pays vient la paëlla ?",
+  "choices": [
+   "Italie",
+   "Espagne",
+   "Portugal",
+   "Mexique"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle viande est dans un Big Mac ?",
+  "choices": [
+   "Poulet",
+   "Bœuf",
+   "Porc",
+   "Poisson"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de gousses dans une 'tête' d'ail (en moyenne) ?",
+  "choices": [
+   "2-4",
+   "8-12",
+   "20-25",
+   "50+"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel pays est célèbre pour la tequila ?",
+  "choices": [
+   "Espagne",
+   "Cuba",
+   "Mexique",
+   "Colombie"
+  ],
+  "answer": 2,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "De quoi est fait le vin rosé ?",
+  "choices": [
+   "Mélange rouge + blanc",
+   "Raisins noirs avec peu de macération",
+   "Raisins roses",
+   "Cerises"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "easy"
+ },
+ {
+  "q": "Qui a écrit Le Petit Prince ?",
+  "choices": [
+   "Saint-Exupéry",
+   "Hugo",
+   "Camus",
+   "Voltaire"
+  ],
+  "answer": 0,
+  "cat": "litterature",
+  "diff": "easy"
+ },
+ {
+  "q": "Dans Cendrillon, qu'est-ce que la fée transforme en carrosse ?",
+  "choices": [
+   "Une pomme",
+   "Une citrouille",
+   "Une souris",
+   "Une botte"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "easy"
+ },
+ {
+  "q": "Qui est l'auteur de Roméo et Juliette ?",
+  "choices": [
+   "Molière",
+   "Shakespeare",
+   "Racine",
+   "Dante"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de romans Harry Potter principaux existent ?",
+  "choices": [
+   "5",
+   "6",
+   "7",
+   "8"
+  ],
+  "answer": 2,
+  "cat": "litterature",
+  "diff": "easy"
+ },
+ {
+  "q": "Qui a écrit Les Trois Mousquetaires ?",
+  "choices": [
+   "Hugo",
+   "Dumas",
+   "Verne",
+   "Balzac"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "easy"
+ },
+ {
+  "q": "Dans quel pays vit l'auteure de Harry Potter ?",
+  "choices": [
+   "États-Unis",
+   "Royaume-Uni",
+   "Australie",
+   "Canada"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "easy"
+ },
+ {
+  "q": "De quelle nationalité était Picasso ?",
+  "choices": [
+   "Italien",
+   "Espagnol",
+   "Français",
+   "Portugais"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle célèbre tour est en fer à Paris ?",
+  "choices": [
+   "Tour de Pise",
+   "Tour Eiffel",
+   "Big Ben",
+   "Tour de Londres"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle couleur obtient-on en mélangeant bleu et jaune ?",
+  "choices": [
+   "Violet",
+   "Vert",
+   "Orange",
+   "Marron"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelles sont les 3 couleurs primaires (peinture) ?",
+  "choices": [
+   "RVB",
+   "Rouge/Jaune/Bleu",
+   "Noir/Blanc/Gris",
+   "Vert/Orange/Violet"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "easy"
+ },
+ {
+  "q": "Combien de couleurs a un arc-en-ciel ?",
+  "choices": [
+   "5",
+   "6",
+   "7",
+   "8"
+  ],
+  "answer": 2,
+  "cat": "art",
+  "diff": "easy"
+ },
+ {
+  "q": "Qui est le PDG de Tesla ?",
+  "choices": [
+   "Bezos",
+   "Musk",
+   "Zuckerberg",
+   "Cook"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel virus a causé une pandémie mondiale en 2020 ?",
+  "choices": [
+   "Ebola",
+   "Covid-19",
+   "H1N1",
+   "SARS"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "easy"
+ },
+ {
+  "q": "Quel pays a quitté l'UE en 2020 ?",
+  "choices": [
+   "France",
+   "Royaume-Uni",
+   "Italie",
+   "Espagne"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "easy"
+ },
+ {
+  "q": "Sur quel réseau social fait-on des 'Reels' ?",
+  "choices": [
+   "LinkedIn",
+   "Instagram",
+   "Pinterest",
+   "Reddit"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "easy"
+ },
+ {
+  "q": "Quelle entreprise vend les iPhone ?",
+  "choices": [
+   "Samsung",
+   "Apple",
+   "Google",
+   "Huawei"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "easy"
+ },
+ {
+  "q": "En quelle année est tombé le mur de Berlin ?",
+  "choices": [
+   "1987",
+   "1989",
+   "1991",
+   "1993"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a peint le plafond de la chapelle Sixtine ?",
+  "choices": [
+   "Léonard de Vinci",
+   "Raphaël",
+   "Michel-Ange",
+   "Botticelli"
+  ],
+  "answer": 2,
+  "cat": "histoire",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle bataille marque la fin de Napoléon en 1815 ?",
+  "choices": [
+   "Austerlitz",
+   "Waterloo",
+   "Iéna",
+   "Trafalgar"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui était le premier président de la Vème République ?",
+  "choices": [
+   "De Gaulle",
+   "Pompidou",
+   "Mitterrand",
+   "Coty"
+  ],
+  "answer": 0,
+  "cat": "histoire",
+  "diff": "medium"
+ },
+ {
+  "q": "En quelle année a eu lieu la Révolution française ?",
+  "choices": [
+   "1769",
+   "1789",
+   "1799",
+   "1815"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle civilisation a construit Machu Picchu ?",
+  "choices": [
+   "Aztèques",
+   "Mayas",
+   "Incas",
+   "Olmèques"
+  ],
+  "answer": 2,
+  "cat": "histoire",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a découvert l'Amérique en 1492 ?",
+  "choices": [
+   "Vasco de Gama",
+   "Magellan",
+   "Christophe Colomb",
+   "Cortès"
+  ],
+  "answer": 2,
+  "cat": "histoire",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel président américain a été assassiné à Dallas en 1963 ?",
+  "choices": [
+   "Lincoln",
+   "Kennedy",
+   "Reagan",
+   "Roosevelt"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle est la capitale de l'Australie ?",
+  "choices": [
+   "Sydney",
+   "Melbourne",
+   "Canberra",
+   "Perth"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est le plus long fleuve du monde ?",
+  "choices": [
+   "Amazone",
+   "Nil",
+   "Yangtsé",
+   "Mississippi"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien y a-t-il de pays dans l'Union Européenne en 2024 ?",
+  "choices": [
+   "25",
+   "27",
+   "28",
+   "30"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Le Mont Everest se trouve dans quelle chaîne de montagnes ?",
+  "choices": [
+   "Andes",
+   "Alpes",
+   "Himalaya",
+   "Rocheuses"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel pays a la forme d'une botte ?",
+  "choices": [
+   "Espagne",
+   "Italie",
+   "Grèce",
+   "Portugal"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle est la capitale du Canada ?",
+  "choices": [
+   "Toronto",
+   "Vancouver",
+   "Ottawa",
+   "Montréal"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans quel océan se trouve Madagascar ?",
+  "choices": [
+   "Atlantique",
+   "Pacifique",
+   "Indien",
+   "Arctique"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel désert est le plus grand du monde ?",
+  "choices": [
+   "Sahara",
+   "Gobi",
+   "Antarctique",
+   "Arabique"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Le Vésuve se trouve près de quelle ville ?",
+  "choices": [
+   "Rome",
+   "Naples",
+   "Florence",
+   "Venise"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est le symbole chimique de l'or ?",
+  "choices": [
+   "Or",
+   "Au",
+   "Ag",
+   "Go"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien de planètes dans le système solaire ?",
+  "choices": [
+   "7",
+   "8",
+   "9",
+   "10"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel organe produit l'insuline ?",
+  "choices": [
+   "Foie",
+   "Pancréas",
+   "Rein",
+   "Estomac"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle est la vitesse de la lumière (approximative) ?",
+  "choices": [
+   "300 000 km/s",
+   "150 000 km/s",
+   "1 000 000 km/s",
+   "30 000 km/s"
+  ],
+  "answer": 0,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a formulé la théorie de la relativité ?",
+  "choices": [
+   "Newton",
+   "Einstein",
+   "Hawking",
+   "Bohr"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel gaz les plantes absorbent-elles ?",
+  "choices": [
+   "Oxygène",
+   "Azote",
+   "CO2",
+   "Méthane"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien d'os a un humain adulte (environ) ?",
+  "choices": [
+   "106",
+   "186",
+   "206",
+   "306"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est l'élément le plus abondant dans l'univers ?",
+  "choices": [
+   "Oxygène",
+   "Hélium",
+   "Hydrogène",
+   "Carbone"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle planète est surnommée la planète rouge ?",
+  "choices": [
+   "Vénus",
+   "Mars",
+   "Jupiter",
+   "Mercure"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien de joueurs dans une équipe de foot sur le terrain ?",
+  "choices": [
+   "10",
+   "11",
+   "12",
+   "9"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans quel sport excelle Roger Federer ?",
+  "choices": [
+   "Golf",
+   "Tennis",
+   "Foot",
+   "Basket"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien de fois la France a-t-elle gagné la Coupe du Monde de foot ?",
+  "choices": [
+   "1",
+   "2",
+   "3",
+   "4"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel pays a inventé le rugby ?",
+  "choices": [
+   "France",
+   "Angleterre",
+   "Nouvelle-Zélande",
+   "Écosse"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel boxeur s'appelait 'The Greatest' ?",
+  "choices": [
+   "Mike Tyson",
+   "Mohamed Ali",
+   "Floyd Mayweather",
+   "George Foreman"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien de joueurs dans une équipe de basket sur le terrain ?",
+  "choices": [
+   "5",
+   "6",
+   "7",
+   "4"
+  ],
+  "answer": 0,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel sport pratique Tony Parker ?",
+  "choices": [
+   "Foot",
+   "Tennis",
+   "Basket",
+   "Hand"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Le Tour de France a lieu chaque année en quel mois principalement ?",
+  "choices": [
+   "Mai",
+   "Juin",
+   "Juillet",
+   "Août"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien de tours fait un 1500m sur une piste d'athlé classique ?",
+  "choices": [
+   "3",
+   "3.75",
+   "4",
+   "5"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a réalisé 'Pulp Fiction' ?",
+  "choices": [
+   "Scorsese",
+   "Tarantino",
+   "Coppola",
+   "Spielberg"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est le nom du sorcier dans Harry Potter qui dirige Poudlard ?",
+  "choices": [
+   "Rogue",
+   "Dumbledore",
+   "Voldemort",
+   "Hagrid"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans Breaking Bad, quel est le surnom de Walter White ?",
+  "choices": [
+   "Mr. White",
+   "Heisenberg",
+   "Mr. Blue",
+   "The Cook"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien d'épisodes compte la saga Star Wars (films principaux) ?",
+  "choices": [
+   "6",
+   "8",
+   "9",
+   "12"
+  ],
+  "answer": 2,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui joue Iron Man dans le MCU ?",
+  "choices": [
+   "Chris Evans",
+   "Robert Downey Jr.",
+   "Mark Ruffalo",
+   "Chris Hemsworth"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel film a remporté l'Oscar du meilleur film en 2020 ?",
+  "choices": [
+   "1917",
+   "Joker",
+   "Parasite",
+   "Once Upon a Time in Hollywood"
+  ],
+  "answer": 2,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans Game of Thrones, quelle est la devise des Stark ?",
+  "choices": [
+   "Le feu et le sang",
+   "L'hiver vient",
+   "Entendez-moi rugir",
+   "La famille avant tout"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui réalise 'Inception' et 'Interstellar' ?",
+  "choices": [
+   "Nolan",
+   "Villeneuve",
+   "Fincher",
+   "Cameron"
+  ],
+  "answer": 0,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans Friends, quel est le métier de Ross ?",
+  "choices": [
+   "Chef",
+   "Paléontologue",
+   "Acteur",
+   "Avocat"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel acteur français joue dans 'Intouchables' avec Omar Sy ?",
+  "choices": [
+   "Jean Dujardin",
+   "François Cluzet",
+   "Daniel Auteuil",
+   "Vincent Cassel"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel anime suit les aventures de Monkey D. Luffy ?",
+  "choices": [
+   "Naruto",
+   "One Piece",
+   "Bleach",
+   "Dragon Ball"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans 'Le Seigneur des Anneaux', qui détruit l'Anneau ?",
+  "choices": [
+   "Aragorn",
+   "Gandalf",
+   "Frodon",
+   "Gollum"
+  ],
+  "answer": 3,
+  "cat": "cinema",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui chante 'Bohemian Rhapsody' ?",
+  "choices": [
+   "Led Zeppelin",
+   "Queen",
+   "The Beatles",
+   "Pink Floyd"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est le vrai nom de Stromae ?",
+  "choices": [
+   "Paul Van Haver",
+   "Pierre Dupont",
+   "Luc Mertens",
+   "Jean Berger"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel groupe a sorti l'album 'The Dark Side of the Moon' ?",
+  "choices": [
+   "Led Zeppelin",
+   "Pink Floyd",
+   "Genesis",
+   "The Who"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui est surnommé 'The King of Pop' ?",
+  "choices": [
+   "Elvis Presley",
+   "Michael Jackson",
+   "Prince",
+   "David Bowie"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel rappeur a fondé le label Roc-A-Fella ?",
+  "choices": [
+   "Dr. Dre",
+   "Jay-Z",
+   "Eminem",
+   "Snoop Dogg"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "De quel pays vient le groupe ABBA ?",
+  "choices": [
+   "Norvège",
+   "Danemark",
+   "Suède",
+   "Finlande"
+  ],
+  "answer": 2,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a composé les '4 Saisons' ?",
+  "choices": [
+   "Mozart",
+   "Vivaldi",
+   "Bach",
+   "Beethoven"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle vidéo est aujourd'hui la plus vue de l'histoire de YouTube ?",
+  "choices": [
+   "Despacito",
+   "Gangnam Style",
+   "Baby Shark",
+   "See You Again"
+  ],
+  "answer": 2,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel groupe a sorti 'Hotel California' ?",
+  "choices": [
+   "Eagles",
+   "Fleetwood Mac",
+   "The Doors",
+   "Lynyrd Skynyrd"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel rappeur français a sorti l'album 'JVLIVS' ?",
+  "choices": [
+   "Booba",
+   "SCH",
+   "Damso",
+   "Ninho"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel était le vrai prénom de Johnny Hallyday ?",
+  "choices": [
+   "Jean",
+   "Jean-Philippe",
+   "Jean-Claude",
+   "Johnny"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui chante 'Shape of You' ?",
+  "choices": [
+   "Justin Bieber",
+   "Ed Sheeran",
+   "Bruno Mars",
+   "The Weeknd"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est l'instrument principal de Jimi Hendrix ?",
+  "choices": [
+   "Batterie",
+   "Basse",
+   "Guitare",
+   "Piano"
+  ],
+  "answer": 2,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel groupe a fait 'Smells Like Teen Spirit' ?",
+  "choices": [
+   "Pearl Jam",
+   "Nirvana",
+   "Soundgarden",
+   "Alice in Chains"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est le plombier moustachu de Nintendo ?",
+  "choices": [
+   "Luigi",
+   "Mario",
+   "Wario",
+   "Toad"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans quel jeu trouve-t-on Master Chief ?",
+  "choices": [
+   "Doom",
+   "Halo",
+   "Call of Duty",
+   "Destiny"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel jeu a popularisé le 'battle royale' avec 100 joueurs et des constructions ?",
+  "choices": [
+   "PUBG",
+   "Fortnite",
+   "Apex Legends",
+   "Warzone"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui est le héros de The Legend of Zelda ?",
+  "choices": [
+   "Zelda",
+   "Link",
+   "Ganon",
+   "Sheik"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel studio a créé GTA ?",
+  "choices": [
+   "Ubisoft",
+   "Rockstar",
+   "EA",
+   "Activision"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans Pokémon, quel est le n°1 du Pokédex ?",
+  "choices": [
+   "Pikachu",
+   "Bulbizarre",
+   "Salamèche",
+   "Carapuce"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est le pseudo du protagoniste dans Cyberpunk 2077 ?",
+  "choices": [
+   "Jack",
+   "V",
+   "Johnny",
+   "Smasher"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel jeu de Bethesda se passe à Skyrim ?",
+  "choices": [
+   "Fallout",
+   "The Elder Scrolls V",
+   "Oblivion",
+   "Morrowind"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien y a-t-il de Pokémon dans la première génération ?",
+  "choices": [
+   "100",
+   "151",
+   "251",
+   "386"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel jeu indé a popularisé le genre 'roguelike platformer' avec un personnage qui meurt souvent ?",
+  "choices": [
+   "Hollow Knight",
+   "Celeste",
+   "Dead Cells",
+   "Hades"
+  ],
+  "answer": 2,
+  "cat": "jeuxvideo",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a fondé Facebook ?",
+  "choices": [
+   "Bill Gates",
+   "Mark Zuckerberg",
+   "Steve Jobs",
+   "Elon Musk"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "medium"
+ },
+ {
+  "q": "Que veut dire 'LOL' ?",
+  "choices": [
+   "Lots of Love",
+   "Laughing Out Loud",
+   "League of Legends",
+   "Lots of Laughs"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel meme représente un homme qui se retourne sur une autre femme ?",
+  "choices": [
+   "Drake meme",
+   "Distracted Boyfriend",
+   "Pepe",
+   "Doge"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel logo représente un oiseau bleu (avant 2023) ?",
+  "choices": [
+   "Facebook",
+   "Twitter",
+   "Snapchat",
+   "Discord"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a racheté Twitter en 2022 ?",
+  "choices": [
+   "Bezos",
+   "Zuckerberg",
+   "Musk",
+   "Gates"
+  ],
+  "answer": 2,
+  "cat": "internet",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle race de chien est associée au meme 'Doge' ?",
+  "choices": [
+   "Husky",
+   "Shiba Inu",
+   "Akita",
+   "Corgi"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel jeu mobile a popularisé la réalité augmentée en 2016 ?",
+  "choices": [
+   "Ingress",
+   "Pokémon GO",
+   "Harry Potter Wizards",
+   "Jurassic World Alive"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel youtubeur français a la plus grosse chaîne historiquement (gaming) ?",
+  "choices": [
+   "Cyprien",
+   "Squeezie",
+   "Norman",
+   "Michou"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "medium"
+ },
+ {
+  "q": "De quel pays vient la pizza ?",
+  "choices": [
+   "France",
+   "Italie",
+   "Espagne",
+   "Grèce"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel ingrédient principal dans le guacamole ?",
+  "choices": [
+   "Tomate",
+   "Avocat",
+   "Poivron",
+   "Concombre"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel cocktail contient du rhum, du sucre de canne, du citron vert et de la menthe ?",
+  "choices": [
+   "Margarita",
+   "Mojito",
+   "Daïquiri",
+   "Caipirinha"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel fromage français est célèbre pour ses moisissures bleues ?",
+  "choices": [
+   "Camembert",
+   "Roquefort",
+   "Brie",
+   "Comté"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel pays produit le plus de café au monde ?",
+  "choices": [
+   "Colombie",
+   "Vietnam",
+   "Brésil",
+   "Éthiopie"
+  ],
+  "answer": 2,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel alcool est la base d'un Bloody Mary ?",
+  "choices": [
+   "Vodka",
+   "Gin",
+   "Tequila",
+   "Rhum"
+  ],
+  "answer": 0,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est le degré d'alcool moyen d'une bière classique ?",
+  "choices": [
+   "2%",
+   "5%",
+   "10%",
+   "15%"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel cocktail contient tequila, triple sec et citron vert ?",
+  "choices": [
+   "Mojito",
+   "Margarita",
+   "Cosmopolitan",
+   "Long Island"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel ingrédient est essentiel à la carbonara authentique ?",
+  "choices": [
+   "Crème",
+   "Guanciale",
+   "Lardons",
+   "Beurre"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a écrit 'Les Misérables' ?",
+  "choices": [
+   "Zola",
+   "Hugo",
+   "Balzac",
+   "Dumas"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a écrit 'Harry Potter' ?",
+  "choices": [
+   "J.R.R. Tolkien",
+   "J.K. Rowling",
+   "Stephen King",
+   "George R.R. Martin"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel auteur a créé Sherlock Holmes ?",
+  "choices": [
+   "Agatha Christie",
+   "Conan Doyle",
+   "Edgar Allan Poe",
+   "H.G. Wells"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a écrit '1984' ?",
+  "choices": [
+   "Huxley",
+   "Orwell",
+   "Bradbury",
+   "Asimov"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel est le prénom du Petit Prince de Saint-Exupéry ?",
+  "choices": [
+   "Pierre",
+   "Il n'en a pas",
+   "Antoine",
+   "Léo"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a écrit 'Le Comte de Monte-Cristo' ?",
+  "choices": [
+   "Hugo",
+   "Dumas",
+   "Balzac",
+   "Stendhal"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "medium"
+ },
+ {
+  "q": "Combien de tomes dans 'À la recherche du temps perdu' ?",
+  "choices": [
+   "3",
+   "5",
+   "7",
+   "10"
+  ],
+  "answer": 2,
+  "cat": "litterature",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a peint 'La Joconde' ?",
+  "choices": [
+   "Michel-Ange",
+   "Léonard de Vinci",
+   "Raphaël",
+   "Botticelli"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "medium"
+ },
+ {
+  "q": "De quel courant artistique fait partie Monet ?",
+  "choices": [
+   "Cubisme",
+   "Impressionnisme",
+   "Surréalisme",
+   "Romantisme"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a peint 'Guernica' ?",
+  "choices": [
+   "Dalí",
+   "Picasso",
+   "Miró",
+   "Matisse"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "medium"
+ },
+ {
+  "q": "Dans quel musée trouve-t-on la Joconde ?",
+  "choices": [
+   "Prado",
+   "Louvre",
+   "Uffizi",
+   "British Museum"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel artiste s'est coupé une oreille ?",
+  "choices": [
+   "Gauguin",
+   "Van Gogh",
+   "Cézanne",
+   "Renoir"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a sculpté le 'David' à Florence ?",
+  "choices": [
+   "Donatello",
+   "Michel-Ange",
+   "Bernin",
+   "Rodin"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui est devenu président des USA en 2021 ?",
+  "choices": [
+   "Trump",
+   "Biden",
+   "Obama",
+   "Harris"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui a fondé SpaceX ?",
+  "choices": [
+   "Bezos",
+   "Musk",
+   "Branson",
+   "Gates"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle plateforme de streaming a produit 'Stranger Things' ?",
+  "choices": [
+   "HBO",
+   "Disney+",
+   "Netflix",
+   "Prime Video"
+  ],
+  "answer": 2,
+  "cat": "actu",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui est le PDG d'Apple en 2024 ?",
+  "choices": [
+   "Steve Jobs",
+   "Tim Cook",
+   "Sundar Pichai",
+   "Satya Nadella"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel pays a organisé la Coupe du Monde de foot 2022 ?",
+  "choices": [
+   "Russie",
+   "Qatar",
+   "France",
+   "Brésil"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle entreprise a créé ChatGPT ?",
+  "choices": [
+   "Google",
+   "OpenAI",
+   "Meta",
+   "Microsoft"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "medium"
+ },
+ {
+  "q": "Qui est la reine d'Angleterre décédée en 2022 ?",
+  "choices": [
+   "Élisabeth I",
+   "Élisabeth II",
+   "Victoria",
+   "Mary"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "medium"
+ },
+ {
+  "q": "Quel réseau social a été lancé par Meta pour concurrencer Twitter en 2023 ?",
+  "choices": [
+   "Bluesky",
+   "Mastodon",
+   "Threads",
+   "Spill"
+  ],
+  "answer": 2,
+  "cat": "actu",
+  "diff": "medium"
+ },
+ {
+  "q": "Quelle dynastie chinoise a construit la Grande Muraille telle qu'on la connaît principalement aujourd'hui ?",
+  "choices": [
+   "Han",
+   "Tang",
+   "Ming",
+   "Qing"
+  ],
+  "answer": 2,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "En quelle année exacte a été signé le Traité de Versailles ?",
+  "choices": [
+   "1918",
+   "1919",
+   "1920",
+   "1921"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui était le pharaon père de Cléopâtre VII ?",
+  "choices": [
+   "Ptolémée XII",
+   "Ramsès II",
+   "Akhenaton",
+   "Toutankhamon"
+  ],
+  "answer": 0,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel traité met fin à la guerre de Trente Ans en 1648 ?",
+  "choices": [
+   "Westphalie",
+   "Utrecht",
+   "Versailles",
+   "Tilsit"
+  ],
+  "answer": 0,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a fondé l'empire mongol ?",
+  "choices": [
+   "Kubilaï Khan",
+   "Gengis Khan",
+   "Tamerlan",
+   "Ögedei"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel président français a aboli la peine de mort en 1981 ?",
+  "choices": [
+   "Giscard d'Estaing",
+   "Mitterrand",
+   "Pompidou",
+   "Chirac"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle bataille a marqué le tournant pour Hitler en 1942-43 sur le front Est ?",
+  "choices": [
+   "Koursk",
+   "Stalingrad",
+   "Moscou",
+   "Léningrad"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui était le dernier empereur d'Éthiopie ?",
+  "choices": [
+   "Hailé Sélassié",
+   "Ménélik II",
+   "Téwodros II",
+   "Yohannès IV"
+  ],
+  "answer": 0,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle ville était la capitale de l'Empire byzantin ?",
+  "choices": [
+   "Athènes",
+   "Rome",
+   "Constantinople",
+   "Alexandrie"
+  ],
+  "answer": 2,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel roi anglais a divorcé pour fonder l'Église anglicane ?",
+  "choices": [
+   "Henri VII",
+   "Henri VIII",
+   "Édouard VI",
+   "Richard III"
+  ],
+  "answer": 1,
+  "cat": "histoire",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le plus petit pays du monde par superficie ?",
+  "choices": [
+   "Monaco",
+   "Vatican",
+   "Saint-Marin",
+   "Liechtenstein"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel détroit sépare l'Espagne du Maroc ?",
+  "choices": [
+   "Bosphore",
+   "Gibraltar",
+   "Hormuz",
+   "Malacca"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle mer est la plus salée du monde ?",
+  "choices": [
+   "Mer Morte",
+   "Mer Rouge",
+   "Mer Caspienne",
+   "Mer Noire"
+  ],
+  "answer": 0,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le seul pays qui borde le Portugal sur terre ?",
+  "choices": [
+   "France",
+   "Espagne",
+   "Maroc",
+   "Aucun"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel pays africain n'a quasi jamais été colonisé ?",
+  "choices": [
+   "Égypte",
+   "Éthiopie",
+   "Maroc",
+   "Algérie"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle est la capitale de la Mongolie ?",
+  "choices": [
+   "Oulan-Bator",
+   "Astana",
+   "Tachkent",
+   "Achgabat"
+  ],
+  "answer": 0,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel pays a le plus grand nombre de fuseaux horaires ?",
+  "choices": [
+   "États-Unis",
+   "Russie",
+   "Chine",
+   "France"
+  ],
+  "answer": 3,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le plus grand lac d'Afrique ?",
+  "choices": [
+   "Tanganyika",
+   "Victoria",
+   "Tchad",
+   "Malawi"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Combien d'États composent les États-Unis ?",
+  "choices": [
+   "48",
+   "49",
+   "50",
+   "52"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel pays a pour capitale Reykjavik ?",
+  "choices": [
+   "Norvège",
+   "Suède",
+   "Islande",
+   "Groenland"
+  ],
+  "answer": 2,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel pays a pour capitale Astana (renommée Nour-Soultan puis revenue à Astana) ?",
+  "choices": [
+   "Ouzbékistan",
+   "Kazakhstan",
+   "Turkménistan",
+   "Kirghizistan"
+  ],
+  "answer": 1,
+  "cat": "geo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le numéro atomique de l'oxygène ?",
+  "choices": [
+   "6",
+   "7",
+   "8",
+   "16"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Combien de chromosomes a un humain (au total) ?",
+  "choices": [
+   "23",
+   "42",
+   "46",
+   "48"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle particule porte la force électromagnétique ?",
+  "choices": [
+   "Gluon",
+   "Photon",
+   "Boson Z",
+   "Graviton"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a énoncé le principe d'incertitude en mécanique quantique ?",
+  "choices": [
+   "Schrödinger",
+   "Bohr",
+   "Heisenberg",
+   "Planck"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le plus grand organe du corps humain ?",
+  "choices": [
+   "Foie",
+   "Peau",
+   "Intestin",
+   "Poumons"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle est l'unité de mesure de la pression ?",
+  "choices": [
+   "Hertz",
+   "Pascal",
+   "Joule",
+   "Newton"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle scientifique a découvert la radioactivité avec Becquerel ?",
+  "choices": [
+   "Rutherford",
+   "Marie Curie",
+   "Lise Meitner",
+   "Rosalind Franklin"
+  ],
+  "answer": 1,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "De combien le proton est-il plus massif que l'électron (environ) ?",
+  "choices": [
+   "10x",
+   "100x",
+   "1000x",
+   "1836x"
+  ],
+  "answer": 3,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Combien de cœurs a une pieuvre ?",
+  "choices": [
+   "1",
+   "2",
+   "3",
+   "4"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle galaxie est la plus proche de la Voie Lactée ?",
+  "choices": [
+   "Andromède",
+   "Triangle",
+   "Sombrero",
+   "Tournesol"
+  ],
+  "answer": 0,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le métal le plus dense connu (à conditions normales) ?",
+  "choices": [
+   "Plomb",
+   "Or",
+   "Osmium",
+   "Mercure"
+  ],
+  "answer": 2,
+  "cat": "sciences",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel joueur a marqué le 'but de la main' contre l'Angleterre en 1986 ?",
+  "choices": [
+   "Pelé",
+   "Maradona",
+   "Cruyff",
+   "Platini"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Combien de Ballons d'Or a remporté Lionel Messi (à fin 2023) ?",
+  "choices": [
+   "6",
+   "7",
+   "8",
+   "9"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel cycliste a gagné 7 Tours de France avant d'être déchu ?",
+  "choices": [
+   "Indurain",
+   "Armstrong",
+   "Hinault",
+   "Merckx"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle est la longueur exacte d'un marathon olympique ?",
+  "choices": [
+   "42 km",
+   "42,195 km",
+   "43 km",
+   "41,5 km"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel sportif détient le record du monde du 100m homme ?",
+  "choices": [
+   "Carl Lewis",
+   "Asafa Powell",
+   "Usain Bolt",
+   "Yohan Blake"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel club anglais est surnommé 'The Red Devils' ?",
+  "choices": [
+   "Liverpool",
+   "Arsenal",
+   "Manchester United",
+   "Chelsea"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Combien de Grands Chelems a remporté Roger Federer en simple ?",
+  "choices": [
+   "18",
+   "19",
+   "20",
+   "21"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel pays a inventé le judo ?",
+  "choices": [
+   "Chine",
+   "Corée",
+   "Japon",
+   "Mongolie"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a battu le record de victoires en Grands Prix de F1 ?",
+  "choices": [
+   "Schumacher",
+   "Senna",
+   "Hamilton",
+   "Vettel"
+  ],
+  "answer": 2,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel pilote français a été champion du monde de F1 en 1985 ?",
+  "choices": [
+   "Alesi",
+   "Prost",
+   "Arnoux",
+   "Pironi"
+  ],
+  "answer": 1,
+  "cat": "sport",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel record d'Oscars est partagé par 'Titanic', 'Ben-Hur' et 'Le Retour du Roi' ?",
+  "choices": [
+   "9 Oscars",
+   "10 Oscars",
+   "11 Oscars",
+   "12 Oscars"
+  ],
+  "answer": 2,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel réalisateur signe 'Mulholland Drive' ?",
+  "choices": [
+   "David Lynch",
+   "David Fincher",
+   "Stanley Kubrick",
+   "Terrence Malick"
+  ],
+  "answer": 0,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel acteur joue le Joker dans 'Joker' (2019) ?",
+  "choices": [
+   "Heath Ledger",
+   "Joaquin Phoenix",
+   "Jared Leto",
+   "Jack Nicholson"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a réalisé '2001 : L'Odyssée de l'espace' ?",
+  "choices": [
+   "Spielberg",
+   "Kubrick",
+   "Lucas",
+   "Scott"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le vrai nom du protagoniste/narrateur dans Fight Club ?",
+  "choices": [
+   "Tyler Durden",
+   "Jack",
+   "Le Narrateur (jamais nommé)",
+   "Edward"
+  ],
+  "answer": 2,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel film a remporté la Palme d'Or à Cannes 2019 ?",
+  "choices": [
+   "Parasite",
+   "Le Traître",
+   "Douleur et Gloire",
+   "Once Upon a Time in Hollywood"
+  ],
+  "answer": 0,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Dans 'The Wire', qui tue Stringer Bell ?",
+  "choices": [
+   "McNulty",
+   "Omar et Brother Mouzone",
+   "Marlo",
+   "Avon"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui réalise 'There Will Be Blood' ?",
+  "choices": [
+   "P.T. Anderson",
+   "Wes Anderson",
+   "Coen",
+   "Soderbergh"
+  ],
+  "answer": 0,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Dans Twin Peaks, qui a tué Laura Palmer ?",
+  "choices": [
+   "BOB / Leland",
+   "Le shérif",
+   "James",
+   "Bobby"
+  ],
+  "answer": 0,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Pour quel film Daniel Day-Lewis n'a-t-il PAS gagné l'Oscar du meilleur acteur ?",
+  "choices": [
+   "My Left Foot",
+   "There Will Be Blood",
+   "Lincoln",
+   "Gangs of New York"
+  ],
+  "answer": 3,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel réalisateur français a signé 'La Haine' ?",
+  "choices": [
+   "Luc Besson",
+   "Mathieu Kassovitz",
+   "Jacques Audiard",
+   "Cédric Klapisch"
+  ],
+  "answer": 1,
+  "cat": "cinema",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel album des Beatles a la pochette avec un passage piéton ?",
+  "choices": [
+   "Abbey Road",
+   "Let It Be",
+   "Help!",
+   "Revolver"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel guitariste est mort à 27 ans, en 1970, après une overdose ?",
+  "choices": [
+   "Jim Morrison",
+   "Janis Joplin",
+   "Jimi Hendrix",
+   "Brian Jones"
+  ],
+  "answer": 2,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le morceau le plus streamé de tous les temps sur Spotify (vers 2023) ?",
+  "choices": [
+   "Shape of You",
+   "Blinding Lights",
+   "Despacito",
+   "Someone Like You"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel rappeur français est connu pour 'Tombé pour elle' ?",
+  "choices": [
+   "Damso",
+   "Lomepal",
+   "Nekfeu",
+   "PNL"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel groupe a sorti l'album 'Master of Puppets' ?",
+  "choices": [
+   "Iron Maiden",
+   "Metallica",
+   "Slayer",
+   "Megadeth"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Avec qui Thomas Bangalter formait Daft Punk ?",
+  "choices": [
+   "Pedro Winter",
+   "Guy-Manuel de Homem-Christo",
+   "SebastiAn",
+   "Justice"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a composé la 9ème Symphonie 'L'Hymne à la Joie' ?",
+  "choices": [
+   "Mozart",
+   "Beethoven",
+   "Brahms",
+   "Schubert"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel rappeur a sorti 'good kid, m.A.A.d city' ?",
+  "choices": [
+   "J. Cole",
+   "Kendrick Lamar",
+   "Drake",
+   "Kanye West"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel chanteur britannique a écrit 'Imagine' ?",
+  "choices": [
+   "Paul McCartney",
+   "John Lennon",
+   "George Harrison",
+   "Ringo Starr"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel rappeur américain est mort à 25 ans en 1996 à Las Vegas ?",
+  "choices": [
+   "Notorious B.I.G.",
+   "2Pac",
+   "Big L",
+   "Ol' Dirty Bastard"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "De quel pays vient le groupe Daft Punk ?",
+  "choices": [
+   "USA",
+   "France",
+   "Belgique",
+   "Royaume-Uni"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel album de Kanye West est sorti en 2010 ?",
+  "choices": [
+   "Graduation",
+   "808s & Heartbreak",
+   "My Beautiful Dark Twisted Fantasy",
+   "Yeezus"
+  ],
+  "answer": 2,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle chanteuse a chanté 'Rolling in the Deep' ?",
+  "choices": [
+   "Adele",
+   "Amy Winehouse",
+   "Duffy",
+   "Joss Stone"
+  ],
+  "answer": 0,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel groupe avait pour bassiste Flea ?",
+  "choices": [
+   "Foo Fighters",
+   "Red Hot Chili Peppers",
+   "Rage Against the Machine",
+   "Audioslave"
+  ],
+  "answer": 1,
+  "cat": "musique",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le tout premier jeu vidéo commercial à grand succès ?",
+  "choices": [
+   "Pong",
+   "Space Invaders",
+   "Pac-Man",
+   "Tetris"
+  ],
+  "answer": 0,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel studio a créé Dark Souls et Elden Ring ?",
+  "choices": [
+   "Capcom",
+   "FromSoftware",
+   "Square Enix",
+   "Konami"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le nom du protagoniste dans Metal Gear Solid 3 ?",
+  "choices": [
+   "Solid Snake",
+   "Naked Snake",
+   "Liquid Snake",
+   "Raiden"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "Combien y avait-il de personnages jouables dans le Smash Bros. original (N64) ?",
+  "choices": [
+   "8",
+   "12",
+   "14",
+   "16"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel jeu a popularisé les MMORPG dans les années 2000 ?",
+  "choices": [
+   "EverQuest",
+   "World of Warcraft",
+   "Ultima Online",
+   "Final Fantasy XI"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui est le compositeur principal des musiques de Final Fantasy ?",
+  "choices": [
+   "Koji Kondo",
+   "Yoko Shimomura",
+   "Nobuo Uematsu",
+   "Yasunori Mitsuda"
+  ],
+  "answer": 2,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel jeu, avec Castlevania, a donné son nom au genre 'metroidvania' ?",
+  "choices": [
+   "Mega Man",
+   "Metroid",
+   "Zelda II",
+   "Kid Icarus"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel jeu de 2017 a remporté le Game of the Year aux Game Awards ?",
+  "choices": [
+   "Horizon Zero Dawn",
+   "Persona 5",
+   "The Legend of Zelda: BOTW",
+   "Cuphead"
+  ],
+  "answer": 2,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle entreprise a racheté Mojang (Minecraft) en 2014 ?",
+  "choices": [
+   "Sony",
+   "Microsoft",
+   "Tencent",
+   "Activision"
+  ],
+  "answer": 1,
+  "cat": "jeuxvideo",
+  "diff": "hard"
+ },
+ {
+  "q": "En quelle année a été lancé publiquement le World Wide Web ?",
+  "choices": [
+   "1989",
+   "1991",
+   "1993",
+   "1995"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle a été la toute première vidéo postée sur YouTube ?",
+  "choices": [
+   "Charlie Bit My Finger",
+   "Me at the zoo",
+   "Evolution of Dance",
+   "Numa Numa"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a inventé le HTML / le Web ?",
+  "choices": [
+   "Linus Torvalds",
+   "Tim Berners-Lee",
+   "Brendan Eich",
+   "James Gosling"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle plateforme de streaming Amazon a-t-elle rachetée en 2014 ?",
+  "choices": [
+   "YouTube",
+   "Twitch",
+   "Mixer",
+   "Vimeo"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel langage tourne nativement dans tous les navigateurs ?",
+  "choices": [
+   "Python",
+   "Java",
+   "JavaScript",
+   "Ruby"
+  ],
+  "answer": 2,
+  "cat": "internet",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est le nom du créateur (pseudo) de Bitcoin ?",
+  "choices": [
+   "Vitalik Buterin",
+   "Satoshi Nakamoto",
+   "Hal Finney",
+   "Nick Szabo"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel forum anonyme est connu pour ses /b/, /pol/ etc. ?",
+  "choices": [
+   "Reddit",
+   "4chan",
+   "9gag",
+   "SomethingAwful"
+  ],
+  "answer": 1,
+  "cat": "internet",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui est l'auteure de la chanson virale 'Friday' (2011) ?",
+  "choices": [
+   "Rebecca Black",
+   "Justin Bieber",
+   "PewDiePie",
+   "Smosh"
+  ],
+  "answer": 0,
+  "cat": "internet",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle région française est l'AOC du champagne ?",
+  "choices": [
+   "Bourgogne",
+   "Champagne",
+   "Alsace",
+   "Loire"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel cépage est le principal du Bordeaux rouge ?",
+  "choices": [
+   "Pinot Noir",
+   "Cabernet Sauvignon",
+   "Syrah",
+   "Gamay"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle est la différence principale entre un bourbon et un scotch ?",
+  "choices": [
+   "Le maïs vs orge",
+   "Le pays",
+   "La distillation",
+   "Toutes les réponses"
+  ],
+  "answer": 3,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle herbe aromatique entre dans le pesto traditionnel ?",
+  "choices": [
+   "Persil",
+   "Basilic",
+   "Coriandre",
+   "Menthe"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel chef français, star de « Cauchemar en cuisine », est aussi juré de Top Chef ?",
+  "choices": [
+   "Cyril Lignac",
+   "Philippe Etchebest",
+   "Hélène Darroze",
+   "Michel Sarran"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel cocktail contient gin, citron, sucre et eau gazeuse ?",
+  "choices": [
+   "Gin Tonic",
+   "Tom Collins",
+   "Negroni",
+   "Gin Fizz"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "De quoi est principalement faite la sauce hollandaise ?",
+  "choices": [
+   "Crème",
+   "Beurre + jaunes d'œufs",
+   "Lait + farine",
+   "Tomate"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle céréale est à la base du saké ?",
+  "choices": [
+   "Blé",
+   "Riz",
+   "Orge",
+   "Maïs"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel est l'alcool de base du Negroni ?",
+  "choices": [
+   "Vodka",
+   "Gin",
+   "Rhum",
+   "Tequila"
+  ],
+  "answer": 1,
+  "cat": "bouffe",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a écrit 'Cent ans de solitude' ?",
+  "choices": [
+   "Borges",
+   "Garcia Marquez",
+   "Vargas Llosa",
+   "Paz"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a écrit 'L'Étranger' ?",
+  "choices": [
+   "Sartre",
+   "Camus",
+   "Malraux",
+   "Gide"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "hard"
+ },
+ {
+  "q": "Combien de tomes officiels compte 'Le Trône de fer' (saga romanesque, à fin 2023) ?",
+  "choices": [
+   "5",
+   "6",
+   "7",
+   "8"
+  ],
+  "answer": 0,
+  "cat": "litterature",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a écrit 'Crime et Châtiment' ?",
+  "choices": [
+   "Tolstoï",
+   "Dostoïevski",
+   "Tchekhov",
+   "Pouchkine"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel auteur a créé Hercule Poirot ?",
+  "choices": [
+   "Conan Doyle",
+   "Christie",
+   "Simenon",
+   "Highsmith"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel écrivain français a refusé le prix Nobel de littérature en 1964 ?",
+  "choices": [
+   "Camus",
+   "Sartre",
+   "Beckett",
+   "Modiano"
+  ],
+  "answer": 1,
+  "cat": "litterature",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel poète a écrit 'Les Fleurs du mal' ?",
+  "choices": [
+   "Rimbaud",
+   "Verlaine",
+   "Baudelaire",
+   "Mallarmé"
+  ],
+  "answer": 2,
+  "cat": "litterature",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a peint 'La Persistance de la Mémoire' (les montres molles) ?",
+  "choices": [
+   "Magritte",
+   "Dalí",
+   "Miró",
+   "Picasso"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel mouvement artistique est associé à Mondrian ?",
+  "choices": [
+   "Cubisme",
+   "De Stijl / Néoplasticisme",
+   "Surréalisme",
+   "Bauhaus"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a peint 'La Naissance de Vénus' ?",
+  "choices": [
+   "Michel-Ange",
+   "Botticelli",
+   "Raphaël",
+   "Caravage"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "hard"
+ },
+ {
+  "q": "Dans quel pays est né Andy Warhol ?",
+  "choices": [
+   "Royaume-Uni",
+   "États-Unis",
+   "Allemagne",
+   "Pologne"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle œuvre de Banksy s'est partiellement autodétruite après vente aux enchères en 2018 ?",
+  "choices": [
+   "La fillette au ballon",
+   "Flower Thrower",
+   "Rage, Flower Thrower",
+   "Kissing Coppers"
+  ],
+  "answer": 0,
+  "cat": "art",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel sculpteur français a créé 'Le Penseur' ?",
+  "choices": [
+   "Camille Claudel",
+   "Rodin",
+   "Bourdelle",
+   "Maillol"
+  ],
+  "answer": 1,
+  "cat": "art",
+  "diff": "hard"
+ },
+ {
+  "q": "En quelle année OpenAI a-t-elle lancé ChatGPT publiquement ?",
+  "choices": [
+   "2020",
+   "2021",
+   "2022",
+   "2023"
+  ],
+  "answer": 2,
+  "cat": "actu",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel pays a accueilli les Jeux Olympiques d'été tenus en 2021 (initialement 2020) ?",
+  "choices": [
+   "Chine",
+   "Japon",
+   "Brésil",
+   "Royaume-Uni"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a remporté la Coupe du Monde de foot 2022 ?",
+  "choices": [
+   "France",
+   "Brésil",
+   "Argentine",
+   "Croatie"
+  ],
+  "answer": 2,
+  "cat": "actu",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel pays a été envahi par la Russie en février 2022 ?",
+  "choices": [
+   "Géorgie",
+   "Biélorussie",
+   "Ukraine",
+   "Moldavie"
+  ],
+  "answer": 2,
+  "cat": "actu",
+  "diff": "hard"
+ },
+ {
+  "q": "Quel modèle d'IA d'Anthropic est concurrent de ChatGPT ?",
+  "choices": [
+   "Gemini",
+   "Claude",
+   "Llama",
+   "Mistral"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle ville a accueilli les JO d'été 2024 ?",
+  "choices": [
+   "Lyon",
+   "Marseille",
+   "Paris",
+   "Nice"
+  ],
+  "answer": 2,
+  "cat": "actu",
+  "diff": "hard"
+ },
+ {
+  "q": "Quelle entreprise a annoncé son casque 'Vision Pro' en 2023 ?",
+  "choices": [
+   "Meta",
+   "Apple",
+   "Sony",
+   "Samsung"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "hard"
+ },
+ {
+  "q": "Qui a gagné la Ligue des Champions UEFA 2023-2024 ?",
+  "choices": [
+   "Manchester City",
+   "Real Madrid",
+   "Bayern Munich",
+   "Inter Milan"
+  ],
+  "answer": 1,
+  "cat": "actu",
+  "diff": "hard"
+ }
+]

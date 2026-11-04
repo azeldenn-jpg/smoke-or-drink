@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Smoke or Drink</title>
+  <meta name="description" content="Jeu de soirée : quiz, Je n'ai jamais, Qui pourrait, Bombe et Roulette.">
+
+  <!-- PWA / iOS -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a0612">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Smoke or Drink">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+
+  <!-- Polices hébergées en local (fonctionnent hors-ligne) -->
+  <link rel="preload" href="fonts/space-grotesk-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/major-mono-display.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="mode-none">
+
+  <!-- Décor : orbes lumineux + grain -->
+  <div class="bg" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+    <span class="grain"></span>
+  </div>
+
+  <main class="app" id="app" data-dir="fwd">
+
+    <!-- ================= ACCUEIL ================= -->
+    <section class="screen is-active" data-screen="home">
+      <div class="home-top">
+        <button class="icon-btn" data-action="toggle-sound" aria-label="Activer ou couper le son">
+          <span class="snd-on">🔊</span><span class="snd-off">🔇</span>
+        </button>
+      </div>
+
+      <header class="hero">
+        <p class="kicker pixel">// jeu de soirée</p>
+        <h1 class="logo" aria-label="Smoke or Drink">
+          <span class="logo-word">SMOKE</span>
+          <span class="logo-or">or</span>
+          <span class="logo-word">DRINK</span>
+        </h1>
+        <p class="tagline pixel">choisis ton poison</p>
+      </header>
+
+      <div class="mode-grid">
+        <button class="mode-card stagger" data-mode="fumette" style="--i:0">
+          <span class="mc-glow" aria-hidden="true"></span>
+          <span class="mc-icon">🌿</span>
+          <span class="mc-title">FUMETTE</span>
+          <span class="mc-desc">Réponds bien, grimpe au score et débloque des taffs à la roulette.</span>
+          <span class="mc-arrow" aria-hidden="true">→</span>
+        </button>
+        <button class="mode-card stagger" data-mode="alcool" style="--i:1">
+          <span class="mc-glow" aria-hidden="true"></span>
+          <span class="mc-icon">🥃</span>
+          <span class="mc-title">ALCOOL</span>
+          <span class="mc-desc">Bonne réponse : tu distribues. Mauvaise : tu bois. Choisis bien tes victimes.</span>
+          <span class="mc-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <p class="home-foot pixel dim">v3.0 · hors-ligne ready</p>
+    </section>
+
+    <!-- ================= CHOIX DU JEU ================= -->
+    <section class="screen" data-screen="hub">
+      <nav class="topbar">
+        <button class="back-btn" data-action="back">← retour</button>
+        <button class="icon-btn" data-action="toggle-sound" aria-label="Activer ou couper le son">
+          <span class="snd-on">🔊</span><span class="snd-off">🔇</span>
+        </button>
+      </nav>
+      <h2 class="screen-title" id="hub-title">MODE</h2>
+      <p class="screen-sub pixel">// choisis ton jeu</p>
+      <div class="game-list" id="game-list"></div>
+    </section>
+
+    <!-- ================= CONFIGURATION ================= -->
+    <section class="screen" data-screen="setup">
+      <nav class="topbar">
+        <button class="back-btn" data-action="back">← retour</button>
+      </nav>
+      <h2 class="screen-title" id="setup-title">CONFIG</h2>
+      <p class="screen-sub pixel" id="setup-sub"></p>
+
+      <div class="setup-section">
+        <h3 class="section-label">Joueurs <span class="count-badge" id="players-count"></span></h3>
+        <div class="players-list" id="players-list"></div>
+        <button class="add-player" id="add-player">+ ajouter un joueur</button>
+      </div>
+
+      <div class="setup-section" data-for="quiz">
+        <h3 class="section-label">Thèmes</h3>
+        <div class="pill-grid" id="cat-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="quiz">
+        <h3 class="section-label">Difficulté</h3>
+        <div class="pill-grid cols-2" id="diff-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="roulette-fumette">
+        <h3 class="section-label">Durée des taffs</h3>
+        <div class="pill-grid" id="duration-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="quiz jamais probable bombe">
+        <h3 class="section-label">Fin de partie</h3>
+        <div class="pill-grid" id="end-grid"></div>
+      </div>
+
+      <div class="setup-foot">
+        <button class="btn-primary" id="start-game">LANCER</button>
+        <p class="pool-info pixel" id="pool-info"></p>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ ================= -->
+    <section class="screen" data-screen="quiz">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="quiz-round"></span>
+        <button class="quit-btn" data-action="quit">quitter ✕</button>
+      </header>
+
+      <div class="turn">
+        <p class="turn-label pixel">// au tour de</p>
+        <p class="turn-name" id="quiz-player"><span class="dot"></span><span class="name"></span></p>
+        <p class="streak" id="quiz-streak" aria-live="polite"></p>
+      </div>
+
+      <div class="stage" id="quiz-stage"></div>
+
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Scores</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
+    <!-- ================= JEUX DE CARTES (Je n'ai jamais / Qui pourrait) ================= -->
+    <section class="screen" data-screen="cards">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="cards-round"></span>
+        <button class="quit-btn" data-action="quit">quitter ✕</button>
+      </header>
+
+      <div class="deck">
+        <span class="deck-under u2" aria-hidden="true"></span>
+        <span class="deck-under u1" aria-hidden="true"></span>
+        <article class="play-card" id="play-card">
+          <p class="pc-kicker pixel" id="pc-kicker"></p>
+          <p class="pc-text" id="pc-text"></p>
+          <button class="pc-count" id="pc-count" hidden>3 · 2 · 1 → pointez !</button>
+          <p class="pc-reader pixel" id="pc-reader"></p>
+        </article>
+      </div>
+
+      <p class="chips-label" id="chips-label"></p>
+      <div class="chips" id="cards-chips"></div>
+
+      <div class="actions">
+        <button class="btn-ghost" id="cards-skip">passer</button>
+        <button class="btn-primary" id="cards-validate">valider</button>
+      </div>
+
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Compteur</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
+    <!-- ================= BOMBE ================= -->
+    <section class="screen" data-screen="bomb">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="bomb-round"></span>
+        <button class="quit-btn" data-action="quit">quitter ✕</button>
+      </header>
+
+      <div class="bomb-theme">
+        <p class="pixel dim">// thème</p>
+        <p class="bomb-theme-text" id="bomb-theme"></p>
+      </div>
+
+      <div class="bomb-wrap" id="bomb-wrap">
+        <svg class="bomb-svg" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <radialGradient id="bombBody" cx="38%" cy="35%" r="70%">
+              <stop offset="0" stop-color="#4a3a5c"/>
+              <stop offset=".55" stop-color="#1d1428"/>
+              <stop offset="1" stop-color="#0b0712"/>
+            </radialGradient>
+          </defs>
+          <path class="bomb-fuse" d="M128 58 C 140 40, 150 34, 162 30" fill="none" stroke="#c9b48a" stroke-width="5" stroke-linecap="round"/>
+          <rect x="112" y="50" width="26" height="20" rx="4" transform="rotate(35 125 60)" fill="#2c2238" stroke="var(--line-strong)"/>
+          <circle cx="96" cy="118" r="62" fill="url(#bombBody)" stroke="var(--line-strong)" stroke-width="2"/>
+          <ellipse cx="74" cy="92" rx="16" ry="10" fill="#fff" opacity=".12" transform="rotate(-30 74 92)"/>
+        </svg>
+        <span class="bomb-spark" aria-hidden="true"></span>
+      </div>
+
+      <p class="bomb-help" id="bomb-help">Cite un mot du thème, puis passe le téléphone à ton voisin. Celui qui l'a en main quand ça pète… prend cher.</p>
+
+      <div class="actions single" id="bomb-actions">
+        <button class="btn-primary" id="bomb-start">allumer la mèche</button>
+      </div>
+
+      <div class="bomb-loser" id="bomb-loser" hidden>
+        <p class="chips-label">Qui avait la bombe&nbsp;?</p>
+        <div class="chips" id="bomb-chips"></div>
+      </div>
+
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Compteur</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
+    <!-- ================= ROULETTE ================= -->
+    <section class="screen" data-screen="roulette">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="roulette-round"></span>
+        <button class="quit-btn" data-action="quit" id="roulette-quit">quitter ✕</button>
+      </header>
+
+      <div class="turn">
+        <p class="turn-label pixel" id="roulette-label">// au tour de</p>
+        <p class="turn-name" id="roulette-player"><span class="dot"></span><span class="name"></span></p>
+      </div>
+
+      <div class="wheel-wrap" id="wheel-wrap">
+        <svg class="wheel-ring" viewBox="0 0 220 220" aria-hidden="true">
+          <circle class="ring-track" cx="110" cy="110" r="104"/>
+          <circle class="ring-progress" id="ring-progress" cx="110" cy="110" r="104"/>
+        </svg>
+        <div class="wheel-pointer" aria-hidden="true"></div>
+        <svg class="wheel" id="wheel" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+        <div class="wheel-hub" id="wheel-hub">
+          <span class="hub-value" id="hub-value">?</span>
+          <span class="hub-unit pixel" id="hub-unit"></span>
+        </div>
+      </div>
+
+      <div class="rarity" id="rarity" aria-live="polite"></div>
+      <div class="actions single">
+        <button class="btn-primary" id="roulette-main">TOURNER</button>
+      </div>
+      <ul class="legend" id="roulette-legend"></ul>
+    </section>
+
+    <!-- ================= FIN ================= -->
+    <section class="screen" data-screen="end">
+      <div class="end">
+        <p class="kicker pixel" id="end-kicker">// fin de partie</p>
+        <h2 class="end-title" id="end-title">C'EST FINI</h2>
+        <div class="winner" id="winner"></div>
+        <ol class="podium" id="podium"></ol>
+        <div class="actions col">
+          <button class="btn-primary" id="end-restart">rejouer</button>
+          <button class="btn-ghost" id="end-hub">changer de jeu</button>
+          <button class="btn-ghost" id="end-home">accueil</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Confirmation (remplace confirm()) -->
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-backdrop" data-sheet="cancel"></div>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <p class="sheet-title" id="sheet-title"></p>
+      <p class="sheet-text" id="sheet-text"></p>
+      <div class="actions">
+        <button class="btn-ghost" data-sheet="cancel">annuler</button>
+        <button class="btn-primary danger" data-sheet="ok">confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications (remplace alert()) -->
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <!-- Effets : particules + flash -->
+  <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+  <div class="flash" id="flash" aria-hidden="true"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
