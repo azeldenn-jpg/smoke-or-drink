@@ -1,148 +1,1143 @@
 {
-  "jamais": [
-    "envoyé un message à la mauvaise personne",
-    "fait semblant de connaître une chanson en soirée",
-    "dormi dans une baignoire",
-    "oublié le prénom de quelqu'un juste après qu'il me l'a dit",
-    "stalké un ex sur les réseaux",
-    "menti sur mon âge",
-    "pleuré devant un dessin animé",
-    "raté un avion ou un train",
-    "mangé un truc tombé par terre",
-    "fait une nuit blanche pour finir un taf à rendre",
-    "chanté au karaoké",
-    "pris un fou rire dans un moment totalement inapproprié",
-    "liké une vieille photo par accident en stalkant",
-    "dit « je t'aime » en premier",
-    "été viré d'un bar, d'une boîte ou d'un cours",
-    "regretté un tatouage ou un piercing",
-    "utilisé l'excuse « j'avais plus de batterie »",
-    "fini une soirée au lever du soleil",
-    "perdu mes clés en soirée",
-    "cuisiné un plat immangeable pour quelqu'un",
-    "appelé un prof « maman » ou « papa »",
-    "envoyé un vocal de plus de 5 minutes",
-    "dansé tout seul devant mon miroir",
-    "triché à un jeu de société",
-    "fait un selfie avec un parfait inconnu",
-    "pris le métro dans le mauvais sens sans m'en rendre compte",
-    "dit que j'adorais un cadeau alors que pas du tout",
-    "fait semblant d'être malade pour esquiver un événement",
-    "regardé une série entière en un week-end",
-    "parlé tout seul dans la rue",
-    "fait un road trip improvisé",
-    "analysé un message pendant une heure avant de répondre",
-    "snoozé mon réveil plus de 5 fois",
-    "pris un bain de minuit",
-    "dormi à la belle étoile",
-    "ramené un verre de bar en souvenir",
-    "été en retard à mon propre anniversaire",
-    "envoyé un texto à 3h du matin que j'ai regretté au réveil",
-    "prétendu avoir lu un livre que je n'ai jamais ouvert",
-    "eu un crush sur un prof",
-    "été coincé dans un ascenseur",
-    "mangé une pizza entière tout seul",
-    "rigolé à une blague que je n'avais pas comprise",
-    "joué à un jeu vidéo toute une nuit",
-    "changé de coupe de cheveux sur un coup de tête",
-    "refilé un cadeau qu'on m'avait offert",
-    "dit « on se voit bientôt » en sachant que non",
-    "fait semblant d'être au téléphone pour éviter quelqu'un",
-    "googlé mon propre nom",
-    "chanté sous la douche à m'en casser la voix"
-  ],
-  "probable": [
-    "devenir célèbre",
-    "s'endormir en premier ce soir",
-    "oublier son téléphone ici ce soir",
-    "se marier à Las Vegas sur un coup de tête",
-    "survivre à une apocalypse zombie",
-    "mourir en premier dans un film d'horreur",
-    "devenir millionnaire",
-    "se perdre même avec un GPS",
-    "envoyer un message qu'il va regretter ce soir",
-    "adopter dix chats",
-    "partir vivre à l'autre bout du monde du jour au lendemain",
-    "pleurer devant un Pixar",
-    "rater son vol",
-    "devenir influenceur",
-    "se faire arnaquer en vacances",
-    "connaître tous les potins du groupe",
-    "lancer une start-up complètement improbable",
-    "arriver en retard à son propre mariage",
-    "garder un secret jusqu'à la tombe",
-    "balancer un secret au bout de cinq minutes",
-    "claquer son salaire en une journée",
-    "avoir un compte secret sur les réseaux",
-    "parler à ses plantes",
-    "devenir président",
-    "se faire tatouer le prénom de quelqu'un",
-    "gagner à un jeu télé",
-    "tomber amoureux d'un inconnu dans le train",
-    "faire un discours beaucoup trop long à un mariage",
-    "se battre avec un pigeon",
-    "connaître toutes les répliques d'un film par cœur",
-    "appeler son ex ce soir",
-    "commander un kebab à 4h du matin",
-    "s'endormir au cinéma",
-    "organiser la prochaine soirée",
-    "disparaître sans dire au revoir",
-    "avoir 40 onglets ouverts en permanence",
-    "devenir végan du jour au lendemain",
-    "écrire un livre",
-    "répondre à un message trois semaines plus tard",
-    "être le dernier debout ce soir",
-    "danser sur la table",
-    "gagner un concours de piments",
-    "casser son téléphone dans l'année",
-    "vivre dans une yourte",
-    "se lancer dans le stand-up",
-    "prendre 200 photos du même plat",
-    "se faire passer pour quelqu'un d'autre au téléphone",
-    "partir en vacances sans réserver d'hôtel"
-  ],
-  "bombe": [
-    "Marques de bière",
-    "Pokémon",
-    "Pays d'Europe",
-    "Capitales du monde",
-    "Joueurs de foot français",
-    "Rappeurs français",
-    "Films Disney ou Pixar",
-    "Fruits",
-    "Marques de voiture",
-    "Séries Netflix",
-    "Personnages de Harry Potter",
-    "Jeux vidéo",
-    "Animaux de la savane",
-    "Cocktails",
-    "Fromages",
-    "Instruments de musique",
-    "Super-héros",
-    "Applis sur ton téléphone",
-    "Sports olympiques",
-    "Trucs qu'on trouve dans une salle de bain",
-    "Mots qui finissent en « -tion »",
-    "Prénoms qui commencent par M",
-    "Villes de France",
-    "Légumes",
-    "Marques de vêtements",
-    "Chanteuses",
-    "Dessins animés des années 2000",
-    "Métiers",
-    "Plats italiens",
-    "Langues parlées dans le monde",
-    "Planètes et astres",
-    "Trucs qui piquent",
-    "Excuses pour arriver en retard",
-    "Mots anglais qu'on utilise en français",
-    "Groupes de rock",
-    "Clubs de foot européens",
-    "Desserts",
-    "Personnages de jeux vidéo",
-    "Monuments célèbres",
-    "Trucs rouges",
-    "Quartiers ou villes autour de Marseille",
-    "Émissions de télé-réalité"
-  ]
+ "_info": "Cartes des jeux. jamais = suite de « Je n'ai jamais … », probable = suite de « Qui est le plus susceptible de … ». lvl = chill | soiree | hot. bombe = thèmes de la Bombe.",
+ "jamais": [
+  {
+   "t": "envoyé un message à la mauvaise personne",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait semblant de connaître une chanson en soirée",
+   "lvl": "chill"
+  },
+  {
+   "t": "dormi dans une baignoire",
+   "lvl": "chill"
+  },
+  {
+   "t": "oublié le prénom de quelqu'un juste après qu'il me l'a dit",
+   "lvl": "chill"
+  },
+  {
+   "t": "stalké un ex sur les réseaux",
+   "lvl": "chill"
+  },
+  {
+   "t": "menti sur mon âge",
+   "lvl": "chill"
+  },
+  {
+   "t": "pleuré devant un dessin animé",
+   "lvl": "chill"
+  },
+  {
+   "t": "raté un avion ou un train",
+   "lvl": "chill"
+  },
+  {
+   "t": "mangé un truc tombé par terre",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait une nuit blanche pour finir un taf à rendre",
+   "lvl": "chill"
+  },
+  {
+   "t": "chanté au karaoké",
+   "lvl": "chill"
+  },
+  {
+   "t": "pris un fou rire dans un moment totalement inapproprié",
+   "lvl": "chill"
+  },
+  {
+   "t": "liké une vieille photo par accident en stalkant",
+   "lvl": "chill"
+  },
+  {
+   "t": "dit « je t'aime » en premier",
+   "lvl": "chill"
+  },
+  {
+   "t": "été viré d'un bar, d'une boîte ou d'un cours",
+   "lvl": "chill"
+  },
+  {
+   "t": "regretté un tatouage ou un piercing",
+   "lvl": "chill"
+  },
+  {
+   "t": "utilisé l'excuse « j'avais plus de batterie »",
+   "lvl": "chill"
+  },
+  {
+   "t": "fini une soirée au lever du soleil",
+   "lvl": "chill"
+  },
+  {
+   "t": "perdu mes clés en soirée",
+   "lvl": "chill"
+  },
+  {
+   "t": "cuisiné un plat immangeable pour quelqu'un",
+   "lvl": "chill"
+  },
+  {
+   "t": "appelé un prof « maman » ou « papa »",
+   "lvl": "chill"
+  },
+  {
+   "t": "envoyé un vocal de plus de 5 minutes",
+   "lvl": "chill"
+  },
+  {
+   "t": "dansé tout seul devant mon miroir",
+   "lvl": "chill"
+  },
+  {
+   "t": "triché à un jeu de société",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait un selfie avec un parfait inconnu",
+   "lvl": "chill"
+  },
+  {
+   "t": "pris le métro dans le mauvais sens sans m'en rendre compte",
+   "lvl": "chill"
+  },
+  {
+   "t": "dit que j'adorais un cadeau alors que pas du tout",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait semblant d'être malade pour esquiver un événement",
+   "lvl": "chill"
+  },
+  {
+   "t": "regardé une série entière en un week-end",
+   "lvl": "chill"
+  },
+  {
+   "t": "parlé tout seul dans la rue",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait un road trip improvisé",
+   "lvl": "chill"
+  },
+  {
+   "t": "analysé un message pendant une heure avant de répondre",
+   "lvl": "chill"
+  },
+  {
+   "t": "snoozé mon réveil plus de 5 fois",
+   "lvl": "chill"
+  },
+  {
+   "t": "pris un bain de minuit",
+   "lvl": "chill"
+  },
+  {
+   "t": "dormi à la belle étoile",
+   "lvl": "chill"
+  },
+  {
+   "t": "ramené un verre de bar en souvenir",
+   "lvl": "chill"
+  },
+  {
+   "t": "été en retard à mon propre anniversaire",
+   "lvl": "chill"
+  },
+  {
+   "t": "envoyé un texto à 3h du matin que j'ai regretté au réveil",
+   "lvl": "chill"
+  },
+  {
+   "t": "prétendu avoir lu un livre que je n'ai jamais ouvert",
+   "lvl": "chill"
+  },
+  {
+   "t": "eu un crush sur un prof",
+   "lvl": "chill"
+  },
+  {
+   "t": "été coincé dans un ascenseur",
+   "lvl": "chill"
+  },
+  {
+   "t": "mangé une pizza entière tout seul",
+   "lvl": "chill"
+  },
+  {
+   "t": "rigolé à une blague que je n'avais pas comprise",
+   "lvl": "chill"
+  },
+  {
+   "t": "joué à un jeu vidéo toute une nuit",
+   "lvl": "chill"
+  },
+  {
+   "t": "changé de coupe de cheveux sur un coup de tête",
+   "lvl": "chill"
+  },
+  {
+   "t": "refilé un cadeau qu'on m'avait offert",
+   "lvl": "chill"
+  },
+  {
+   "t": "dit « on se voit bientôt » en sachant que non",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait semblant d'être au téléphone pour éviter quelqu'un",
+   "lvl": "chill"
+  },
+  {
+   "t": "googlé mon propre nom",
+   "lvl": "chill"
+  },
+  {
+   "t": "chanté sous la douche à m'en casser la voix",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait semblant d'avoir lu un message pour ne pas y répondre",
+   "lvl": "chill"
+  },
+  {
+   "t": "pris un Uber pour faire moins de 2 kilomètres",
+   "lvl": "chill"
+  },
+  {
+   "t": "mangé des pâtes au ketchup en me disant que c'était un vrai repas",
+   "lvl": "chill"
+  },
+  {
+   "t": "dormi plus de 14 heures d'affilée",
+   "lvl": "chill"
+  },
+  {
+   "t": "inventé une excuse bidon pour annuler un plan à la dernière minute",
+   "lvl": "chill"
+  },
+  {
+   "t": "porté le même t-shirt trois jours de suite",
+   "lvl": "chill"
+  },
+  {
+   "t": "pleuré pour une fin de série",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait croire que j'étais en route alors que je sortais de la douche",
+   "lvl": "chill"
+  },
+  {
+   "t": "commandé à manger deux fois dans la même soirée",
+   "lvl": "chill"
+  },
+  {
+   "t": "mangé dans le lit et dormi avec les miettes",
+   "lvl": "chill"
+  },
+  {
+   "t": "menti sur mon CV",
+   "lvl": "chill"
+  },
+  {
+   "t": "répondu « je suis presque arrivé » en étant encore chez moi",
+   "lvl": "chill"
+  },
+  {
+   "t": "créé un faux compte pour espionner quelqu'un",
+   "lvl": "chill"
+  },
+  {
+   "t": "volé un truc dans un hôtel",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait une sieste au travail",
+   "lvl": "chill"
+  },
+  {
+   "t": "relu une conversation entière pour analyser un « ok »",
+   "lvl": "chill"
+  },
+  {
+   "t": "été viré d'un groupe WhatsApp",
+   "lvl": "chill"
+  },
+  {
+   "t": "fait semblant de connaître quelqu'un qui me disait bonjour",
+   "lvl": "chill"
+  },
+  {
+   "t": "regardé les stories de quelqu'un à 3 h du mat en espérant qu'il ne le verrait pas",
+   "lvl": "chill"
+  },
+  {
+   "t": "abandonné une salle de sport après une seule séance",
+   "lvl": "chill"
+  },
+  {
+   "t": "vomi dans un taxi ou une voiture",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fini une soirée sans savoir comment je suis rentré",
+   "lvl": "soiree"
+  },
+  {
+   "t": "bu dans la bouteille de quelqu'un d'autre sans demander",
+   "lvl": "soiree"
+  },
+  {
+   "t": "dit « je bois plus jamais » et recommencé le week-end suivant",
+   "lvl": "soiree"
+  },
+  {
+   "t": "dansé sur une table ou un bar",
+   "lvl": "soiree"
+  },
+  {
+   "t": "perdu mon téléphone en soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fait un mélange d'alcools dont je ne me souviens plus",
+   "lvl": "soiree"
+  },
+  {
+   "t": "pris un fou rire après avoir fumé, pour rien",
+   "lvl": "soiree"
+  },
+  {
+   "t": "mangé tout le frigo de quelqu'un après une soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fait une soirée qui a duré plus de 24 heures",
+   "lvl": "soiree"
+  },
+  {
+   "t": "appelé quelqu'un bourré pour lui dire que je l'aimais",
+   "lvl": "soiree"
+  },
+  {
+   "t": "triché à un jeu à boire pour boire moins",
+   "lvl": "soiree"
+  },
+  {
+   "t": "triché à un jeu à boire pour boire plus",
+   "lvl": "soiree"
+  },
+  {
+   "t": "dormi par terre chez quelqu'un après une soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "caché de l'alcool ou de la weed à mes parents",
+   "lvl": "soiree"
+  },
+  {
+   "t": "roulé un joint tellement raté qu'il a fallu le refaire",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fait la fête en semaine et été au travail le lendemain sans dormir",
+   "lvl": "soiree"
+  },
+  {
+   "t": "chanté au karaoké complètement faux, en y croyant à fond",
+   "lvl": "soiree"
+  },
+  {
+   "t": "squatté une soirée où je n'étais pas invité",
+   "lvl": "soiree"
+  },
+  {
+   "t": "envoyé un message gênant à mon boss après avoir bu",
+   "lvl": "soiree"
+  },
+  {
+   "t": "eu une gueule de bois qui a duré deux jours",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fait un bad trip",
+   "lvl": "soiree"
+  },
+  {
+   "t": "renversé mon verre sur quelqu'un",
+   "lvl": "soiree"
+  },
+  {
+   "t": "commandé un kebab après 4 h du matin",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fumé alors que j'avais « arrêté »",
+   "lvl": "soiree"
+  },
+  {
+   "t": "posté une story en soirée que j'ai supprimée le lendemain",
+   "lvl": "soiree"
+  },
+  {
+   "t": "pris un shot de quelque chose que je n'arrivais pas à identifier",
+   "lvl": "soiree"
+  },
+  {
+   "t": "réveillé tout le voisinage en rentrant de soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fait semblant d'être sobre devant mes parents",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fini la soirée à refaire le monde jusqu'au lever du soleil",
+   "lvl": "soiree"
+  },
+  {
+   "t": "perdu mes clés et dormi ailleurs que chez moi",
+   "lvl": "soiree"
+  },
+  {
+   "t": "bu de l'alcool au petit-déjeuner",
+   "lvl": "soiree"
+  },
+  {
+   "t": "pleuré en soirée sans vraie raison",
+   "lvl": "soiree"
+  },
+  {
+   "t": "raté un train ou un avion à cause d'une soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "dépensé plus de 100 € en une seule soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "oublié le prénom de la personne avec qui je parlais depuis une heure",
+   "lvl": "soiree"
+  },
+  {
+   "t": "dit un secret de quelqu'un parce que j'avais trop bu",
+   "lvl": "soiree"
+  },
+  {
+   "t": "fait un concours de shots",
+   "lvl": "soiree"
+  },
+  {
+   "t": "été le dernier debout en soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "été le premier à m'endormir en soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "envoyé un message à mon ex en pleine nuit",
+   "lvl": "hot"
+  },
+  {
+   "t": "embrassé quelqu'un de cette pièce",
+   "lvl": "hot"
+  },
+  {
+   "t": "eu un crush sur un pote de mon ex",
+   "lvl": "hot"
+  },
+  {
+   "t": "fait un date qui s'est fini en fuite par la fenêtre des toilettes",
+   "lvl": "hot"
+  },
+  {
+   "t": "menti sur mon nombre de partenaires",
+   "lvl": "hot"
+  },
+  {
+   "t": "été sur une appli de rencontre en étant en couple",
+   "lvl": "hot"
+  },
+  {
+   "t": "envoyé une photo coquine à la mauvaise personne",
+   "lvl": "hot"
+  },
+  {
+   "t": "embrassé deux personnes différentes dans la même soirée",
+   "lvl": "hot"
+  },
+  {
+   "t": "eu un plan d'un soir que j'ai regretté le lendemain",
+   "lvl": "hot"
+  },
+  {
+   "t": "eu un plan d'un soir que je n'ai pas du tout regretté",
+   "lvl": "hot"
+  },
+  {
+   "t": "été surpris en plein moment intime",
+   "lvl": "hot"
+  },
+  {
+   "t": "fantasmé sur le partenaire d'un pote",
+   "lvl": "hot"
+  },
+  {
+   "t": "fait semblant d'être célibataire pour plaire à quelqu'un",
+   "lvl": "hot"
+  },
+  {
+   "t": "dragué quelqu'un uniquement pour rendre jaloux quelqu'un d'autre",
+   "lvl": "hot"
+  },
+  {
+   "t": "eu un crush sur un collègue",
+   "lvl": "hot"
+  },
+  {
+   "t": "stalké un ex pendant plus d'une heure",
+   "lvl": "hot"
+  },
+  {
+   "t": "pris le numéro de quelqu'un sans jamais l'appeler",
+   "lvl": "hot"
+  },
+  {
+   "t": "ghosté quelqu'un après un date",
+   "lvl": "hot"
+  },
+  {
+   "t": "été ghosté après un date que je pensais réussi",
+   "lvl": "hot"
+  },
+  {
+   "t": "embrassé quelqu'un dont je ne connaissais pas le prénom",
+   "lvl": "hot"
+  },
+  {
+   "t": "remis avec un ex juste pour une nuit",
+   "lvl": "hot"
+  },
+  {
+   "t": "fait un strip-poker",
+   "lvl": "hot"
+  },
+  {
+   "t": "eu une relation cachée de tout le monde",
+   "lvl": "hot"
+  },
+  {
+   "t": "dit « je t'aime » sans le penser",
+   "lvl": "hot"
+  },
+  {
+   "t": "envoyé un vocal coquin",
+   "lvl": "hot"
+  },
+  {
+   "t": "fait un bisou à quelqu'un pour un pari",
+   "lvl": "hot"
+  },
+  {
+   "t": "liké une vieille photo de mon crush en le stalkant",
+   "lvl": "hot"
+  },
+  {
+   "t": "dragué le serveur ou la serveuse pour avoir un verre gratuit",
+   "lvl": "hot"
+  },
+  {
+   "t": "eu des sentiments pour un pote de cette soirée",
+   "lvl": "hot"
+  },
+  {
+   "t": "fait quelque chose de coquin dans un lieu public",
+   "lvl": "hot"
+  },
+  {
+   "t": "testé une appli de rencontre juste pour voir qui j'allais matcher",
+   "lvl": "hot"
+  },
+  {
+   "t": "été jaloux de quelqu'un dans cette pièce",
+   "lvl": "hot"
+  },
+  {
+   "t": "dormi chez quelqu'un après un premier date",
+   "lvl": "hot"
+  },
+  {
+   "t": "inventé un prénom en soirée pour qu'on ne me retrouve pas",
+   "lvl": "hot"
+  },
+  {
+   "t": "écrit à quelqu'un « tu dors ? » après minuit",
+   "lvl": "hot"
+  },
+  {
+   "t": "eu un crush sur le frère ou la sœur d'un pote",
+   "lvl": "hot"
+  },
+  {
+   "t": "dragué quelqu'un en sachant qu'il était en couple",
+   "lvl": "hot"
+  },
+  {
+   "t": "fait semblant d'avoir aimé un bisou",
+   "lvl": "hot"
+  },
+  {
+   "t": "fait un date avec deux personnes différentes le même jour",
+   "lvl": "hot"
+  },
+  {
+   "t": "lu les messages du téléphone de mon partenaire",
+   "lvl": "hot"
+  }
+ ],
+ "probable": [
+  {
+   "t": "devenir célèbre",
+   "lvl": "chill"
+  },
+  {
+   "t": "s'endormir en premier ce soir",
+   "lvl": "chill"
+  },
+  {
+   "t": "oublier son téléphone ici ce soir",
+   "lvl": "chill"
+  },
+  {
+   "t": "se marier à Las Vegas sur un coup de tête",
+   "lvl": "chill"
+  },
+  {
+   "t": "survivre à une apocalypse zombie",
+   "lvl": "chill"
+  },
+  {
+   "t": "mourir en premier dans un film d'horreur",
+   "lvl": "chill"
+  },
+  {
+   "t": "devenir millionnaire",
+   "lvl": "chill"
+  },
+  {
+   "t": "se perdre même avec un GPS",
+   "lvl": "chill"
+  },
+  {
+   "t": "envoyer un message qu'il va regretter ce soir",
+   "lvl": "chill"
+  },
+  {
+   "t": "adopter dix chats",
+   "lvl": "chill"
+  },
+  {
+   "t": "partir vivre à l'autre bout du monde du jour au lendemain",
+   "lvl": "chill"
+  },
+  {
+   "t": "pleurer devant un Pixar",
+   "lvl": "chill"
+  },
+  {
+   "t": "rater son vol",
+   "lvl": "chill"
+  },
+  {
+   "t": "devenir influenceur",
+   "lvl": "chill"
+  },
+  {
+   "t": "se faire arnaquer en vacances",
+   "lvl": "chill"
+  },
+  {
+   "t": "connaître tous les potins du groupe",
+   "lvl": "chill"
+  },
+  {
+   "t": "lancer une start-up complètement improbable",
+   "lvl": "chill"
+  },
+  {
+   "t": "arriver en retard à son propre mariage",
+   "lvl": "chill"
+  },
+  {
+   "t": "garder un secret jusqu'à la tombe",
+   "lvl": "chill"
+  },
+  {
+   "t": "balancer un secret au bout de cinq minutes",
+   "lvl": "chill"
+  },
+  {
+   "t": "claquer son salaire en une journée",
+   "lvl": "chill"
+  },
+  {
+   "t": "avoir un compte secret sur les réseaux",
+   "lvl": "chill"
+  },
+  {
+   "t": "parler à ses plantes",
+   "lvl": "chill"
+  },
+  {
+   "t": "devenir président",
+   "lvl": "chill"
+  },
+  {
+   "t": "se faire tatouer le prénom de quelqu'un",
+   "lvl": "chill"
+  },
+  {
+   "t": "gagner à un jeu télé",
+   "lvl": "chill"
+  },
+  {
+   "t": "tomber amoureux d'un inconnu dans le train",
+   "lvl": "chill"
+  },
+  {
+   "t": "faire un discours beaucoup trop long à un mariage",
+   "lvl": "chill"
+  },
+  {
+   "t": "se battre avec un pigeon",
+   "lvl": "chill"
+  },
+  {
+   "t": "connaître toutes les répliques d'un film par cœur",
+   "lvl": "chill"
+  },
+  {
+   "t": "appeler son ex ce soir",
+   "lvl": "chill"
+  },
+  {
+   "t": "commander un kebab à 4h du matin",
+   "lvl": "chill"
+  },
+  {
+   "t": "s'endormir au cinéma",
+   "lvl": "chill"
+  },
+  {
+   "t": "organiser la prochaine soirée",
+   "lvl": "chill"
+  },
+  {
+   "t": "disparaître sans dire au revoir",
+   "lvl": "chill"
+  },
+  {
+   "t": "avoir 40 onglets ouverts en permanence",
+   "lvl": "chill"
+  },
+  {
+   "t": "devenir végan du jour au lendemain",
+   "lvl": "chill"
+  },
+  {
+   "t": "écrire un livre",
+   "lvl": "chill"
+  },
+  {
+   "t": "répondre à un message trois semaines plus tard",
+   "lvl": "chill"
+  },
+  {
+   "t": "être le dernier debout ce soir",
+   "lvl": "chill"
+  },
+  {
+   "t": "danser sur la table",
+   "lvl": "chill"
+  },
+  {
+   "t": "gagner un concours de piments",
+   "lvl": "chill"
+  },
+  {
+   "t": "casser son téléphone dans l'année",
+   "lvl": "chill"
+  },
+  {
+   "t": "vivre dans une yourte",
+   "lvl": "chill"
+  },
+  {
+   "t": "se lancer dans le stand-up",
+   "lvl": "chill"
+  },
+  {
+   "t": "prendre 200 photos du même plat",
+   "lvl": "chill"
+  },
+  {
+   "t": "se faire passer pour quelqu'un d'autre au téléphone",
+   "lvl": "chill"
+  },
+  {
+   "t": "partir en vacances sans réserver d'hôtel",
+   "lvl": "chill"
+  },
+  {
+   "t": "finir la soirée en pleurs",
+   "lvl": "soiree"
+  },
+  {
+   "t": "faire un discours d'amour à tout le monde après trois verres",
+   "lvl": "soiree"
+  },
+  {
+   "t": "perdre son téléphone ce soir",
+   "lvl": "soiree"
+  },
+  {
+   "t": "s'endormir sur le canapé avant minuit",
+   "lvl": "soiree"
+  },
+  {
+   "t": "dire « dernier verre » cinq fois de suite",
+   "lvl": "soiree"
+  },
+  {
+   "t": "finir la soirée en caleçon",
+   "lvl": "soiree"
+  },
+  {
+   "t": "rouler le joint le plus raté de l'histoire",
+   "lvl": "soiree"
+  },
+  {
+   "t": "manger tout le frigo à 5 h du mat",
+   "lvl": "soiree"
+  },
+  {
+   "t": "réveiller tout le monde en rentrant",
+   "lvl": "soiree"
+  },
+  {
+   "t": "proposer une soirée improvisée un mardi",
+   "lvl": "soiree"
+  },
+  {
+   "t": "vomir dans un endroit improbable",
+   "lvl": "soiree"
+  },
+  {
+   "t": "commencer un débat politique à 3 h du matin",
+   "lvl": "soiree"
+  },
+  {
+   "t": "partir sans dire au revoir",
+   "lvl": "soiree"
+  },
+  {
+   "t": "boire le verre de quelqu'un d'autre sans s'en rendre compte",
+   "lvl": "soiree"
+  },
+  {
+   "t": "dire qu'il ne boit pas ce soir… et finir le plus bourré",
+   "lvl": "soiree"
+  },
+  {
+   "t": "taper un fou rire pendant cinq minutes pour rien",
+   "lvl": "soiree"
+  },
+  {
+   "t": "monter le son au maximum sur sa chanson préférée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "squatter le canapé jusqu'au lendemain midi",
+   "lvl": "soiree"
+  },
+  {
+   "t": "se faire refouler d'une boîte",
+   "lvl": "soiree"
+  },
+  {
+   "t": "lancer un concours de shots",
+   "lvl": "soiree"
+  },
+  {
+   "t": "appeler son ex avant la fin de la soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "oublier où il a garé sa voiture",
+   "lvl": "soiree"
+  },
+  {
+   "t": "finir la soirée chez des inconnus",
+   "lvl": "soiree"
+  },
+  {
+   "t": "s'improviser DJ et vider la piste",
+   "lvl": "soiree"
+  },
+  {
+   "t": "raconter la même anecdote trois fois dans la soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "avoir la plus grosse gueule de bois demain",
+   "lvl": "soiree"
+  },
+  {
+   "t": "faire une sieste au milieu de la soirée et revenir en pleine forme",
+   "lvl": "soiree"
+  },
+  {
+   "t": "commander un taxi et partir dans le mauvais",
+   "lvl": "soiree"
+  },
+  {
+   "t": "prendre 300 photos floues de la soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "promettre d'arrêter de fumer et craquer dans l'heure",
+   "lvl": "soiree"
+  },
+  {
+   "t": "philosopher sur le sens de la vie après avoir fumé",
+   "lvl": "soiree"
+  },
+  {
+   "t": "transformer un apéro tranquille en soirée jusqu'à 6 h",
+   "lvl": "soiree"
+  },
+  {
+   "t": "ramener une bouteille et la boire tout seul",
+   "lvl": "soiree"
+  },
+  {
+   "t": "dire « je suis pas bourré » de façon très peu convaincante",
+   "lvl": "soiree"
+  },
+  {
+   "t": "se battre avec un videur… verbalement",
+   "lvl": "soiree"
+  },
+  {
+   "t": "pleurer devant une vidéo de chien en soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "finir en after alors qu'il travaille demain",
+   "lvl": "soiree"
+  },
+  {
+   "t": "perdre une chaussure en rentrant",
+   "lvl": "soiree"
+  },
+  {
+   "t": "faire un câlin à tout le monde en partant",
+   "lvl": "soiree"
+  },
+  {
+   "t": "devenir ami avec tous les inconnus de la soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "repartir accompagné ce soir",
+   "lvl": "hot"
+  },
+  {
+   "t": "envoyer un message coquin à la mauvaise personne",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir le plus de matchs sur les applis de rencontre",
+   "lvl": "hot"
+  },
+  {
+   "t": "se remettre avec son ex",
+   "lvl": "hot"
+  },
+  {
+   "t": "draguer le serveur ou la serveuse",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir un crush sur quelqu'un de cette pièce",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir le plus gros body count",
+   "lvl": "hot"
+  },
+  {
+   "t": "faire un date le soir même d'une rupture",
+   "lvl": "hot"
+  },
+  {
+   "t": "être le plus jaloux en couple",
+   "lvl": "hot"
+  },
+  {
+   "t": "ghoster quelqu'un après un super date",
+   "lvl": "hot"
+  },
+  {
+   "t": "se faire draguer sans même s'en rendre compte",
+   "lvl": "hot"
+  },
+  {
+   "t": "tomber amoureux en une seule soirée",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir une relation secrète en ce moment",
+   "lvl": "hot"
+  },
+  {
+   "t": "embrasser quelqu'un pour un pari",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir déjà dragué le partenaire d'un pote",
+   "lvl": "hot"
+  },
+  {
+   "t": "envoyer « tu dors ? » à 2 h du matin",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir le plus de conversations en cours sur les applis",
+   "lvl": "hot"
+  },
+  {
+   "t": "se marier en premier",
+   "lvl": "hot"
+  },
+  {
+   "t": "faire un strip-tease improvisé en soirée",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir déjà été surpris en plein moment intime",
+   "lvl": "hot"
+  },
+  {
+   "t": "mentir sur son nombre de partenaires",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir un plan régulier dont personne n'est au courant",
+   "lvl": "hot"
+  },
+  {
+   "t": "flirter avec tout le monde sans s'en rendre compte",
+   "lvl": "hot"
+  },
+  {
+   "t": "tomber sous le charme d'une personne en couple",
+   "lvl": "hot"
+  },
+  {
+   "t": "garder des photos de son ex",
+   "lvl": "hot"
+  },
+  {
+   "t": "draguer avec une technique complètement ringarde",
+   "lvl": "hot"
+  },
+  {
+   "t": "faire la première approche dans une soirée",
+   "lvl": "hot"
+  },
+  {
+   "t": "être le plus romantique du groupe",
+   "lvl": "hot"
+  },
+  {
+   "t": "être le plus coquin du groupe",
+   "lvl": "hot"
+  },
+  {
+   "t": "stalker le nouveau crush de son ex",
+   "lvl": "hot"
+  },
+  {
+   "t": "se faire larguer par message",
+   "lvl": "hot"
+  },
+  {
+   "t": "larguer quelqu'un par message",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir le meilleur jeu de séduction",
+   "lvl": "hot"
+  },
+  {
+   "t": "craquer pour un collègue",
+   "lvl": "hot"
+  },
+  {
+   "t": "avoir déjà eu un date catastrophique",
+   "lvl": "hot"
+  }
+ ],
+ "bombe": [
+  "Marques de bière",
+  "Pokémon",
+  "Pays d'Europe",
+  "Capitales du monde",
+  "Joueurs de foot français",
+  "Rappeurs français",
+  "Films Disney ou Pixar",
+  "Fruits",
+  "Marques de voiture",
+  "Séries Netflix",
+  "Personnages de Harry Potter",
+  "Jeux vidéo",
+  "Animaux de la savane",
+  "Cocktails",
+  "Fromages",
+  "Instruments de musique",
+  "Super-héros",
+  "Applis sur ton téléphone",
+  "Sports olympiques",
+  "Trucs qu'on trouve dans une salle de bain",
+  "Mots qui finissent en « -tion »",
+  "Prénoms qui commencent par M",
+  "Villes de France",
+  "Légumes",
+  "Marques de vêtements",
+  "Chanteuses",
+  "Dessins animés des années 2000",
+  "Métiers",
+  "Plats italiens",
+  "Langues parlées dans le monde",
+  "Planètes et astres",
+  "Trucs qui piquent",
+  "Excuses pour arriver en retard",
+  "Mots anglais qu'on utilise en français",
+  "Groupes de rock",
+  "Clubs de foot européens",
+  "Desserts",
+  "Personnages de jeux vidéo",
+  "Monuments célèbres",
+  "Trucs rouges",
+  "Quartiers ou villes autour de Marseille",
+  "Émissions de télé-réalité"
+ ]
 }

@@ -21,8 +21,8 @@ class SmokeOrDrinkApp {
       film: 105,              // durée du film en minutes
       joint: 'tourne',        // 'tourne' | 'chacun'
       end: { quiz: 'free', cards: 'free', bombe: 'free' },
-      intensity: 'normal',
-      memeLevel: 'soiree',    // memes : 'chill' | 'soiree' | 'hot' (cumulatif)    // jeu de l'oie : 'soft' | 'normal' | 'hard'
+      intensity: 'normal',    // jeu de l'oie : 'soft' | 'normal' | 'hard'
+      memeLevel: 'soiree',    // ambiance des memes, Je n'ai jamais, Qui pourrait… : 'chill' | 'soiree' | 'hot' (cumulatif)
       ...(saved.settings || {}),
     };
     this.mode = null;          // 'fumette' | 'alcool'
@@ -91,8 +91,11 @@ class SmokeOrDrinkApp {
 
     const cards = cardsRes.status === 'fulfilled' ? cardsRes.value : {};
     for (const key of ['jamais', 'probable', 'bombe']) {
-      const list = Array.isArray(cards[key]) ? cards[key].filter((s) => typeof s === 'string' && s.trim()) : [];
-      this.data[key] = list.length ? list : FALLBACK[key];
+      // Une carte = un texte, ou { t: texte, lvl: 'chill' | 'soiree' | 'hot' }
+      const list = (Array.isArray(cards[key]) ? cards[key] : [])
+        .map((c) => (typeof c === 'string' ? { t: c, lvl: 'chill' } : c))
+        .filter((c) => c && typeof c.t === 'string' && c.t.trim());
+      this.data[key] = list.length ? list : FALLBACK[key].map((t) => ({ t, lvl: 'chill' }));
     }
     if (quizRes.status === 'rejected' || cardsRes.status === 'rejected') {
       console.warn('[Data] Chargement partiel, contenu de secours activé.', quizRes.reason || cardsRes.reason);
@@ -314,7 +317,7 @@ class SmokeOrDrinkApp {
     if (this.isRouletteFumette) { this.renderRType(); this.renderDurations(); }
     if (this.isSeance) { this.renderFilm(); this.renderJoint(); }
     if (g.id === 'oie') this.renderIntensity();
-    if (g.id === 'memes') this.renderMemeLevel();
+    if (['memes', 'jamais', 'probable', 'oie'].includes(g.id)) this.renderMemeLevel();
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
   }
@@ -511,6 +514,14 @@ class SmokeOrDrinkApp {
     return `// ≈ ${n} taffs ${each ? 'chacun ' : ''}sur ${fmtDuration(this.settings.film * 60)}`;
   }
 
+  /** Textes d'un paquet de cartes, filtrés selon l'ambiance choisie (chill ⊂ soirée ⊂ hot) */
+  cardPool(key) {
+    const lvl = (typeof MEME_LEVELS !== 'undefined' && MEME_LEVELS[this.settings.memeLevel]) || { includes: ['chill', 'soiree'] };
+    const all = this.data[key] || [];
+    const pool = all.filter((c) => lvl.includes.includes(c.lvl || 'chill')).map((c) => c.t);
+    return pool.length ? pool : all.map((c) => c.t);
+  }
+
   quizPool() {
     const cats = this.settings.cats;
     return cats.includes('all') ? this.data.quiz : this.data.quiz.filter((q) => cats.includes(q.cat));
@@ -530,7 +541,7 @@ class SmokeOrDrinkApp {
     let count = 0;
     if (this.dataReady) {
       if (g.id === 'quiz') count = this.quizPool().length;
-      else if (g.kind === 'cards' || g.kind === 'bombe') count = this.data[g.id].length;
+      else if (g.kind === 'cards' || g.kind === 'bombe') count = this.cardPool(g.id).length;
       if (!reason && g.id === 'quiz' && !count) reason = 'AUCUNE QUESTION POUR CES THÈMES';
     }
     btn.disabled = Boolean(reason);
@@ -580,10 +591,10 @@ class SmokeOrDrinkApp {
       };
       this.quizTurn();
     } else if (g.kind === 'cards') {
-      this.game.deck = new Deck(this.data[g.id]);
+      this.game.deck = new Deck(this.cardPool(g.id));
       this.cardsTurn(true);
     } else if (g.kind === 'bombe') {
-      this.game.deck = new Deck(this.data.bombe);
+      this.game.deck = new Deck(this.cardPool('bombe'));
       this.game.turn = randInt(0, this.game.players.length - 1);
       this.bombTurn();
     } else if (kind === 'memes') {

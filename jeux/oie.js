@@ -81,9 +81,9 @@ addGame(class {
     g.mult = OIE.MULT[this.settings.intensity] || 2;
     g.pending = []; // effets à afficher dans le prochain panneau (rebond, case occupée…)
     g.quiz = new Deck(this.data.quiz);
-    g.jamais = new Deck(this.data.jamais);
-    g.probable = new Deck(this.data.probable);
-    g.themes = new Deck(this.data.bombe);
+    g.jamais = new Deck(this.cardPool('jamais'));
+    g.probable = new Deck(this.cardPool('probable'));
+    g.themes = new Deck(this.cardPool('bombe'));
     this.oieBuildBoard();
     this.oieTurn();
     // L'écran n'est visible qu'après la transition : on recadre la caméra à ce moment-là
