@@ -2,31 +2,35 @@
  * SMOKE OR DRINK — Jeu de l'oie (format téléphone)
  * ------------------------------------------------------------------------------
  * - Plateau de 63 cases qui serpente de bas en haut ; la "caméra" suit le pion.
- * - Deux dés ; il faut tomber pile sur 63 (sinon on rebondit en arrière).
+ * - Un dé ; il faut tomber pile sur 63 (sinon on rebondit, avec un malus du surplus).
+ * - Arriver sur une case déjà occupée = malus de 1.
+ * - Intensité (Soft / Normal / Hardcore) : malus ×1, ×2 ou ×3.
  * - Cases classiques : oie (on rejoue son lancer), pont, auberge, puits,
  *   labyrinthe, prison, tête de mort. Les autres cases lancent des mini-jeux.
  * - Chaque effet s'adapte au camp du joueur (comme le Mashup) :
  *     malus  → buveur : il boit · fumeur : sa jauge descend
  *     bonus  → buveur : il distribue · fumeur : il garde (jauge) ou balance
- *   5 points de jauge = une taff.
+ *   3 points de jauge = une taff.
  * ------------------------------------------------------------------------------
  */
 'use strict';
 
 const OIE = {
   LAST: 63,
+  GAUGE: 3,
+  MULT: { soft: 1, normal: 2, hard: 3 },
   COLS: 5,
   CELL_TYPES: {
     depart:     { icon: '🏁', name: 'Départ',          color: '#f4ecd8' },
     finish:     { icon: '🏆', name: 'Arrivée',         color: '#ffc857' },
-    oie:        { icon: '🦢', name: 'Oie',             color: '#f4ecd8', text: 'Tu avances encore du même nombre !' },
-    pont:       { icon: '🌉', name: 'Le pont',         color: '#6dc7e8', text: 'Tu traverses directement jusqu’à la case 12.' },
-    auberge:    { icon: '🍻', name: 'L’auberge',       color: '#ffc857', text: 'Petite pause : tu passes ton prochain tour.' },
-    puits:      { icon: '🕳️', name: 'Le puits',        color: '#a667d4', text: 'Tu es coincé au fond : 2 tours sans jouer.' },
-    labyrinthe: { icon: '🌀', name: 'Le labyrinthe',   color: '#5ec8ff', text: 'Tu te perds… retour à la case 30.' },
-    prison:     { icon: '⛓️', name: 'La prison',       color: '#9ca3af', text: 'Enfermé : 2 tours sans jouer.' },
+    oie:        { icon: '🦢', name: 'Oie',             color: '#f4ecd8', text: 'Tu distribues 2 malus, puis tu avances encore du même nombre !' },
+    pont:       { icon: '🌉', name: 'Le pont',         color: '#6dc7e8', text: 'Tu distribues 1 malus, puis tu traverses jusqu’à la case 12.' },
+    auberge:    { icon: '🍻', name: 'L’auberge',       color: '#ffc857', text: 'Tu passes 1 tour avec 1 malus… ou tu prends 3 malus et tu continues.' },
+    puits:      { icon: '🕳️', name: 'Le puits',        color: '#a667d4', text: 'Pas le choix : cul sec pour les buveurs, taff de pompier pour les fumeurs.' },
+    labyrinthe: { icon: '🌀', name: 'Le labyrinthe',   color: '#5ec8ff', text: 'Tu te perds… retour à la case 30 et 4 malus.' },
+    prison:     { icon: '⛓️', name: 'La prison',       color: '#9ca3af', text: 'Cul sec / taff de pompier… ou 2 tours enfermé et tu bois le score de ton dernier dé.' },
     mort:       { icon: '💀', name: 'La tête de mort', color: '#ff5e7e', text: 'Retour au départ… et une pénalité en prime.' },
-    calm:       { icon: '',   name: 'Case tranquille', color: 'rgba(244,236,216,.3)' },
+    verite:     { icon: '🎭', name: 'Action ou vérité', color: '#f48fb1' },
     malus:      { icon: '😬', name: 'Pas de chance',   color: '#ff8855' },
     cadeau:     { icon: '🎁', name: 'Cadeau',          color: '#7ee07a' },
     tous:       { icon: '🍾', name: 'Tournée générale', color: '#ffa845' },
@@ -42,8 +46,8 @@ const OIE = {
   SPECIAL: { 6: 'pont', 19: 'auberge', 31: 'puits', 42: 'labyrinthe', 52: 'prison', 58: 'mort' },
   GEESE: [9, 18, 27, 36, 45, 54],
   // Les autres cases reçoivent ces événements dans cet ordre (le plateau est toujours le même)
-  CYCLE: ['quiz', 'calm', 'jamais', 'malus', 'theme', 'cadeau', 'calm', 'quiz', 'probable', 'duel', 'calm', 'avance',
-    'quiz', 'tous', 'jamais', 'calm', 'recule', 'echange', 'theme', 'quiz', 'calm', 'probable', 'malus', 'cadeau'],
+  CYCLE: ['quiz', 'verite', 'jamais', 'malus', 'theme', 'cadeau', 'verite', 'quiz', 'probable', 'duel', 'verite', 'avance',
+    'quiz', 'tous', 'jamais', 'verite', 'recule', 'echange', 'theme', 'quiz', 'verite', 'probable', 'malus', 'cadeau'],
 };
 
 function buildOieBoard() {
@@ -69,6 +73,8 @@ addGame(class {
     const g = this.game;
     g.board = buildOieBoard();
     g.busy = false;
+    g.mult = OIE.MULT[this.settings.intensity] || 2;
+    g.pending = []; // effets à afficher dans le prochain panneau (rebond, case occupée…)
     g.quiz = new Deck(this.data.quiz);
     g.jamais = new Deck(this.data.jamais);
     g.probable = new Deck(this.data.probable);
@@ -119,9 +125,9 @@ addGame(class {
     const cells = g.board.map((type, i) => {
       const t = OIE.CELL_TYPES[type];
       const { x, y } = this.oieXY(i);
-      const special = !['calm', 'quiz', 'jamais', 'probable', 'theme', 'duel'].includes(type);
+      const special = !['verite', 'quiz', 'jamais', 'probable', 'theme', 'duel'].includes(type);
       return h('div', {
-        class: `oie-cell t-${type}${special && type !== 'calm' ? ' is-special' : ''}`, dataset: { i },
+        class: `oie-cell t-${type}${special ? ' is-special' : ''}`, dataset: { i },
         style: { left: `${x}px`, top: `${y}px`, '--cc': t.color },
       }, h('span', { class: 'ci', text: t.icon }), h('span', { class: 'cn', text: i === 0 ? 'GO' : String(i) }));
     });
@@ -241,7 +247,6 @@ addGame(class {
     $$('#oie-panel button').forEach((b) => { b.disabled = true; });
     const dies = $$('.die', dice);
     const d1 = randInt(1, 6);
-    const d2 = randInt(1, 6);
     // Animation : les faces défilent puis se figent
     dies.forEach((d) => replay(d, 'rolling'));
     const t0 = performance.now();
@@ -251,15 +256,19 @@ addGame(class {
       await wait(70);
     }
     this.oieDie(dies[0], d1);
-    this.oieDie(dies[1], d2);
     haptic(20);
     this.sound.good();
-    const total = d1 + d2;
+    const total = d1;
     g.lastRoll = total;
     const p = g.players[g.turn];
-    this.oiePanel({ icon: '🎲', title: `${d1} + ${d2} = ${total}`, text: `${p.name} avance de ${total} cases…` });
+    const surplus = Math.max(0, p.pos + total - OIE.LAST);
+    this.oiePanel({ icon: '🎲', title: `${total}`, text: `${p.name} avance de ${plural(total, 'case')}…` });
     await wait(350);
     await this.oieMove(p, total);
+    if (surplus) {
+      this.sound.bad();
+      g.pending.push(`↩️ Rebond de ${surplus} : ${this.oieMalus(p, surplus)}`);
+    }
     this.oieResolve(p, 0);
   }
 
@@ -303,6 +312,10 @@ addGame(class {
     if (!g || g.over) return;
     const type = g.board[p.pos];
     const t = OIE.CELL_TYPES[type];
+    // Arriver sur une case déjà occupée : le dernier arrivé prend un malus
+    if (p.pos !== 0 && p.pos !== OIE.LAST && g.players.some((x) => x.id !== p.id && x.pos === p.pos)) {
+      g.pending.push(`👥 Case occupée : ${this.oieMalus(p, 1)}`);
+    }
     const done = (label = 'JOUEUR SUIVANT →') => h('button', { class: 'btn-primary', text: label, onclick: once(() => this.oieNext()) });
     const flash = () => this.fx.flash(color(t.color, 0.3));
     const base = { icon: t.icon, title: t.name, color: t.color };
@@ -318,18 +331,22 @@ addGame(class {
         if (depth >= 3) { this.oiePanel({ ...base, text: 'Les oies sont fatiguées, on s’arrête là.', actions: [done()] }); return; }
         this.sound.good();
         flash();
-        this.oiePanel({ ...base, text: `Tu avances encore de ${g.lastRoll} cases !` });
-        await wait(900);
-        await this.oieMove(p, g.lastRoll);
-        this.oieResolve(p, depth + 1);
+        this.oieBonus(p, 2, base, `Tu distribues 2 malus, puis tu avances encore de ${plural(g.lastRoll, 'case')}.`, async () => {
+          this.oiePanel({ ...base, text: `En avant de ${plural(g.lastRoll, 'case')} !` });
+          await wait(500);
+          await this.oieMove(p, g.lastRoll);
+          this.oieResolve(p, depth + 1);
+        }, { keep: false });
         return;
       }
       case 'pont': {
         flash();
-        this.oiePanel({ ...base, text: t.text });
-        await wait(800);
-        await this.oieJump(p, 12);
-        this.oieResolve(p, depth + 1);
+        this.oieBonus(p, 1, base, 'Tu distribues 1 malus, puis direction la case 12.', async () => {
+          this.oiePanel({ ...base, text: 'Tu traverses le pont…' });
+          await wait(400);
+          await this.oieJump(p, 12);
+          this.oieResolve(p, depth + 1);
+        }, { keep: false });
         return;
       }
       case 'labyrinthe': {
@@ -338,16 +355,31 @@ addGame(class {
         this.oiePanel({ ...base, text: t.text });
         await wait(800);
         await this.oieJump(p, 30);
-        this.oiePanel({ ...base, text: 'Te voilà case 30.', actions: [done()] });
+        this.oiePanel({ ...base, text: 'Te voilà case 30.', effects: [this.oieMalus(p, 4)], actions: [done()] });
         return;
       }
-      case 'auberge':
-      case 'puits':
-      case 'prison': {
-        p.skip = type === 'auberge' ? 1 : 2;
+      case 'auberge': {
         this.sound.bad();
         flash();
-        this.oiePanel({ ...base, text: t.text, actions: [done()] });
+        this.oieChoice(p, base, t.text, [
+          { label: '😴 PASSER 1 TOUR + 1 MALUS', run: () => { p.skip = 1; return [this.oieMalus(p, 1), `😴 ${p.name} passe son prochain tour`]; } },
+          { label: '🔥 3 MALUS ET JE CONTINUE', run: () => [this.oieMalus(p, 3)] },
+        ]);
+        return;
+      }
+      case 'puits': {
+        this.sound.bad();
+        flash();
+        this.oiePanel({ ...base, text: t.text, effects: [this.oieBig(p)], actions: [done()] });
+        return;
+      }
+      case 'prison': {
+        this.sound.bad();
+        flash();
+        this.oieChoice(p, base, t.text, [
+          { label: p.camp === 'alcool' ? '🥃 CUL SEC' : '🌿 TAFF DE POMPIER', run: () => [this.oieBig(p)] },
+          { label: `⛓️ 2 TOURS + ${g.lastRoll || 1} ${p.camp === 'alcool' ? 'GORGÉES' : 'DE JAUGE'}`, run: () => { p.skip = 2; return [this.oieMalus(p, g.lastRoll || 1, true), `⛓️ ${p.name} reste enfermé 2 tours`]; } },
+        ]);
         return;
       }
       case 'mort': {
@@ -370,10 +402,7 @@ addGame(class {
         this.oieResolve(p, depth + 1);
         return;
       }
-      case 'calm': {
-        this.oiePanel({ ...base, icon: '😌', text: 'Rien ne se passe. Profite.', actions: [done()] });
-        return;
-      }
+      case 'verite': return this.oieVerite(p, base);
       case 'malus': {
         this.sound.bad();
         const fx = this.oieMalus(p, 2);
@@ -412,7 +441,8 @@ addGame(class {
    * Malus adapté au camp : un buveur boit, un fumeur perd des points de jauge.
    * Renvoie la ligne de texte à afficher.
    */
-  oieMalus(p, n) {
+  oieMalus(p, base, raw = false) {
+    const n = raw ? base : base * (this.game.mult || 1);
     if (p.camp === 'alcool') {
       p.taken += n;
       return `🥃 ${p.name} boit ${n}`;
@@ -420,15 +450,81 @@ addGame(class {
     const lost = Math.min(p.gauge, n);
     p.gauge -= lost;
     p.sabotaged += n;
-    return lost ? `🔻 ${p.name} −${lost} jauge (${p.gauge}/${CONFIG.TAFF_EVERY})` : `🛡️ ${p.name} : jauge déjà vide`;
+    return lost ? `🔻 ${p.name} −${lost} jauge (${p.gauge}/${this.gaugeMax})` : `🛡️ ${p.name} : jauge déjà vide`;
+  }
+
+  /** Gros malus : cul sec pour un buveur, taff de pompier pour un fumeur */
+  oieBig(p) {
+    if (p.camp === 'alcool') {
+      p.taken += 5;
+      return `🥃 ${p.name} : CUL SEC !`;
+    }
+    p.taffs += 1;
+    return `🌿 ${p.name} : TAFF DE POMPIER !`;
+  }
+
+  /** Case à choix (auberge, prison) : deux options, puis on affiche le résultat */
+  oieChoice(p, base, text, options) {
+    const btns = options.map((o, i) => h('button', {
+      class: i === 0 ? 'btn-primary' : 'btn-ghost', text: o.label,
+      onclick: once(() => {
+        const effects = o.run();
+        this.renderScores('oie');
+        this.oiePanel({ ...base, text: `${p.name} a choisi.`, effects,
+          actions: [h('button', { class: 'btn-primary', text: 'JOUEUR SUIVANT →', onclick: once(() => this.oieNext()) })] });
+      }),
+    }));
+    this.oiePanel({ ...base, text: `${text} À toi de choisir :`, body: h('div', { class: 'op-body' }, btns) });
+  }
+
+  /**
+   * Action ou vérité : le joueur choisit une victime, qui choisit action ou vérité.
+   * C'est le joueur qui invente la question ou le gage. Refus = malus 3.
+   */
+  oieVerite(p, base) {
+    const g = this.game;
+    const others = g.players.filter((x) => x.id !== p.id);
+    const chips = h('div', { class: 'chips' });
+    this.renderChips(chips, others, {
+      onChange: (sel) => {
+        const v = others.find((x) => sel.has(x.id));
+        if (!v) return;
+        const step2 = (kind) => {
+          this.oiePanel({ ...base, icon: kind === 'action' ? '🎬' : '🤫', title: kind === 'action' ? 'Action !' : 'Vérité !',
+            big: `${p.name} donne ${kind === 'action' ? 'un gage' : 'une question'} à ${v.name}`,
+            text: `Si ${v.name} refuse : ${this.oieMalusLabel(v, 3)}.`,
+            body: h('div', { class: 'actions' },
+              h('button', { class: 'btn-ghost', text: '✗ refusé', onclick: once(() => {
+                const fx = this.oieMalus(v, 3);
+                this.sound.bad();
+                this.renderScores('oie');
+                this.oiePanel({ ...base, text: `${v.name} se dégonfle…`, effects: [fx],
+                  actions: [h('button', { class: 'btn-primary', text: 'JOUEUR SUIVANT →', onclick: once(() => this.oieNext()) })] });
+              }) }),
+              h('button', { class: 'btn-primary', text: '✓ RELEVÉ', onclick: once(() => { this.sound.good(); this.toast(`👏 ${v.name} a assuré`, 'good'); this.oieNext(); }) })) });
+        };
+        this.oiePanel({ ...base, big: `${v.name} : action ou vérité ?`, text: `${p.name} trouve la question ou le gage.`,
+          body: h('div', { class: 'actions' },
+            h('button', { class: 'btn-ghost', text: '🤫 VÉRITÉ', onclick: once(() => step2('verite')) }),
+            h('button', { class: 'btn-primary', text: '🎬 ACTION', onclick: once(() => step2('action')) })) });
+      },
+    });
+    this.oiePanel({ ...base, text: `${p.name}, choisis ta victime.`, body: h('div', { class: 'op-body' }, chips) });
+  }
+
+  /** Texte d'un malus sans l'appliquer (ex. "boit 4" / "−4 jauge") */
+  oieMalusLabel(p, base) {
+    const n = base * (this.game.mult || 1);
+    return p.camp === 'alcool' ? `il boit ${n}` : `−${n} de jauge`;
   }
 
   /** Bonus : le joueur distribue (buveur) ou garde/balance (fumeur) ses jetons */
-  oieBonus(p, n, base, text) {
+  oieBonus(p, n, base, text, then = null, { keep = p.camp === 'fumette' } = {}) {
+    const next = () => (then ? then() : this.oieNext());
     const body = h('div', { class: 'op-body' });
-    this.oiePanel({ ...base, text: `${text} ${p.camp === 'fumette' ? 'Garde-les pour ta jauge ou balance-les.' : 'Distribue-les !'}`, body });
+    this.oiePanel({ ...base, text: keep ? `${text} Garde-les pour ta jauge ou balance-les.` : text, body });
     this.renderGive(body, p, n, {
-      keep: p.camp === 'fumette', tokens: true, screen: 'oie',
+      keep, tokens: true, screen: 'oie',
       onDone: (gained) => {
         if (gained > 0) {
           this.sound.reward();
@@ -436,9 +532,9 @@ addGame(class {
           this.fx.burstFrom($('#oie-panel'), { colors: ['#7ee07a', '#d4ff5e', '#fff'], count: 90, power: 11 });
           this.oiePanel({ icon: '🌿', title: gained > 1 ? `${gained} TAFFS !` : 'TAFF !', color: '#7ee07a',
             text: `${p.name}, ta jauge est pleine : va fumer !`,
-            actions: [h('button', { class: 'btn-primary pulse', text: '✓ C’EST FUMÉ →', onclick: once(() => this.oieNext()) })] });
+            actions: [h('button', { class: 'btn-primary pulse', text: '✓ C’EST FUMÉ →', onclick: once(() => next()) })] });
         } else {
-          this.oieNext();
+          next();
         }
       },
     });
@@ -615,6 +711,8 @@ addGame(class {
   /* PANNEAU D'ÉVÉNEMENT                                                     */
   /* ---------------------------------------------------------------------- */
   oiePanel({ icon = '', title = '', color: c = null, text = '', big = '', effects = [], body = null, actions = [] }) {
+    const g = this.game;
+    if (g && g.pending && g.pending.length) { effects = [...g.pending, ...effects]; g.pending = []; }
     const card = h('div', { class: 'op-card', style: c ? { '--cc': c } : {} },
       h('div', { class: 'op-head' }, icon ? h('span', { class: 'op-icon', text: icon }) : null, h('span', { class: 'op-title', text: title })),
       big ? h('p', { class: 'op-big', text: big }) : null,

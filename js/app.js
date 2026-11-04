@@ -21,6 +21,7 @@ class SmokeOrDrinkApp {
       film: 105,              // durée du film en minutes
       joint: 'tourne',        // 'tourne' | 'chacun'
       end: { quiz: 'free', cards: 'free', bombe: 'free' },
+      intensity: 'normal',    // jeu de l'oie : 'soft' | 'normal' | 'hard'
       ...(saved.settings || {}),
     };
     this.mode = null;          // 'fumette' | 'alcool'
@@ -233,6 +234,8 @@ class SmokeOrDrinkApp {
   /* MODE & HUB                                                              */
   /* ---------------------------------------------------------------------- */
   get isMashup() { return this.mode === 'mashup'; }
+  /** Taille de la jauge de taff : 3 au jeu de l'oie, 5 ailleurs */
+  get gaugeMax() { return this.game && this.game.id === 'oie' ? OIE.GAUGE : CONFIG.TAFF_EVERY; }
   get unitEmoji() { return this.isMashup ? '🌿🥃' : this.mode === 'fumette' ? '🌿' : '🥃'; }
   /** Camp d'un joueur : le sien en Mashup, sinon celui de la partie */
   campOf(p) { return this.isMashup ? p.camp : this.mode; }
@@ -309,6 +312,7 @@ class SmokeOrDrinkApp {
     if (g.id === 'quiz') { this.renderCategories(); this.renderDiffs(); }
     if (this.isRouletteFumette) { this.renderRType(); this.renderDurations(); }
     if (this.isSeance) { this.renderFilm(); this.renderJoint(); }
+    if (g.id === 'oie') this.renderIntensity();
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
   }
@@ -473,6 +477,18 @@ class SmokeOrDrinkApp {
     })));
   }
 
+  renderIntensity() {
+    const opts = [
+      { id: 'soft', emoji: '🙂', label: 'Soft', small: 'malus ×1' },
+      { id: 'normal', emoji: '😈', label: 'Normal', small: 'malus ×2' },
+      { id: 'hard', emoji: '💀', label: 'Hardcore', small: 'malus ×3' },
+    ];
+    $('#intensity-grid').replaceChildren(...opts.map((o) => this.pill({
+      on: this.settings.intensity === o.id, emoji: o.emoji, label: o.label, small: o.small,
+      onClick: () => { this.settings.intensity = o.id; this.save(); this.renderIntensity(); },
+    })));
+  }
+
   renderEnds() {
     const key = this.endKey;
     const opts = CONFIG.END_OPTIONS[key];
@@ -520,6 +536,7 @@ class SmokeOrDrinkApp {
     const mix = this.isMashup ? ` · ${this.players.filter((p) => p.camp === 'fumette').length} 🌿 · ${this.players.filter((p) => p.camp === 'alcool').length} 🥃` : '';
     info.textContent = !this.dataReady ? '' : g.id === 'quiz'
       ? `// ${count} questions dispo${mix}`
+      : g.id === 'oie' ? `// 63 cases · 1 dé · jauge de ${OIE.GAUGE} pour une taff`
       : this.isSeance ? this.seanceEstimate()
       : g.kind === 'roulette' ? '// 50 cases · 70 / 24 / 6 %' : `// ${count} cartes dans le paquet`;
   }
@@ -644,7 +661,7 @@ class SmokeOrDrinkApp {
         sub = fum ? `attente totale ${formatTime(p.time)}` : '';
       } else if (g.id === 'oie') {
         main = p.pos >= 63 ? '🏆 63' : `case ${p.pos}`;
-        sub = p.camp === 'fumette' ? `🌿 ${plural(p.taffs, 'taff')} · jauge ${p.gauge}/${CONFIG.TAFF_EVERY}` : `🥃 ${p.taken} bues · ${p.given} données`;
+        sub = p.camp === 'fumette' ? `🌿 ${plural(p.taffs, 'taff')} · jauge ${p.gauge}/${this.gaugeMax}` : `🥃 ${p.taken} bues · ${p.given} données`;
       } else if (g.id === 'seance') {
         main = `${p.taffs} 🌿`;
         sub = plural(p.taffs, 'taff');
@@ -722,8 +739,8 @@ class SmokeOrDrinkApp {
         h('span', { class: 'sdot' }),
         h('span', { class: 'sname', text: this.isMashup ? `${p.camp === 'fumette' ? '🌿' : '🥃'} ${p.name}` : p.name }),
         h('span', { class: 'sval' }, line.main, line.small ? h('small', { text: line.small }) : null),
-        gauge ? h('span', { class: 'gauge', 'aria-label': `Jauge ${p.gauge} sur ${CONFIG.TAFF_EVERY}` },
-          ...Array.from({ length: CONFIG.TAFF_EVERY }, (_, k) => h('i', { class: k < p.gauge ? 'on' : '' }))) : null);
+        gauge ? h('span', { class: 'gauge', 'aria-label': `Jauge ${p.gauge} sur ${this.gaugeMax}` },
+          ...Array.from({ length: this.gaugeMax }, (_, k) => h('i', { class: k < p.gauge ? 'on' : '' }))) : null);
     }));
 
     if (reducedMotion.matches) return;

@@ -116,7 +116,7 @@ addGame(class {
 
       if (fum) {
         const before = p.taffs;
-        p.taffs = Math.floor(p.score / CONFIG.TAFF_EVERY);
+        p.taffs = Math.floor(p.score / this.gaugeMax);
         const gained = p.taffs - before;
         const lines = [h('p', { class: 'line' }, h('span', { class: 'big', text: `+${value}` }), ` PT${value > 1 ? 'S' : ''}`)];
         if (gained > 0) {
@@ -125,7 +125,7 @@ addGame(class {
           lines.push(h('p', { class: 'sub', text: 'Va fumer, on t’attend 🌿' }));
           actions.append(h('button', { class: 'btn-primary pulse', text: '✓ C’EST FUMÉ →', onclick: once(() => this.quizNext()) }));
         } else {
-          const left = CONFIG.TAFF_EVERY - (p.score % CONFIG.TAFF_EVERY);
+          const left = this.gaugeMax - (p.score % this.gaugeMax);
           lines.push(h('p', { class: 'sub', text: `encore ${plural(left, 'point')} avant la prochaine taff` }));
           actions.append(continueBtn());
         }
@@ -171,7 +171,7 @@ addGame(class {
     let left = total;
     const label = h('p', { class: 'give-label' }, keep ? 'Garde ou balance · reste ' : 'Tape sur tes victimes · reste ', h('b', { text: String(left) }));
     const labelOf = mash ? (t) => (t.id === giver.id
-      ? h('span', { class: 'chip-main' }, '🌿 Garder', h('small', { text: `jauge ${t.gauge}/${CONFIG.TAFF_EVERY}` }))
+      ? h('span', { class: 'chip-main' }, '🌿 Garder', h('small', { text: `jauge ${t.gauge}/${this.gaugeMax}` }))
       : h('span', { class: 'chip-main' }, t.name, h('small', { text: t.camp === 'alcool' ? '🥃 boit' : `🌿 jauge ${t.gauge}` }))) : null;
     const chips = h('div', { class: 'chips' });
     const validate = h('button', { class: 'btn-primary', text: 'VALIDER →', disabled: true });
@@ -256,7 +256,7 @@ addGame(class {
       area.replaceChildren(h('div', { class: 'result good' },
         h('p', { class: 'verdict', text: 'BIEN JOUÉ' }),
         h('p', { class: 'line' }, `+${value} pt${value > 1 ? 's' : ''} · `, h('span', { class: 'big', text: String(value) }), ` jeton${value > 1 ? 's' : ''} ${smoker ? '🌿' : '🥃'}`),
-        smoker ? h('p', { class: 'sub', text: `Jauge ${p.gauge}/${CONFIG.TAFF_EVERY} · garde pour fumer plus vite, ou balance pour saboter` } ) : null));
+        smoker ? h('p', { class: 'sub', text: `Jauge ${p.gauge}/${this.gaugeMax} · garde pour fumer plus vite, ou balance pour saboter` } ) : null));
       this.renderGive(area, p, value, { keep: smoker });
     } else {
       p.streak = 0;
@@ -268,7 +268,7 @@ addGame(class {
       if (smoker) {
         const lost = Math.min(p.gauge, value);
         p.gauge -= lost;
-        lines.push(h('p', { class: 'line' }, '🔻 Jauge ', h('span', { class: 'big', text: `-${lost}` }), ` · ${p.gauge}/${CONFIG.TAFF_EVERY}`));
+        lines.push(h('p', { class: 'line' }, '🔻 Jauge ', h('span', { class: 'big', text: `-${lost}` }), ` · ${p.gauge}/${this.gaugeMax}`));
         if (!lost) lines.push(h('p', { class: 'sub', text: 'Ta jauge était déjà vide, tu t’en sors bien.' }));
       } else {
         p.taken += value;
@@ -284,7 +284,7 @@ addGame(class {
     if (target.id === giver.id) {
       target.gauge += n;
       let gained = 0;
-      while (target.gauge >= CONFIG.TAFF_EVERY) { target.gauge -= CONFIG.TAFF_EVERY; target.taffs += 1; gained += 1; }
+      while (target.gauge >= this.gaugeMax) { target.gauge -= this.gaugeMax; target.taffs += 1; gained += 1; }
       return { gained, text: `🌿 ${giver.name} garde ${n}` };
     }
     giver.given += n;
@@ -306,7 +306,7 @@ addGame(class {
       h('div', { class: 'result good' },
         h('p', { class: 'verdict', text: gained > 1 ? `${gained} TAFFS !` : 'TAFF !' }),
         h('p', { class: 'line', text: `🌿 ${p.name}, ta jauge est pleine` }),
-        h('p', { class: 'sub', text: `Va fumer ! Jauge remise à ${p.gauge}/${CONFIG.TAFF_EVERY}` })),
+        h('p', { class: 'sub', text: `Va fumer ! Jauge remise à ${p.gauge}/${this.gaugeMax}` })),
       h('div', { class: 'result-actions' },
         h('button', { class: 'btn-primary pulse', text: '✓ C’EST FUMÉ →', onclick: once(() => this.quizNext()) })));
     this.sound.reward();
