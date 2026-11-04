@@ -12,8 +12,10 @@
  * incrémente simplement VERSION.
  * ==============================================================================
  */
-const VERSION = 'sod-v4.2.1';
+const VERSION = 'sod-v4.3.0';
 const NETWORK_TIMEOUT = 2500;
+// Cache séparé pour les images de memes : il survit aux mises à jour de l'appli
+const IMG_CACHE = 'sod-images-v1';
 
 const CORE = [
   './',
@@ -30,6 +32,8 @@ const CORE = [
   './jeux/bombe.js',
   './jeux/roulette.js',
   './jeux/oie.js',
+  './jeux/memes.js',
+  './memes.json',
   './data.json',
   './cards.json',
   './manifest.json',
@@ -60,7 +64,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION && k !== IMG_CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -69,17 +73,20 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return; // on ne touche pas aux requêtes externes
+  // Images de memes (Imgflip) : gardées en cache après le premier affichage → dispo hors-ligne
+  if (url.hostname === 'i.imgflip.com') { event.respondWith(cacheFirst(req, IMG_CACHE)); return; }
+  if (url.origin !== self.location.origin) return; // on ne touche pas aux autres requêtes externes
 
   const isStatic = /\/(fonts|icons)\//.test(url.pathname);
   event.respondWith(isStatic ? cacheFirst(req) : networkFirst(req));
 });
 
-async function cacheFirst(req) {
+async function cacheFirst(req, cacheName = VERSION) {
   const cached = await caches.match(req);
   if (cached) return cached;
   const res = await fetch(req);
-  if (res.ok) (await caches.open(VERSION)).put(req, res.clone());
+  // Une image externe chargée par <img> revient "opaque" (statut 0) : on la garde quand même
+  if (res.ok || res.type === 'opaque') (await caches.open(cacheName)).put(req, res.clone());
   return res;
 }
 

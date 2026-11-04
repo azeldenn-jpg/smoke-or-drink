@@ -21,7 +21,8 @@ class SmokeOrDrinkApp {
       film: 105,              // durée du film en minutes
       joint: 'tourne',        // 'tourne' | 'chacun'
       end: { quiz: 'free', cards: 'free', bombe: 'free' },
-      intensity: 'normal',    // jeu de l'oie : 'soft' | 'normal' | 'hard'
+      intensity: 'normal',
+      memeLevel: 'soiree',    // memes : 'chill' | 'soiree' | 'hot' (cumulatif)    // jeu de l'oie : 'soft' | 'normal' | 'hard'
       ...(saved.settings || {}),
     };
     this.mode = null;          // 'fumette' | 'alcool'
@@ -295,7 +296,7 @@ class SmokeOrDrinkApp {
   get kind() { return this.gameDef ? this.gameDef.kind : 'quiz'; }
   get isRouletteFumette() { return this.gameId === 'roulette' && this.mode === 'fumette'; }
   get isSeance() { return this.isRouletteFumette && this.settings.rtype === 'seance'; }
-  get endKey() { return this.kind === 'cards' ? 'cards' : this.kind; }
+  get endKey() { return this.kind === 'cards' || this.kind === 'memes' ? 'cards' : this.kind; }
 
   renderSetup() {
     const g = this.gameDef;
@@ -313,6 +314,7 @@ class SmokeOrDrinkApp {
     if (this.isRouletteFumette) { this.renderRType(); this.renderDurations(); }
     if (this.isSeance) { this.renderFilm(); this.renderJoint(); }
     if (g.id === 'oie') this.renderIntensity();
+    if (g.id === 'memes') this.renderMemeLevel();
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
   }
@@ -536,6 +538,7 @@ class SmokeOrDrinkApp {
     const mix = this.isMashup ? ` · ${this.players.filter((p) => p.camp === 'fumette').length} 🌿 · ${this.players.filter((p) => p.camp === 'alcool').length} 🥃` : '';
     info.textContent = !this.dataReady ? '' : g.id === 'quiz'
       ? `// ${count} questions dispo${mix}`
+      : g.id === 'memes' ? this.memesInfo()
       : g.id === 'oie' ? `// 63 cases · 1 dé · jauge de ${OIE.GAUGE} pour une taff`
       : this.isSeance ? this.seanceEstimate()
       : g.kind === 'roulette' ? '// 50 cases · 70 / 24 / 6 %' : `// ${count} cartes dans le paquet`;
@@ -565,7 +568,7 @@ class SmokeOrDrinkApp {
     $$('[data-game-tag]').forEach((el) => { el.textContent = `${this.unitEmoji} ${g.short}`; });
     this.keepAwake(true);
     const kind = this.isSeance ? 'seance' : g.kind;
-    const target = { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette', seance: 'seance', oie: 'oie' }[kind];
+    const target = { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette', seance: 'seance', oie: 'oie', memes: 'memes' }[kind];
 
     if (g.kind === 'quiz') {
       const pool = this.quizPool();
@@ -583,6 +586,8 @@ class SmokeOrDrinkApp {
       this.game.deck = new Deck(this.data.bombe);
       this.game.turn = randInt(0, this.game.players.length - 1);
       this.bombTurn();
+    } else if (kind === 'memes') {
+      this.memesStart();
     } else if (kind === 'oie') {
       this.oieStart();
     } else if (kind === 'seance') {
@@ -639,6 +644,7 @@ class SmokeOrDrinkApp {
       roulette: { kicker: '// roulette', crown: fum ? 'Le chouchou de la roue' : 'Le plus arrosé', key: (p) => (fum ? p.taffs * 1e6 - p.time : p.taken) },
       seance:   { kicker: '// séance', crown: 'Le plus gros fumeur', key: (p) => p.taffs },
       oie:      { kicker: "// jeu de l'oie", crown: 'Premier arrivé', key: (p) => p.pos },
+      memes:    { kicker: '// le meme de la soirée', crown: 'Le meme vivant', key: (p) => p.taken },
     }[g.id];
 
     const ranked = [...g.players].sort((a, b) => conf.key(b) - conf.key(a) || a.taken - b.taken);
@@ -666,8 +672,8 @@ class SmokeOrDrinkApp {
         main = `${p.taffs} 🌿`;
         sub = plural(p.taffs, 'taff');
       } else {
-        main = `${p.taken} ${this.unitEmoji}`;
-        sub = fum ? plural(p.taken, 'taff') + ' prise' + (p.taken > 1 ? 's' : '') : plural(p.taken, 'gorgée') + ' bue' + (p.taken > 1 ? 's' : '');
+        main = `${p.taken} ${this.isMashup ? (p.camp === 'fumette' ? '🌿' : '🥃') : this.unitEmoji}`;
+        sub = this.isMashup ? (p.camp === 'fumette' ? `${plural(p.taken, 'taff')} prise${p.taken > 1 ? 's' : ''}` : `${plural(p.taken, 'gorgée')} bue${p.taken > 1 ? 's' : ''}`) : fum ? plural(p.taken, 'taff') + ' prise' + (p.taken > 1 ? 's' : '') : plural(p.taken, 'gorgée') + ' bue' + (p.taken > 1 ? 's' : '');
       }
       return h('li', { class: i === 0 ? 'first' : '', style: { '--i': i, '--pc': p.color } },
         h('span', { class: 'rank', text: String(i + 1) }),
@@ -714,7 +720,7 @@ class SmokeOrDrinkApp {
         ? { v: `${p.taffs}`, main: `${p.taffs} 🌿`, small: ` · ${formatTime(p.time)} d'attente` }
         : { v: `${p.taken}`, main: `${p.taken} 🥃`, small: '' };
     }
-    return { v: `${p.taken}`, main: `${p.taken} ${this.unitEmoji}`, small: '' };
+    return { v: `${p.taken}`, main: `${p.taken} ${this.isMashup ? (p.camp === 'fumette' ? '🌿' : '🥃') : this.unitEmoji}`, small: '' };
   }
 
   /** Tableau des scores avec animation FLIP : les lignes glissent quand le classement change */
@@ -724,7 +730,7 @@ class SmokeOrDrinkApp {
     const list = $('[data-score-list]', screen);
     const title = $('[data-score-title]', screen);
     const fum = this.mode === 'fumette';
-    title.textContent = g.id === 'oie' ? (this.isMashup ? 'Position · jauge 🌿 · gorgées 🥃' : fum ? 'Position · jauge 🌿' : 'Position · données ↗ bues ↘') : g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Taffs' : 'Gorgées') : (fum ? 'Taffs prises' : 'Gorgées bues');
+    title.textContent = g.id === 'oie' ? (this.isMashup ? 'Position · jauge 🌿 · gorgées 🥃' : fum ? 'Position · jauge 🌿' : 'Position · données ↗ bues ↘') : g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Taffs' : 'Gorgées') : this.isMashup ? 'Taffs 🌿 · gorgées 🥃' : (fum ? 'Taffs prises' : 'Gorgées bues');
 
     const before = new Map([...list.children].map((li) => [li.dataset.id, { top: li.getBoundingClientRect().top, v: li.dataset.v, g: li.dataset.g }]));
     const showGauge = (p) => (g.id === 'oie' || (this.isMashup && g.id === 'quiz')) && p.camp === 'fumette';

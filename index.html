@@ -76,7 +76,7 @@
         </button>
       </div>
 
-      <p class="home-foot pixel dim">v4.2.1 · hors-ligne ready</p>
+      <p class="home-foot pixel dim">v4.3 · hors-ligne ready</p>
     </section>
 
     <!-- ================= CHOIX DU JEU ================= -->
@@ -145,7 +145,12 @@
         <div class="pill-grid" id="intensity-grid"></div>
       </div>
 
-      <div class="setup-section" data-for="quiz jamais probable bombe">
+      <div class="setup-section" data-for="memes">
+        <h3 class="section-label">Ambiance des memes</h3>
+        <div class="pill-grid" id="memelevel-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="quiz jamais probable bombe memes">
         <h3 class="section-label">Fin de partie</h3>
         <div class="pill-grid" id="end-grid"></div>
       </div>
@@ -291,6 +296,38 @@
       <ul class="legend" id="roulette-legend"></ul>
     </section>
 
+    <!-- ================= LE MEME DE LA SOIRÉE ================= -->
+    <section class="screen" data-screen="memes">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="meme-round"></span>
+        <button class="quit-btn" data-action="quit">quitter ✕</button>
+      </header>
+
+      <article class="meme-card" id="meme-card">
+        <p class="meme-caption" id="meme-caption"></p>
+        <div class="meme-img-wrap" id="meme-img-wrap">
+          <img id="meme-img" alt="" decoding="async">
+          <span class="meme-fallback" id="meme-fallback">🖼️<small>pas d'image (hors-ligne)</small></span>
+        </div>
+        <p class="meme-tpl pixel" id="meme-tpl"></p>
+      </article>
+
+      <button class="pc-count meme-count" id="meme-count">3 · 2 · 1 → pointez !</button>
+      <p class="chips-label" id="meme-label"></p>
+      <div class="chips" id="meme-chips"></div>
+
+      <div class="actions">
+        <button class="btn-ghost" id="meme-skip">passer</button>
+        <button class="btn-primary" id="meme-validate" disabled>VALIDER</button>
+      </div>
+
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Compteur</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
     <!-- ================= JEU DE L'OIE ================= -->
     <section class="screen" data-screen="oie">
       <header class="game-top">
@@ -422,6 +459,7 @@
   <script src="jeux/bombe.js" defer></script>
   <script src="jeux/roulette.js" defer></script>
   <script src="jeux/oie.js" defer></script>
+  <script src="jeux/memes.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

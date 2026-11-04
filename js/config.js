@@ -7,7 +7,7 @@
    1. CONFIG
    ========================================================================== */
 const CONFIG = {
-  VERSION: '4.2.1',
+  VERSION: '4.3.0',
   STORAGE_KEY: 'sod_v3',
   MAX_PLAYERS: 10,
   PLAYER_COLORS: ['#7ee07a', '#ff5e9e', '#6dc7e8', '#ffc857', '#a667d4', '#ff8855', '#5fb878', '#e85a8c', '#5ec8ff', '#f48fb1'],
@@ -38,7 +38,7 @@ const CONFIG = {
   TAFF_EVERY: 5, // Mode fumette : 1 taff débloquée tous les 5 points
 
   // Pénalités des jeux de groupe (en gorgées pour l'alcool ; 1 taff en fumette)
-  PENALTY: { jamais: 1, probable: 2, bombe: 3 },
+  PENALTY: { jamais: 1, probable: 2, bombe: 3, memes: 2 },
 
   /**
    * Roulette : 50 segments → 35 Commun (70 %), 12 Rare (24 %), 3 Légendaire (6 %).
@@ -63,6 +63,10 @@ const CONFIG = {
   },
 
   GAMES: [
+    { id: 'memes', short: 'MEMES', icon: '🖼️', title: 'Le meme de la soirée', min: 3, kind: 'memes', isNew: true, mashup: true,
+      desc: { fumette: 'Un meme apparaît, tout le monde pointe celui à qui il colle le mieux. Le plus désigné prend une taff.',
+              alcool:  'Un meme apparaît, tout le monde pointe celui à qui il colle le mieux. Le plus désigné boit 2 gorgées.',
+              mashup:  'Un meme, un vote, une victime : 2 gorgées pour un buveur, une taff pour un fumeur.' } },
     { id: 'oie', short: "JEU DE L'OIE", icon: '🦢', title: "Jeu de l'oie", min: 2, kind: 'oie', isNew: true, mashup: true,
       desc: { fumette: '63 cases, deux dés, des pièges et des mini-jeux. Remplis ta jauge pour fumer, sabote celle des autres.',
               alcool:  '63 cases, deux dés, des pièges et des mini-jeux. Chaque case peut te faire boire… ou distribuer.',
