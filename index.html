@@ -79,7 +79,7 @@
 
       <button class="recap-btn stagger" data-action="recap" style="--i:3" hidden>🏆 Récap de la soirée <span class="rc-count pixel"></span></button>
 
-      <p class="home-foot pixel dim">v4.6 · hors-ligne ready</p>
+      <p class="home-foot pixel dim">v4.7 · hors-ligne ready</p>
     </section>
 
     <!-- ================= CHOIX DU JEU ================= -->
@@ -119,6 +119,11 @@
         <div class="pill-grid cols-2" id="diff-grid"></div>
       </div>
 
+      <div class="setup-section" data-for="quiz">
+        <h3 class="section-label">Options</h3>
+        <div class="pill-grid cols-2" id="quizopt-grid"></div>
+      </div>
+
       <div class="setup-section" data-for="roulette-fumette">
         <h3 class="section-label">Type de roulette</h3>
         <div class="pill-grid cols-2" id="rtype-grid"></div>
@@ -144,13 +149,29 @@
       </div>
 
       <div class="setup-section" data-for="oie">
+        <h3 class="section-label">Plateau</h3>
+        <div class="pill-grid cols-2" id="oiesize-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="oie">
         <h3 class="section-label">Intensité des malus</h3>
         <div class="pill-grid" id="intensity-grid"></div>
       </div>
 
-      <div class="setup-section" data-for="memes jamais probable oie">
+      <div class="setup-section" data-for="bombe">
+        <h3 class="section-label">Variante</h3>
+        <div class="pill-grid cols-2" id="bombopt-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="memes">
+        <h3 class="section-label">Mode</h3>
+        <div class="pill-grid cols-2" id="mememode-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="memes jamais probable oie bombe">
         <h3 class="section-label">Ambiance</h3>
         <div class="pill-grid" id="memelevel-grid"></div>
+        <div class="custom-box" id="custom-cards-box" data-for-inner></div>
       </div>
 
       <div class="setup-section" data-for="quiz jamais probable bombe memes">
@@ -348,7 +369,7 @@
       <div class="oie-turn">
         <p class="turn-name" id="oie-player"><span class="dot"></span><span class="name"></span></p>
         <button class="oie-dice" id="oie-dice" aria-label="Lancer le dé">
-          <span class="die" data-v="1"></span>
+          <span class="die3d"><span class="cube" id="oie-cube"></span></span>
         </button>
       </div>
 
@@ -482,6 +503,15 @@
     </div>
   </div>
 
+  <!-- Éditeur de cartes perso -->
+  <div class="sheet" id="editor-sheet" hidden>
+    <div class="sheet-backdrop" data-editor="close"></div>
+    <div class="sheet-panel ed-panel" role="dialog" aria-modal="true">
+      <p class="sheet-title">✏️ Mes cartes</p>
+      <div id="editor-body"></div>
+    </div>
+  </div>
+
   <!-- Notifications (remplace alert()) -->
   <div class="toasts" id="toasts" aria-live="polite"></div>
 
@@ -503,6 +533,7 @@
   <script src="jeux/roulette.js" defer></script>
   <script src="jeux/oie.js" defer></script>
   <script src="jeux/memes.js" defer></script>
+  <script src="js/editeur.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

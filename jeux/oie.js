@@ -1,7 +1,7 @@
 /**
  * SMOKE OR DRINK — Jeu de l'oie (format téléphone)
  * ------------------------------------------------------------------------------
- * - Plateau de 63 cases qui serpente de bas en haut ; la "caméra" suit le pion.
+ * - Plateau de 63 cases (ou 32 en Express) qui serpente de bas en haut ; la "caméra" suit le pion.
  * - Un dé ; il faut tomber pile sur 63 (sinon on rebondit, avec un malus du surplus).
  * - Arriver sur une case déjà occupée = malus de 1.
  * - Intensité (Soft / Normal / Hardcore) : malus ×1, ×2 ou ×3.
@@ -24,10 +24,10 @@ const OIE = {
     depart:     { icon: '🏁', name: 'Départ',          color: '#f4ecd8' },
     finish:     { icon: '🏆', name: 'Arrivée',         color: '#ffc857' },
     oie:        { icon: '🦢', name: 'Oie',             color: '#f4ecd8', text: 'Tu distribues 2 malus, puis tu avances encore du même nombre !' },
-    pont:       { icon: '🌉', name: 'Le pont',         color: '#6dc7e8', text: 'Tu distribues 1 malus, puis tu traverses jusqu’à la case 12.' },
+    pont:       { icon: '🌉', name: 'Le pont',         color: '#6dc7e8', text: 'Tu distribues 1 malus, puis tu traverses le pont.' },
     auberge:    { icon: '🍻', name: 'L’auberge',       color: '#ffc857', text: 'Tu passes 1 tour avec 1 malus… ou tu prends 3 malus et tu continues.' },
     puits:      { icon: '🕳️', name: 'Le puits',        color: '#a667d4', text: 'Pas le choix : cul sec pour les buveurs, taff de pompier pour les fumeurs.' },
-    labyrinthe: { icon: '🌀', name: 'Le labyrinthe',   color: '#5ec8ff', text: 'Tu te perds… retour à la case 30 et 4 malus.' },
+    labyrinthe: { icon: '🌀', name: 'Le labyrinthe',   color: '#5ec8ff', text: 'Tu te perds… tu recules et tu prends 4 malus.' },
     prison:     { icon: '⛓️', name: 'La prison',       color: '#9ca3af', text: 'Cul sec / taff de pompier… ou 2 tours enfermé et tu bois le score de ton dernier dé.' },
     mort:       { icon: '💀', name: 'La tête de mort', color: '#ff5e7e', text: 'Retour au départ… et une pénalité en prime.' },
     verite:     { icon: '🎭', name: 'Action ou vérité', color: '#f48fb1' },
@@ -45,7 +45,10 @@ const OIE = {
     theme:      { icon: '💬', name: 'Trois en cinq',   color: '#6dc7e8' },
     duel:       { icon: '⚔️', name: 'Duel',            color: '#ff5e7e' },
   },
+  // Plateau classique (63 cases)
   SPECIAL: { 6: 'pont', 19: 'auberge', 31: 'puits', 42: 'labyrinthe', 52: 'prison', 58: 'mort' },
+  PONT_TO: 12,
+  LABY_TO: 30,
   GEESE: [9, 18, 27, 36, 45, 54],
   // Cases propres à chaque camp (Mashup uniquement ; sinon Tournée générale)
   CAMP: { 16: 'clope', 47: 'clope', 28: 'sante', 59: 'sante' },
@@ -54,17 +57,41 @@ const OIE = {
     'quiz', 'tous', 'jamais', 'verite', 'recule', 'echange', 'theme', 'quiz', 'verite', 'probable', 'malus', 'cadeau'],
 };
 
-function buildOieBoard(mashup = false) {
+/**
+ * Plateau Express (32 cases) : moitié du classique, mêmes proportions.
+ * 3 oies (une tous les 9), les 6 cases piège aux mêmes endroits relatifs,
+ * 1 case de chaque camp, et 20 cases mini-jeux dans le même ordre de mélange.
+ */
+const OIE_EXPRESS = {
+  LAST: 32,
+  SPECIAL: { 4: 'pont', 10: 'auberge', 16: 'puits', 21: 'labyrinthe', 26: 'prison', 29: 'mort' },
+  PONT_TO: 8,
+  LABY_TO: 15,
+  GEESE: [9, 18, 27],
+  CAMP: { 13: 'clope', 23: 'sante' },
+  CAMP_SKIP: false, // les cases de camp ne décalent pas l'ordre des mini-jeux
+  CYCLE: ['quiz', 'verite', 'jamais', 'cadeau', 'theme', 'probable', 'verite', 'malus', 'quiz', 'duel', 'avance',
+    'verite', 'jamais', 'cadeau', 'recule', 'quiz', 'probable', 'echange', 'verite', 'quiz'],
+};
+
+/** Réglages du plateau choisi (classique par défaut) */
+function oieConfig(size) {
+  return size === 'express' ? { ...OIE, ...OIE_EXPRESS } : OIE;
+}
+
+const OIE_SAVE_KEY = 'sod_oie_save';
+
+function buildOieBoard(mashup = false, cfg = OIE) {
   const board = [];
   let k = 0;
-  for (let i = 0; i <= OIE.LAST; i++) {
+  for (let i = 0; i <= cfg.LAST; i++) {
     let type;
     if (i === 0) type = 'depart';
-    else if (i === OIE.LAST) type = 'finish';
-    else if (OIE.SPECIAL[i]) type = OIE.SPECIAL[i];
-    else if (OIE.GEESE.includes(i)) type = 'oie';
-    else if (OIE.CAMP[i]) { type = mashup ? OIE.CAMP[i] : 'tous'; k += 1; }
-    else { type = OIE.CYCLE[k % OIE.CYCLE.length]; k += 1; }
+    else if (i === cfg.LAST) type = 'finish';
+    else if (cfg.SPECIAL[i]) type = cfg.SPECIAL[i];
+    else if (cfg.GEESE.includes(i)) type = 'oie';
+    else if (cfg.CAMP[i]) { type = mashup ? cfg.CAMP[i] : 'tous'; if (cfg.CAMP_SKIP !== false) k += 1; }
+    else { type = cfg.CYCLE[k % cfg.CYCLE.length]; k += 1; }
     board.push(type);
   }
   return board;
@@ -77,7 +104,8 @@ addGame(class {
   oieStart() {
     const g = this.game;
     const ep = g ? g.epoch : 0;
-    g.board = buildOieBoard(this.isMashup);
+    g.cfg = oieConfig(this.settings.oieSize);
+    g.board = buildOieBoard(this.isMashup, g.cfg);
     g.busy = false;
     g.mult = OIE.MULT[this.settings.intensity] || 2;
     g.pending = []; // effets à afficher dans le prochain panneau (rebond, case occupée…)
@@ -86,6 +114,7 @@ addGame(class {
     g.probable = new Deck(this.cardPool('probable'));
     g.themes = new Deck(this.cardPool('bombe'));
     this.oieBuildBoard();
+    this.oieCube();
     this.oieTurn();
     // L'écran n'est visible qu'après la transition : on recadre la caméra à ce moment-là
     this.later(() => { if (g.players.length && !g.busy) { this.oieBuildBoard(); this.oieCamera(g.players[g.turn].pos, false); } }, 420);
@@ -107,7 +136,7 @@ addGame(class {
     const ep = g ? g.epoch : 0;
     const boardEl = $('#oie-board');
     const width = $('#oie-viewport').clientWidth || Math.min(window.innerWidth - 36, 524);
-    const rows = Math.ceil((OIE.LAST + 1) / OIE.COLS);
+    const rows = Math.ceil((this.game.cfg.LAST + 1) / OIE.COLS);
     g.pad = 10;
     g.colW = (width - g.pad * 2) / OIE.COLS;
     g.rowH = Math.min(96, Math.max(66, g.colW * 0.95));
@@ -178,7 +207,7 @@ addGame(class {
     });
     g.players.forEach((p) => {
       const dot = g.mapDots.get(p.id);
-      dot.style.left = `${(p.pos / OIE.LAST) * 100}%`;
+      dot.style.left = `${(p.pos / this.game.cfg.LAST) * 100}%`;
       dot.classList.toggle('is-turn', current && p.id === current.id);
     });
   }
@@ -193,8 +222,40 @@ addGame(class {
   /* ---------------------------------------------------------------------- */
   /* TOUR DE JEU                                                             */
   /* ---------------------------------------------------------------------- */
+  /* ---------- Sauvegarde : on peut reprendre après une fermeture ---------- */
+  oieSave() {
+    const g = this.game;
+    if (!g || g.over || g.kind !== 'oie') return;
+    try {
+      localStorage.setItem(OIE_SAVE_KEY, JSON.stringify({
+        v: 1, at: Date.now(), mode: this.mode,
+        settings: { oieSize: this.settings.oieSize, intensity: this.settings.intensity, memeLevel: this.settings.memeLevel },
+        players: g.players, turn: g.turn, round: g.round, count: g.count,
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  oieClearSave() {
+    try { localStorage.removeItem(OIE_SAVE_KEY); } catch (e) { /* ignore */ }
+  }
+
+  /** Reprend une partie sauvegardée (appelé depuis l'écran d'accueil) */
+  oieResume(saved) {
+    this.mode = saved.mode;
+    this.setTheme(saved.mode);
+    this.gameId = 'oie';
+    Object.assign(this.settings, saved.settings);
+    this.renderHub();
+    this.renderSetup();
+    this.game = { id: 'oie', kind: 'oie', end: { id: 'free' }, players: saved.players, turn: saved.turn, round: saved.round, count: saved.count, over: false };
+    $$('[data-game-tag]').forEach((el) => { el.textContent = `${this.unitEmoji} JEU DE L'OIE`; });
+    this.keepAwake(true);
+    this.router.resetTo(['home', 'hub', 'setup', 'oie'], 'fwd').then(() => this.oieStart());
+  }
+
   oieTurn() {
     this.beginTurn('oieTurn');
+    this.oieSave();
     const g = this.game;
     const ep = g ? g.epoch : 0;
     if (!g || g.over) return;
@@ -247,6 +308,43 @@ addGame(class {
     el.replaceChildren(...Array.from({ length: 9 }, (_, k) => (spots.includes(k + 1) ? h('i', {}) : h('span'))));
   }
 
+  /** Dé en 3D : un cube à 6 faces (construit une seule fois) */
+  oieCube() {
+    const cube = $('#oie-cube');
+    if (!cube.childElementCount) {
+      for (let v = 1; v <= 6; v++) {
+        const face = h('span', { class: `face f${v}` });
+        this.oieDie(face, v);
+        cube.append(face);
+      }
+      cube.dataset.rx = '-20';
+      cube.dataset.ry = '25';
+      cube.style.transform = 'rotateX(-20deg) rotateY(25deg)';
+    }
+    return cube;
+  }
+
+  /** Fait rouler le cube et l'arrête sur la face v (renvoie quand il s'est posé) */
+  async oieRollCube(v) {
+    const cube = this.oieCube();
+    // Rotation qui amène chaque face devant
+    const face = { 1: [0, 0], 2: [0, -90], 3: [-90, 0], 4: [90, 0], 5: [0, 90], 6: [0, 180] }[v];
+    const rx = Number(cube.dataset.rx) || 0;
+    const ry = Number(cube.dataset.ry) || 0;
+    const spinX = 360 * (2 + randInt(0, 1));
+    const spinY = 360 * (2 + randInt(0, 1));
+    const tx = Math.ceil(rx / 360) * 360 + spinX + face[0] - 14;
+    const ty = Math.ceil(ry / 360) * 360 + spinY + face[1] + 18;
+    cube.dataset.rx = String(tx);
+    cube.dataset.ry = String(ty);
+    const ms = reducedMotion.matches ? 0 : 950;
+    cube.style.transition = `transform ${ms}ms cubic-bezier(.2,.75,.25,1.05)`;
+    cube.style.transform = `rotateX(${tx}deg) rotateY(${ty}deg)`;
+    const wrap = cube.parentElement;
+    replay(wrap, 'tossed');
+    for (let t = 0; t < ms; t += 90) { this.sound.tick(0.2 + t / ms); await wait(90); }
+  }
+
   async oieRoll() {
     const g = this.game;
     const ep = g ? g.epoch : 0;
@@ -258,24 +356,16 @@ addGame(class {
     dice.onclick = null;
     dice.classList.remove('can-roll');
     $$('#oie-panel button').forEach((b) => { b.disabled = true; });
-    const dies = $$('.die', dice);
     const d1 = randInt(1, 6);
-    // Animation : les faces défilent puis se figent
-    dies.forEach((d) => replay(d, 'rolling'));
-    const t0 = performance.now();
-    while (performance.now() - t0 < (reducedMotion.matches ? 0 : 520)) {
-      dies.forEach((d) => this.oieDie(d, randInt(1, 6)));
-      this.sound.tick(0.3);
-      await wait(70);
-      if (this.game !== g || g.epoch !== ep) return;
-    }
-    this.oieDie(dies[0], d1);
+    // Le dé 3D roule puis se pose sur la bonne face
+    await this.oieRollCube(d1);
+    if (this.game !== g || g.epoch !== ep) return;
     haptic(20);
     this.sound.good();
     const total = d1;
     g.lastRoll = total;
     const p = g.players[g.turn];
-    const surplus = Math.max(0, p.pos + total - OIE.LAST);
+    const surplus = Math.max(0, p.pos + total - this.game.cfg.LAST);
     this.oiePanel({ icon: '🎲', title: `${total}`, text: `${p.name} avance de ${plural(total, 'case')}…` });
     await wait(350);
     if (this.game !== g || g.epoch !== ep) return;
@@ -297,13 +387,13 @@ addGame(class {
     let left = Math.abs(steps);
     const pawn = g.pawns.get(p.id);
     while (left > 0) {
-      if (p.pos + dir > OIE.LAST) dir = -1;   // rebond sur l'arrivée
+      if (p.pos + dir > this.game.cfg.LAST) dir = -1;   // rebond sur l'arrivée
       if (p.pos + dir < 0) break;
       p.pos += dir;
       left -= 1;
       this.oiePlacePawns();
       replay(pawn, 'hop');
-      this.sound.tick(p.pos / OIE.LAST);
+      this.sound.tick(p.pos / this.game.cfg.LAST);
       this.oieCamera(p.pos);
       await wait(reducedMotion.matches ? 30 : 210);
       if (this.game !== g || g.epoch !== ep) return;
@@ -335,7 +425,7 @@ addGame(class {
     const type = g.board[p.pos];
     const t = OIE.CELL_TYPES[type];
     // Arriver sur une case déjà occupée : le dernier arrivé prend un malus
-    if (p.pos !== 0 && p.pos !== OIE.LAST && g.players.some((x) => x.id !== p.id && x.pos === p.pos)) {
+    if (p.pos !== 0 && p.pos !== this.game.cfg.LAST && g.players.some((x) => x.id !== p.id && x.pos === p.pos)) {
       g.pending.push(`👥 Case occupée : ${this.oieMalus(p, 1)}`);
     }
     const done = (label = 'JOUEUR SUIVANT →') => h('button', { class: 'btn-primary', text: label, onclick: once(() => this.oieNext()) });
@@ -346,7 +436,7 @@ addGame(class {
       case 'finish': {
         this.sound.reward();
         this.fx.confetti([p.color, '#ffc857', '#fff', '#7ee07a']);
-        this.oiePanel({ ...base, icon: '🏆', title: `${p.name} gagne !`, text: 'Pile sur la case 63. Champion·ne.', actions: [h('button', { class: 'btn-primary pulse', text: 'VOIR LE CLASSEMENT 🏆', onclick: once(() => this.finish()) })] });
+        this.oiePanel({ ...base, icon: '🏆', title: `${p.name} gagne !`, text: `Pile sur la case ${g.cfg.LAST}. Champion·ne.`, actions: [h('button', { class: 'btn-primary pulse', text: 'VOIR LE CLASSEMENT 🏆', onclick: once(() => this.finish()) })] });
         return;
       }
       case 'oie': {
@@ -365,11 +455,11 @@ addGame(class {
       }
       case 'pont': {
         flash();
-        this.oieBonus(p, 1, base, 'Tu distribues 1 malus, puis direction la case 12.', async () => {
+        this.oieBonus(p, 1, base, `Tu distribues 1 malus, puis direction la case ${g.cfg.PONT_TO}.`, async () => {
           this.oiePanel({ ...base, text: 'Tu traverses le pont…' });
           await wait(400);
           if (this.game !== g || g.epoch !== ep) return;
-          await this.oieJump(p, 12);
+          await this.oieJump(p, g.cfg.PONT_TO);
           if (this.game !== g || g.epoch !== ep) return;
           this.oieResolve(p, depth + 1);
         }, { keep: false });
@@ -381,9 +471,9 @@ addGame(class {
         this.oiePanel({ ...base, text: t.text });
         await wait(800);
         if (this.game !== g || g.epoch !== ep) return;
-        await this.oieJump(p, 30);
+        await this.oieJump(p, g.cfg.LABY_TO);
         if (this.game !== g || g.epoch !== ep) return;
-        this.oiePanel({ ...base, text: 'Te voilà case 30.', effects: [this.oieMalus(p, 4)], actions: [done()] });
+        this.oiePanel({ ...base, text: `Te voilà case ${g.cfg.LABY_TO}.`, effects: [this.oieMalus(p, 4)], actions: [done()] });
         return;
       }
       case 'auberge': {
@@ -716,10 +806,10 @@ addGame(class {
           (async () => {
             await wait(500);
             if (this.game !== g || g.epoch !== ep) return;
-            if (winner.pos < OIE.LAST) await this.oieMove(winner, 1);
+            if (winner.pos < this.game.cfg.LAST) await this.oieMove(winner, 1);
             if (loser.pos > 0) await this.oieMove(loser, -1);
             this.renderScores('oie');
-            if (winner.pos === OIE.LAST) { this.oieResolve(winner, 3); return; }
+            if (winner.pos === this.game.cfg.LAST) { this.oieResolve(winner, 3); return; }
             this.oiePanel({ ...base, text: `${winner.name} passe case ${winner.pos}, ${loser.name} recule case ${loser.pos}.`, effects: [fx],
               actions: [h('button', { class: 'btn-primary', text: 'JOUEUR SUIVANT →', onclick: once(() => this.oieNext()) })] });
           })();

@@ -17,12 +17,15 @@ addGame(class {
     const fum = this.mode === 'fumette';
     const penalty = fum ? 1 : CONFIG.PENALTY.bombe;
     g.penalty = penalty;
+    // Variante « lettre imposée » : lettres faciles, pour que ça reste jouable
+    g.letter = this.settings.bombLetter ? 'ABCDFGLMPRST'[randInt(0, 11)] : '';
 
     const themeEl = $('#bomb-theme');
-    themeEl.textContent = theme;
+    themeEl.replaceChildren(theme, g.letter ? h('span', { class: 'bomb-letter', text: g.letter }) : '');
     replay(themeEl, 'swap');
     $('#bomb-round').textContent = `MANCHE ${g.count + 1}${g.end.cards ? '/' + g.end.cards : ''}`;
-    $('#bomb-help').textContent = `${starter.name} commence. Cite un mot du thème, puis passe le téléphone à ta gauche. Celui qui l'a en main quand ça pète ${fum ? 'prend une taff' : `boit ${this.unit(penalty)}`}.`;
+    const sanction = this.isMashup ? `prend la pénalité (🥃 ${penalty === 1 ? CONFIG.PENALTY.bombe : penalty} gorgées · 🌿 une taff)` : fum ? 'prend une taff' : `boit ${this.unit(penalty)}`;
+    $('#bomb-help').textContent = `${starter.name} commence. Cite un mot du thème${g.letter ? ` qui commence par ${g.letter}` : ''}, puis passe le téléphone à ta gauche. Celui qui l'a en main quand ça pète ${sanction}.`;
     $('#bomb-help').hidden = false;
     const wrap = $('#bomb-wrap');
     wrap.classList.remove('lit', 'boom');
@@ -91,8 +94,10 @@ addGame(class {
     validate.addEventListener('click', once(() => {
       const loser = g.players.find((p) => sel.has(p.id));
       if (!loser) return;
-      loser.taken += g.penalty;
-      this.toast(`💥 ${loser.name} : +${this.unit(g.penalty)}`, 'bad');
+      // Mashup : chacun paie dans sa monnaie
+      const n = this.isMashup ? (loser.camp === 'alcool' ? CONFIG.PENALTY.bombe : 1) : g.penalty;
+      loser.taken += n;
+      this.toast(this.isMashup ? (loser.camp === 'alcool' ? `💥 ${loser.name} boit ${n}` : `💥 ${loser.name} prend une taff`) : `💥 ${loser.name} : +${this.unit(n)}`, 'bad');
       g.count += 1;
       g.turn = g.players.indexOf(loser); // le perdant relance la partie
       this.bombTurn();

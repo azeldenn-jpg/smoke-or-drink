@@ -27,6 +27,19 @@ addGame(class {
     })));
   }
 
+  renderMemeMode() {
+    const opts = [
+      { id: 'point', emoji: '👉', label: 'On pointe', small: 'à qui ça correspond ?' },
+      { id: 'libre', emoji: '✍️', label: 'Légende libre', small: 'inventez, votez' },
+    ];
+    $('#mememode-grid').replaceChildren(...opts.map((o) => this.pill({
+      on: (this.settings.memeMode || 'point') === o.id, emoji: o.emoji, label: o.label, small: o.small,
+      onClick: () => { this.settings.memeMode = o.id; this.save(); this.renderMemeMode(); this.validateSetup(); },
+    })));
+  }
+
+  get memeLibre() { return this.settings.memeMode === 'libre'; }
+
   memesInfo() {
     const lvl = MEME_LEVELS[this.settings.memeLevel] || MEME_LEVELS.soiree;
     if (!this.memeDb) { this.loadMemes().then(() => this.validateSetup()); return '// chargement des memes…'; }
@@ -56,12 +69,18 @@ addGame(class {
     const g = this.game;
     await this.loadMemes();
     const lvl = MEME_LEVELS[this.settings.memeLevel] || MEME_LEVELS.soiree;
-    const pool = this.memeDb.filter((m) => lvl.includes.includes(m.level));
+    // Légende libre : il faut une image, la légende d'origine n'est qu'un bonus
+    const pool = this.memeDb.filter((m) => lvl.includes.includes(m.level) && (!this.memeLibre || m.img));
     g.deck = new Deck(pool.length ? pool : this.memeDb);
     g.failed = new Set(); // images qui n'ont pas pu se charger
     if (!g.memeBound) {
       g.memeBound = true;
-      $('#meme-count').onclick = () => this.countdown321($('#meme-count'));
+      $('#meme-count').onclick = () => {
+        if (!this.memeLibre) { this.countdown321($('#meme-count')); return; }
+        const cap = $('#meme-caption');
+        cap.classList.toggle('revealed');
+        cap.textContent = cap.classList.contains('revealed') ? `💡 ${this.game.deck.last.caption}` : '✍️ À vous d’inventer la légende !';
+      };
       $('#meme-skip').onclick = () => this.memesNext(false);
       $('#meme-validate').onclick = () => this.memesNext(true);
     }
@@ -92,10 +111,17 @@ addGame(class {
     const card = $('#meme-card');
     const wrap = $('#meme-img-wrap');
     const img = $('#meme-img');
+    const libre = this.memeLibre;
     const fill = () => {
       const reader = g.players[g.turn];
-      $('#meme-caption').textContent = meme.caption;
-      $('#meme-tpl').textContent = meme.template ? `${meme.template} · 📖 ${reader.name} lit` : `📖 ${reader.name} lit`;
+      const cap = $('#meme-caption');
+      cap.classList.toggle('free', libre);
+      cap.classList.remove('revealed');
+      cap.textContent = libre ? '✍️ À vous d’inventer la légende !' : meme.caption;
+      $('#meme-tpl').textContent = libre
+        ? `🎤 ${reader.name} commence, puis on tourne`
+        : meme.template ? `${meme.template} · 📖 ${reader.name} lit` : `📖 ${reader.name} lit`;
+      $('#meme-count').textContent = libre ? '💡 voir la légende d’origine' : '3 · 2 · 1 → pointez !';
       $('#meme-round').textContent = `MEME ${g.count + 1}${g.end.cards ? '/' + g.end.cards : ''}`;
       wrap.classList.remove('loaded', 'failed');
       wrap.classList.add('loading');
@@ -110,9 +136,13 @@ addGame(class {
         wrap.classList.add('failed');
       } else {
         this.memeLoadImage(src).then((ok) => {
-          if (g.deck.last !== meme) return; // on est déjà passé au meme suivant
+          if (g.deck.last !== meme || this.game !== g) return; // on est déjà passé au meme suivant
           wrap.classList.remove('loading');
-          if (ok) { img.src = src; wrap.classList.add('loaded'); } else { g.failed.add(src); wrap.classList.add('failed'); }
+          if (ok) { img.src = src; wrap.classList.add('loaded'); g.skips = 0; } else {
+            g.failed.add(src); wrap.classList.add('failed');
+            // Sans image, pas de légende à inventer : on passe au suivant
+            if (libre && (g.skips = (g.skips || 0) + 1) <= 5) { this.toast('🖼️ Image indisponible, meme suivant'); this.later(() => this.memesTurn(), 600); }
+          }
         });
       }
       const upcoming = g.deck.pile[g.deck.pile.length - 1];
@@ -127,9 +157,33 @@ addGame(class {
       const validate = $('#meme-validate');
       validate.disabled = true;
       validate.textContent = 'VALIDER';
-      g.selected = this.renderChips($('#meme-chips'), g.players, {
-        onChange: (sel) => { validate.disabled = sel.size === 0; validate.classList.toggle('pulse', sel.size > 0); },
-      });
+      if (libre) {
+        // Étape 1 : la meilleure légende · étape 2 : son auteur choisit qui paie
+        const label = $('#meme-label');
+        const pen = mash ? '🥃 2 gorgées ou 🌿 une taff' : fum ? 'une taff 🌿' : `${this.unit(CONFIG.PENALTY.memes)} 🥃`;
+        label.textContent = '🏆 Qui a sorti la meilleure légende ?';
+        g.best = null;
+        g.selected = new Set();
+        this.renderChips($('#meme-chips'), g.players, {
+          onChange: (sel) => {
+            const best = g.players.find((x) => sel.has(x.id));
+            if (!best) return;
+            g.best = best;
+            best.memeWins = (best.memeWins || 0) + 1;
+            this.sound.reward();
+            haptic([30, 30, 30]);
+            label.textContent = `🎯 ${best.name} choisit qui prend ${pen}`;
+            const others = g.players.filter((x) => x !== best);
+            g.selected = this.renderChips($('#meme-chips'), others, {
+              onChange: (s2) => { validate.disabled = s2.size === 0; validate.classList.toggle('pulse', s2.size > 0); },
+            });
+          },
+        });
+      } else {
+        g.selected = this.renderChips($('#meme-chips'), g.players, {
+          onChange: (sel) => { validate.disabled = sel.size === 0; validate.classList.toggle('pulse', sel.size > 0); },
+        });
+      }
       $('#meme-count').disabled = false;
       g.locked = false;
       this.renderScores('memes');

@@ -59,6 +59,15 @@ class SmokeOrDrinkApp {
 
   /** Une séance tournait quand l'appli a été fermée : on propose de la reprendre */
   async offerResume() {
+    // Partie de l'oie interrompue (moins de 12 h) ?
+    let oie = null;
+    try { oie = JSON.parse(localStorage.getItem(OIE_SAVE_KEY) || 'null'); } catch (e) { /* ignore */ }
+    if (oie && oie.v === 1 && Date.now() - oie.at < 12 * 3600 * 1000 && !Seance.loadSaved()) {
+      const lead = [...oie.players].sort((a, b) => b.pos - a.pos)[0];
+      const ok = await this.confirm('Reprendre la partie ?', `Jeu de l'oie en cours avec ${oie.players.map((p) => p.name).join(', ')} (${lead.name} en tête, case ${lead.pos}).`, 'reprendre', false);
+      if (ok) { this.oieResume(oie); return; }
+      this.oieClearSave();
+    }
     const saved = Seance.loadSaved();
     if (!saved) return;
     const ok = await this.confirm('Reprendre la séance ?', `Une séance est en cours (${saved.players.map((p) => p.name).join(', ')}). Le chrono a continué pendant ton absence.`, 'reprendre', false);
@@ -334,8 +343,11 @@ class SmokeOrDrinkApp {
     if (g.id === 'quiz') { this.renderCategories(); this.renderDiffs(); }
     if (this.isRouletteFumette) { this.renderRType(); this.renderDurations(); }
     if (this.isSeance) { this.renderFilm(); this.renderJoint(); }
-    if (g.id === 'oie') this.renderIntensity();
-    if (['memes', 'jamais', 'probable', 'oie'].includes(g.id)) this.renderMemeLevel();
+    if (g.id === 'oie') { this.renderIntensity(); this.renderOieSize(); }
+    if (['memes', 'jamais', 'probable', 'oie', 'bombe'].includes(g.id)) this.renderMemeLevel();
+    if (g.id === 'bombe') this.renderBombOptions();
+    if (g.id === 'memes') this.renderMemeMode();
+    this.renderCustomButton();
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
   }
@@ -443,8 +455,16 @@ class SmokeOrDrinkApp {
       { id: 'random', emoji: '🔀', label: 'Aléatoire', small: 'le jeu choisit' },
     ];
     $('#diff-grid').replaceChildren(...opts.map((o) => this.pill({
-      on: this.settings.diff === o.id, emoji: o.emoji, label: o.label, small: o.small,
-      onClick: () => { this.settings.diff = o.id; this.save(); this.renderDiffs(); },
+      on: this.settings.diff === o.id && !this.settings.quizBuzzer, emoji: o.emoji, label: o.label, small: o.small,
+      onClick: () => { this.settings.diff = o.id; this.settings.quizBuzzer = false; this.save(); this.renderDiffs(); },
+    })));
+    const toggles = [
+      { key: 'quizTimer', emoji: '⏱', label: 'Chrono 15 s', small: 'trop lent = raté' },
+      { key: 'quizBuzzer', emoji: '🔔', label: 'Mode buzzer', small: 'le 1er qui se désigne répond' },
+    ];
+    $('#quizopt-grid').replaceChildren(...toggles.map((t) => this.pill({
+      on: Boolean(this.settings[t.key]), emoji: t.emoji, label: t.label, small: t.small,
+      onClick: () => { this.settings[t.key] = !this.settings[t.key]; this.save(); this.renderDiffs(); },
     })));
   }
 
@@ -502,6 +522,25 @@ class SmokeOrDrinkApp {
     })));
   }
 
+  renderBombOptions() {
+    $('#bombopt-grid').replaceChildren(
+      this.pill({ on: !this.settings.bombLetter, emoji: '💣', label: 'Classique', small: 'n’importe quel mot du thème',
+        onClick: () => { this.settings.bombLetter = false; this.save(); this.renderBombOptions(); } }),
+      this.pill({ on: Boolean(this.settings.bombLetter), emoji: '🔤', label: 'Lettre imposée', small: '« Pays en B ! »',
+        onClick: () => { this.settings.bombLetter = true; this.save(); this.renderBombOptions(); } }));
+  }
+
+  renderOieSize() {
+    const opts = [
+      { id: 'classic', emoji: '🦢', label: 'Classique', small: '63 cases · ~40 min' },
+      { id: 'express', emoji: '⚡', label: 'Express', small: '32 cases · ~15 min' },
+    ];
+    $('#oiesize-grid').replaceChildren(...opts.map((o) => this.pill({
+      on: (this.settings.oieSize || 'classic') === o.id, emoji: o.emoji, label: o.label, small: o.small,
+      onClick: () => { this.settings.oieSize = o.id; this.save(); this.renderOieSize(); this.validateSetup(); },
+    })));
+  }
+
   renderIntensity() {
     const opts = [
       { id: 'soft', emoji: '🙂', label: 'Soft', small: 'malus ×1' },
@@ -537,7 +576,8 @@ class SmokeOrDrinkApp {
   /** Textes d'un paquet de cartes, filtrés selon l'ambiance choisie (chill ⊂ soirée ⊂ hot) */
   cardPool(key) {
     const lvl = (typeof MEME_LEVELS !== 'undefined' && MEME_LEVELS[this.settings.memeLevel]) || { includes: ['chill', 'soiree'] };
-    const all = this.data[key] || [];
+    const mine = typeof this.customCards === 'function' ? (this.customCards()[key] || []) : [];
+    const all = [...(this.data[key] || []), ...mine];
     const pool = all.filter((c) => lvl.includes.includes(c.lvl || 'chill')).map((c) => c.t);
     return pool.length ? pool : all.map((c) => c.t);
   }
@@ -570,7 +610,7 @@ class SmokeOrDrinkApp {
     info.textContent = !this.dataReady ? '' : g.id === 'quiz'
       ? `// ${count} questions dispo${mix}`
       : g.id === 'memes' ? this.memesInfo()
-      : g.id === 'oie' ? `// 63 cases · 1 dé · jauge de ${OIE.GAUGE} pour une taff`
+      : g.id === 'oie' ? `// ${this.settings.oieSize === 'express' ? '32 cases · ~15 min' : '63 cases · ~40 min'} · 1 dé · jauge de ${OIE.GAUGE} pour une taff`
       : this.isSeance ? this.seanceEstimate()
       : g.kind === 'roulette' ? '// 50 cases · 70 / 24 / 6 %' : `// ${count} cartes dans le paquet`;
   }
@@ -654,6 +694,7 @@ class SmokeOrDrinkApp {
 
   endGame() {
     if (this.isMashup) this.setTheme('mashup');
+    if (this.game && this.game.kind === 'oie') this.oieClearSave();
     if (this.game && this.game.kind === 'seance') this.seance.clear();
     this.clearTimers();
     this.bombStop();
@@ -698,7 +739,7 @@ class SmokeOrDrinkApp {
         main = fum ? `${p.taffs} 🌿` : `${p.taken} 🥃`;
         sub = fum ? `attente totale ${formatTime(p.time)}` : '';
       } else if (g.id === 'oie') {
-        main = p.pos >= 63 ? '🏆 63' : `case ${p.pos}`;
+        main = p.pos >= g.cfg.LAST ? `🏆 ${g.cfg.LAST}` : `case ${p.pos}`;
         sub = p.camp === 'fumette' ? `🌿 ${plural(p.taffs, 'taff')} · jauge ${p.gauge}/${this.gaugeMax}` : `🥃 ${p.taken} bues · ${p.given} données`;
       } else if (g.id === 'seance') {
         main = `${p.taffs} 🌿`;

@@ -33,7 +33,7 @@ const RULES = {
     'Un meme apparaît avec sa légende.',
     'Au signal, tout le monde pointe le joueur à qui il correspond le plus.',
     'Le plus désigné prend la pénalité de son camp.',
-    'Mode Légende libre : pas de légende, chacun invente la sienne et le groupe vote pour la meilleure.',
+    'Mode Légende libre : pas de légende ! Chacun invente la sienne à voix haute, on vote pour la meilleure, et son auteur choisit qui paie.',
   ],
   bombe: [
     'Un thème apparaît. Celui qui tient le téléphone allume la mèche.',

@@ -20,8 +20,36 @@ addGame(class {
     streak.textContent = p.streak >= 2 ? `🔥 série de ${p.streak}` : '';
     this.renderScores('quiz');
 
-    if (this.settings.diff === 'bet') this.renderBet(p);
+    if (this.settings.quizBuzzer) {
+      // Mode buzzer : la question est pour tout le monde, le premier qui se désigne répond
+      const tn = $('#quiz-player');
+      tn.style.removeProperty('--pc');
+      $('.dot', tn).textContent = '🔔';
+      $('.dot', tn).classList.add('emo');
+      $('.name', tn).textContent = 'Tout le monde';
+      streak.textContent = '';
+      if (this.isMashup) this.setTheme('mashup');
+      this.renderQuestion(this.drawQuestion('all'), { buzz: true });
+    } else if (this.settings.diff === 'bet') this.renderBet(p);
     else this.renderQuestion(this.drawQuestion('all'));
+  }
+
+  /* ---------- Chrono (option) ---------- */
+  startQuizTimer() {
+    const g = this.game;
+    if (!this.settings.quizTimer || !g) return;
+    const secs = 15;
+    const bar = $('#quiz-stage .q-timer i');
+    if (bar) {
+      bar.style.transition = 'none';
+      bar.style.transform = 'scaleX(1)';
+      void bar.offsetWidth;
+      bar.style.transition = `transform ${secs}s linear`;
+      bar.style.transform = 'scaleX(0)';
+    }
+    const q = g.current;
+    for (let s = secs - 3; s < secs; s++) this.later(() => { if (!g.answered && g.current === q) this.sound.beep(); }, s * 1000);
+    this.later(() => { if (!g.answered && g.current === q) this.answerQuiz(false, null, true); }, secs * 1000);
   }
 
   drawQuestion(deckKey) {
@@ -59,7 +87,7 @@ addGame(class {
       h('div', { class: 'bet-grid' }, cards)));
   }
 
-  renderQuestion(q) {
+  renderQuestion(q, { buzz = false } = {}) {
     const g = this.game;
     const cat = CONFIG.CATEGORIES[q.cat] || CONFIG.UNKNOWN_CATEGORY;
     const diff = CONFIG.DIFFS[q.diff];
@@ -73,19 +101,49 @@ addGame(class {
       onclick: (e) => this.answerQuiz(orig === q.answer, e.currentTarget),
     }, h('span', { class: 'letter', text: letters[i] }), h('span', { text: q.choices[orig] })));
 
+    let buzzBox = null;
+    if (buzz) {
+      choices.forEach((b) => { b.disabled = true; });
+      const chips = h('div', { class: 'chips' });
+      buzzBox = h('div', { class: 'buzz-box' }, h('p', { class: 'chips-label', text: '🔔 Qui buzze en premier ?' }), chips);
+      this.renderChips(chips, g.players, {
+        onChange: (sel) => {
+          const idx = g.players.findIndex((x) => sel.has(x.id));
+          if (idx < 0 || g.buzzed) return;
+          g.buzzed = true;
+          g.turn = idx;
+          const p = g.players[idx];
+          this.setTurnName($('#quiz-player'), p);
+          if (this.isMashup) this.setTheme(p.camp);
+          this.sound.reward();
+          haptic([40, 30, 40]);
+          buzzBox.replaceChildren(h('p', { class: 'chips-label', text: `🔔 ${p.name} répond !` }));
+          choices.forEach((b) => { b.disabled = false; });
+          this.renderScores('quiz');
+          this.startQuizTimer();
+        },
+      });
+    }
+    g.buzzed = false;
     $('#quiz-stage').replaceChildren(h('article', { class: 'q-card', style: { '--cat': cat.color } },
+      this.settings.quizTimer ? h('div', { class: 'q-timer' }, h('i')) : null,
       h('div', { class: 'q-meta' },
         h('span', { class: 'tag', style: { '--tc': cat.color }, text: `${cat.emoji} ${cat.name.toUpperCase()}` }),
         h('span', { class: 'tag', style: { '--tc': diff.color }, text: `${diff.emoji} ${diff.name.toUpperCase()} · ${diff.value}` })),
       h('p', { class: 'q-text', text: q.q }),
+      buzzBox,
       h('div', { class: 'choices' }, choices),
       h('div', { class: 'result-area' })));
+    if (!buzz) this.startQuizTimer();
   }
 
-  answerQuiz(correct, btnEl) {
+  answerQuiz(correct, btnEl, timeout = false) {
     const g = this.game;
     if (!g || g.answered) return;
     g.answered = true;
+    const bar = $('#quiz-stage .q-timer');
+    if (bar) bar.classList.add('stopped');
+    if (timeout) this.toast('⏱ Temps écoulé !', 'bad');
     const { q, value } = g.current;
     const p = g.players[g.turn];
     const fum = this.mode === 'fumette';
@@ -154,6 +212,7 @@ addGame(class {
       actions.append(continueBtn());
       area.replaceChildren(h('div', { class: 'result bad' }, lines), actions);
     }
+    if (q.fact) area.prepend(h('p', { class: 'q-fact', text: `💡 ${q.fact}` }));
     this.renderScores('quiz');
     if (this.checkEnd()) $$('.result-actions .btn-primary, .result-actions .btn-ghost', area).forEach((b) => { if (b.textContent.startsWith('CONTINUER')) b.textContent = 'VOIR LE CLASSEMENT 🏆'; });
     this.later(() => area.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'nearest' }), 250);

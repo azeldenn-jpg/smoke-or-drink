@@ -15,12 +15,14 @@ addGame(class {
     $('#roulette-label').textContent = '// au tour de';
     $('#roulette-round').textContent = `TOUR ${g.count + 1}`;
     this.setTurnName($('#roulette-player'), p);
+    if (this.isMashup) this.setTheme(p.camp);
     this.roulette.setup({
       player: p,
+      mode: this.campOf(p),
       doneLabel: g.players.length > 1 ? 'JOUEUR SUIVANT →' : 'ENCORE UN TOUR →',
       onDone: (res) => {
         if (!res) return;
-        if (this.mode === 'fumette') { p.taffs += 1; p.time += res.secs; }
+        if (this.campOf(p) === 'fumette') { p.taffs += 1; p.time += res.secs; }
         else p.taken += res.gorgees;
         g.count += 1;
         g.turn = (g.turn + 1) % g.players.length;

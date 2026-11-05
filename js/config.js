@@ -7,7 +7,7 @@
    1. CONFIG
    ========================================================================== */
 const CONFIG = {
-  VERSION: '4.6.0',
+  VERSION: '4.7.0',
   STORAGE_KEY: 'sod_v3',
   MAX_PLAYERS: 10,
   AVATARS: ['😎', '🤠', '👽', '🦊', '🐸', '🐼', '🦁', '🐙', '🦄', '🐯', '👻', '🤖', '🍕', '🌵', '🔥', '⚡', '🍄', '🐲', '🦩', '🐵', '🥑', '💀', '🧠', '🍉', '🐻', '🦈', '😈', '🤡', '🧙', '🎸'],
@@ -17,7 +17,7 @@ const CONFIG = {
     histoire:    { name: 'Histoire',         emoji: '🏛️', color: '#d4a574' },
     geo:         { name: 'Géographie',       emoji: '🌍', color: '#5fb878' },
     sciences:    { name: 'Sciences',         emoji: '🔬', color: '#6dc7e8' },
-    sport:       { name: 'Sport',            emoji: '⚽', color: '#ff8855' },
+    sport:       { name: 'Sport',            emoji: '🏅', color: '#ff8855' },
     cinema:      { name: 'Ciné & Séries',    emoji: '🎬', color: '#e85a8c' },
     musique:     { name: 'Musique',          emoji: '🎵', color: '#a667d4' },
     jeuxvideo:   { name: 'Jeux Vidéo',       emoji: '🎮', color: '#7ee0b8' },
@@ -26,6 +26,7 @@ const CONFIG = {
     litterature: { name: 'Littérature',      emoji: '📚', color: '#c97b63' },
     art:         { name: 'Art',              emoji: '🎨', color: '#f48fb1' },
     actu:        { name: 'Actu & People',    emoji: '📰', color: '#9ca3af' },
+    insolite:    { name: 'Insolite',         emoji: '🤯', color: '#ff9f43' },
   },
   UNKNOWN_CATEGORY: { name: 'Divers', emoji: '❓', color: '#9ca3af' },
 
@@ -82,12 +83,14 @@ const CONFIG = {
     { id: 'probable', short: "QUI POURRAIT", icon: '👉', title: 'Qui pourrait…', min: 3, kind: 'cards',
       desc: { fumette: 'Tout le monde pointe du doigt en même temps. Le plus désigné prend une taff.',
               alcool:  'Tout le monde pointe du doigt en même temps. Le plus désigné boit 2 gorgées.' } },
-    { id: 'bombe', short: "BOMBE", icon: '💣', title: 'La Bombe', min: 2, kind: 'bombe',
+    { id: 'bombe', short: "BOMBE", icon: '💣', title: 'La Bombe', min: 2, kind: 'bombe', mashup: true,
       desc: { fumette: "Un thème, un téléphone qui tourne, une mèche invisible. Celui qui l'a quand ça pète prend une taff.",
-              alcool:  "Un thème, un téléphone qui tourne, une mèche invisible. Celui qui l'a quand ça pète boit 3 gorgées." } },
-    { id: 'roulette', short: "ROULETTE", icon: '🎡', title: 'Roulette', min: 1, kind: 'roulette',
+              alcool:  "Un thème, un téléphone qui tourne, une mèche invisible. Celui qui l'a quand ça pète boit 3 gorgées.",
+              mashup:  "Un thème, un téléphone qui tourne, une mèche invisible. Quand ça pète : 3 gorgées pour un buveur, une taff pour un fumeur." } },
+    { id: 'roulette', short: "ROULETTE", icon: '🎡', title: 'Roulette', min: 1, kind: 'roulette', mashup: true,
       desc: { fumette: 'Classique : la roue tire le temps avant ta prochaine taff. Séance : tout un plan de taffs calé sur ton film.',
-              alcool:  'La roue décide combien tu bois. 6 % de chances de cul sec.' } },
+              alcool:  'La roue décide combien tu bois. 6 % de chances de cul sec.',
+              mashup:  'Chacun sa roue : le temps avant ta prochaine taff si tu fumes, tes gorgées si tu bois.' } },
   ],
 
   END_OPTIONS: {

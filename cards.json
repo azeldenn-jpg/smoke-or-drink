@@ -1097,47 +1097,281 @@
   }
  ],
  "bombe": [
-  "Marques de bière",
-  "Pokémon",
-  "Pays d'Europe",
-  "Capitales du monde",
-  "Joueurs de foot français",
-  "Rappeurs français",
-  "Films Disney ou Pixar",
-  "Fruits",
-  "Marques de voiture",
-  "Séries Netflix",
-  "Personnages de Harry Potter",
-  "Jeux vidéo",
-  "Animaux de la savane",
-  "Cocktails",
-  "Fromages",
-  "Instruments de musique",
-  "Super-héros",
-  "Applis sur ton téléphone",
-  "Sports olympiques",
-  "Trucs qu'on trouve dans une salle de bain",
-  "Mots qui finissent en « -tion »",
-  "Prénoms qui commencent par M",
-  "Villes de France",
-  "Légumes",
-  "Marques de vêtements",
-  "Chanteuses",
-  "Dessins animés des années 2000",
-  "Métiers",
-  "Plats italiens",
-  "Langues parlées dans le monde",
-  "Planètes et astres",
-  "Trucs qui piquent",
-  "Excuses pour arriver en retard",
-  "Mots anglais qu'on utilise en français",
-  "Groupes de rock",
-  "Clubs de foot européens",
-  "Desserts",
-  "Personnages de jeux vidéo",
-  "Monuments célèbres",
-  "Trucs rouges",
-  "Quartiers ou villes autour de Marseille",
-  "Émissions de télé-réalité"
+  {
+   "t": "Marques de bière",
+   "lvl": "chill"
+  },
+  {
+   "t": "Pokémon",
+   "lvl": "chill"
+  },
+  {
+   "t": "Pays d'Europe",
+   "lvl": "chill"
+  },
+  {
+   "t": "Capitales du monde",
+   "lvl": "chill"
+  },
+  {
+   "t": "Joueurs de foot français",
+   "lvl": "chill"
+  },
+  {
+   "t": "Rappeurs français",
+   "lvl": "chill"
+  },
+  {
+   "t": "Films Disney ou Pixar",
+   "lvl": "chill"
+  },
+  {
+   "t": "Fruits",
+   "lvl": "chill"
+  },
+  {
+   "t": "Marques de voiture",
+   "lvl": "chill"
+  },
+  {
+   "t": "Séries Netflix",
+   "lvl": "chill"
+  },
+  {
+   "t": "Personnages de Harry Potter",
+   "lvl": "chill"
+  },
+  {
+   "t": "Jeux vidéo",
+   "lvl": "chill"
+  },
+  {
+   "t": "Animaux de la savane",
+   "lvl": "chill"
+  },
+  {
+   "t": "Cocktails",
+   "lvl": "chill"
+  },
+  {
+   "t": "Fromages",
+   "lvl": "chill"
+  },
+  {
+   "t": "Instruments de musique",
+   "lvl": "chill"
+  },
+  {
+   "t": "Super-héros",
+   "lvl": "chill"
+  },
+  {
+   "t": "Applis sur ton téléphone",
+   "lvl": "chill"
+  },
+  {
+   "t": "Sports olympiques",
+   "lvl": "chill"
+  },
+  {
+   "t": "Trucs qu'on trouve dans une salle de bain",
+   "lvl": "chill"
+  },
+  {
+   "t": "Mots qui finissent en « -tion »",
+   "lvl": "chill"
+  },
+  {
+   "t": "Prénoms qui commencent par M",
+   "lvl": "chill"
+  },
+  {
+   "t": "Villes de France",
+   "lvl": "chill"
+  },
+  {
+   "t": "Légumes",
+   "lvl": "chill"
+  },
+  {
+   "t": "Marques de vêtements",
+   "lvl": "chill"
+  },
+  {
+   "t": "Chanteuses",
+   "lvl": "chill"
+  },
+  {
+   "t": "Dessins animés des années 2000",
+   "lvl": "chill"
+  },
+  {
+   "t": "Métiers",
+   "lvl": "chill"
+  },
+  {
+   "t": "Plats italiens",
+   "lvl": "chill"
+  },
+  {
+   "t": "Langues parlées dans le monde",
+   "lvl": "chill"
+  },
+  {
+   "t": "Planètes et astres",
+   "lvl": "chill"
+  },
+  {
+   "t": "Trucs qui piquent",
+   "lvl": "chill"
+  },
+  {
+   "t": "Excuses pour arriver en retard",
+   "lvl": "chill"
+  },
+  {
+   "t": "Mots anglais qu'on utilise en français",
+   "lvl": "chill"
+  },
+  {
+   "t": "Groupes de rock",
+   "lvl": "chill"
+  },
+  {
+   "t": "Clubs de foot européens",
+   "lvl": "chill"
+  },
+  {
+   "t": "Desserts",
+   "lvl": "chill"
+  },
+  {
+   "t": "Personnages de jeux vidéo",
+   "lvl": "chill"
+  },
+  {
+   "t": "Monuments célèbres",
+   "lvl": "chill"
+  },
+  {
+   "t": "Trucs rouges",
+   "lvl": "chill"
+  },
+  {
+   "t": "Quartiers ou villes autour de Marseille",
+   "lvl": "chill"
+  },
+  {
+   "t": "Émissions de télé-réalité",
+   "lvl": "chill"
+  },
+  {
+   "t": "Marques d'alcool",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Jeux à boire",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Façons de dire qu'on est bourré",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Excuses pour rentrer tard",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Trucs qu'on trouve dans un sac le lendemain de soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Chansons de fin de soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Snacks de 4 h du mat",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Trucs qu'on dit à son pote bourré",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Raisons de faire la fête",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Remèdes contre la gueule de bois",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Trucs qu'on perd en soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Marques de bière du monde",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Boîtes de nuit ou bars que tu connais",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Choses à ne pas faire en soirée",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Mots pour dire « fumer »",
+   "lvl": "soiree"
+  },
+  {
+   "t": "Phrases de drague nulles",
+   "lvl": "hot"
+  },
+  {
+   "t": "Applis de rencontre",
+   "lvl": "hot"
+  },
+  {
+   "t": "Endroits insolites pour un bisou",
+   "lvl": "hot"
+  },
+  {
+   "t": "Choses à ne pas dire au premier date",
+   "lvl": "hot"
+  },
+  {
+   "t": "Prénoms qui font craquer",
+   "lvl": "hot"
+  },
+  {
+   "t": "Signes qu'on plaît à quelqu'un",
+   "lvl": "hot"
+  },
+  {
+   "t": "Excuses pour ne pas rappeler quelqu'un",
+   "lvl": "hot"
+  },
+  {
+   "t": "Trucs sexy chez quelqu'un",
+   "lvl": "hot"
+  },
+  {
+   "t": "Films romantiques",
+   "lvl": "hot"
+  },
+  {
+   "t": "Choses qu'on fait pour séduire",
+   "lvl": "hot"
+  },
+  {
+   "t": "Surnoms de couple ridicules",
+   "lvl": "hot"
+  },
+  {
+   "t": "Questions à poser à un crush",
+   "lvl": "hot"
+  }
  ]
 }
