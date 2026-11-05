@@ -260,7 +260,7 @@ class Seance {
     const key = players.map((p) => p.id).join(',');
     if (this._namesKey === key) return;
     this._namesKey = key;
-    this.el.names.replaceChildren(...players.map((p) => h('span', { class: 'se-n', style: { '--pc': p.color } }, h('span', { class: 'dot' }), h('span', { text: p.name }))));
+    this.el.names.replaceChildren(...players.map((p) => h('span', { class: 'se-n', style: { '--pc': p.color } }, this.app.avatar(p, 'dot'), h('span', { text: p.name }))));
   }
 
   render(now = this.s ? this.elapsed() : 0) {
@@ -356,7 +356,7 @@ class Seance {
     const s = this.s;
     this._lastScores = s.idx;
     this.el.scores.replaceChildren(...s.players.map((p) => h('li', { class: 'score-row', style: { '--pc': p.color } },
-      h('span', { class: 'sdot' }),
+      this.app.avatar(p, 'sdot'),
       h('span', { class: 'sname', text: p.name }),
       h('span', { class: 'sval' }, `${p.taffs} 🌿`, h('small', { text: ` / ${p.planned} prévues` })))));
   }

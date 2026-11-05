@@ -36,6 +36,7 @@
     <!-- ================= ACCUEIL ================= -->
     <section class="screen is-active" data-screen="home">
       <div class="home-top">
+        <button class="icon-btn" data-action="toggle-big" aria-label="Agrandir le texte"><span class="aa">Aa</span></button>
         <button class="icon-btn" data-action="toggle-sound" aria-label="Activer ou couper le son">
           <span class="snd-on">🔊</span><span class="snd-off">🔇</span>
         </button>
@@ -75,6 +76,8 @@
           <span class="mc-arrow" aria-hidden="true">→</span>
         </button>
       </div>
+
+      <button class="recap-btn stagger" data-action="recap" style="--i:3" hidden>🏆 Récap de la soirée <span class="rc-count pixel"></span></button>
 
       <p class="home-foot pixel dim">v4.5 · hors-ligne ready</p>
     </section>
@@ -166,7 +169,7 @@
       <header class="game-top">
         <span class="game-tag pixel" data-game-tag></span>
         <span class="round-tag pixel" id="quiz-round"></span>
-        <button class="quit-btn" data-action="quit">quitter ✕</button>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
       </header>
 
       <div class="turn">
@@ -188,7 +191,7 @@
       <header class="game-top">
         <span class="game-tag pixel" data-game-tag></span>
         <span class="round-tag pixel" id="cards-round"></span>
-        <button class="quit-btn" data-action="quit">quitter ✕</button>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
       </header>
 
       <div class="deck">
@@ -221,7 +224,7 @@
       <header class="game-top">
         <span class="game-tag pixel" data-game-tag></span>
         <span class="round-tag pixel" id="bomb-round"></span>
-        <button class="quit-btn" data-action="quit">quitter ✕</button>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
       </header>
 
       <div class="bomb-theme">
@@ -268,7 +271,7 @@
       <header class="game-top">
         <span class="game-tag pixel" data-game-tag></span>
         <span class="round-tag pixel" id="roulette-round"></span>
-        <button class="quit-btn" data-action="quit" id="roulette-quit">quitter ✕</button>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie" id="roulette-quit">✕</button>
       </header>
 
       <div class="turn">
@@ -301,7 +304,7 @@
       <header class="game-top">
         <span class="game-tag pixel" data-game-tag></span>
         <span class="round-tag pixel" id="meme-round"></span>
-        <button class="quit-btn" data-action="quit">quitter ✕</button>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
       </header>
 
       <article class="meme-card" id="meme-card">
@@ -333,7 +336,7 @@
       <header class="game-top">
         <span class="game-tag pixel" data-game-tag></span>
         <span class="round-tag pixel" id="oie-round"></span>
-        <button class="quit-btn" data-action="quit">quitter ✕</button>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
       </header>
 
       <div class="oie-map" id="oie-map" aria-hidden="true"><span class="oie-map-line"></span></div>
@@ -362,7 +365,7 @@
       <header class="game-top">
         <span class="game-tag pixel">🌿 SÉANCE</span>
         <span class="round-tag pixel" id="se-count"></span>
-        <button class="quit-btn" data-action="quit">quitter ✕</button>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
       </header>
 
       <div class="turn">
@@ -412,6 +415,24 @@
       </section>
     </section>
 
+    <!-- ================= RÉCAP DE SOIRÉE ================= -->
+    <section class="screen" data-screen="recap">
+      <nav class="topbar">
+        <button class="back-btn" data-action="back">← retour</button>
+      </nav>
+      <h2 class="screen-title">🏆 RÉCAP DE LA SOIRÉE</h2>
+      <p class="screen-sub pixel" id="recap-sub"></p>
+      <div class="recap-games" id="recap-games"></div>
+      <h3 class="section-label">Trophées</h3>
+      <ol class="trophies" id="recap-trophies"></ol>
+      <h3 class="section-label">Classement cumulé</h3>
+      <ol class="podium" id="recap-table"></ol>
+      <div class="actions col recap-actions">
+        <button class="btn-primary" id="recap-share">📤 PARTAGER L’IMAGE</button>
+        <button class="btn-ghost" id="recap-new">🌙 nouvelle soirée</button>
+      </div>
+    </section>
+
     <!-- ================= FIN ================= -->
     <section class="screen" data-screen="end">
       <div class="end">
@@ -421,6 +442,7 @@
         <ol class="podium" id="podium"></ol>
         <div class="actions col">
           <button class="btn-primary" id="end-restart">rejouer</button>
+          <button class="btn-ghost recap-inline" data-action="recap" hidden>🏆 récap de la soirée</button>
           <button class="btn-ghost" id="end-hub">changer de jeu</button>
           <button class="btn-ghost" id="end-home">accueil</button>
         </div>
@@ -441,6 +463,25 @@
     </div>
   </div>
 
+  <!-- Règles / informations -->
+  <div class="sheet" id="info-sheet" hidden>
+    <div class="sheet-backdrop" data-info="close"></div>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="info-title">
+      <p class="sheet-title" id="info-title"></p>
+      <ul class="info-list" id="info-list"></ul>
+      <button class="btn-primary" data-info="close">compris !</button>
+    </div>
+  </div>
+
+  <!-- Choix de l'avatar -->
+  <div class="sheet" id="avatar-sheet" hidden>
+    <div class="sheet-backdrop" data-avatar="close"></div>
+    <div class="sheet-panel" role="dialog" aria-modal="true">
+      <p class="sheet-title">Choisis ton avatar</p>
+      <div class="avatar-grid" id="avatar-grid"></div>
+    </div>
+  </div>
+
   <!-- Notifications (remplace alert()) -->
   <div class="toasts" id="toasts" aria-live="polite"></div>
 
@@ -454,6 +495,8 @@
   <script src="js/roulette.js" defer></script>
   <script src="js/seance.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/extras.js" defer></script>
+  <script src="js/soiree.js" defer></script>
   <script src="jeux/quiz.js" defer></script>
   <script src="jeux/cartes.js" defer></script>
   <script src="jeux/bombe.js" defer></script>

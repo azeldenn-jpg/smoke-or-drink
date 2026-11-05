@@ -8,6 +8,7 @@ addGame(class {
   /* JEUX DE CARTES : Je n'ai jamais / Qui pourrait…                         */
   /* ---------------------------------------------------------------------- */
   cardsTurn(first = false) {
+    this.beginTurn('cardsTurn');
     const g = this.game;
     if (this.checkEnd()) { this.finish(); return; }
     const isJamais = g.id === 'jamais';

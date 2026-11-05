@@ -53,9 +53,37 @@ function formatTime(totalSeconds) {
   const s = Math.max(0, Math.ceil(totalSeconds));
   return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 }
+/**
+ * Vibration. Android : navigator.vibrate. iPhone (iOS 18+) : Safari n'a pas
+ * d'API de vibration, mais basculer un interrupteur <input switch> déclenche
+ * un petit "tic" du moteur haptique : on en cache un et on le "touche".
+ * Ne marche que pendant un geste de l'utilisateur, et pas sur tous les appareils.
+ */
+let hapticSwitch = null;
+function iosTick() {
+  if (!hapticSwitch) {
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.setAttribute('switch', '');
+    input.id = 'sod-haptic';
+    input.setAttribute('aria-hidden', 'true');
+    input.tabIndex = -1;
+    input.style.cssText = 'position:fixed;left:-100px;top:0;opacity:0;pointer-events:none;';
+    hapticSwitch = document.createElement('label');
+    hapticSwitch.htmlFor = 'sod-haptic';
+    hapticSwitch.style.cssText = 'position:fixed;left:-100px;top:0;opacity:0;pointer-events:none;';
+    document.body.append(input, hapticSwitch);
+  }
+  hapticSwitch.click();
+}
 function haptic(pattern = 15) {
-  // iOS ne supporte pas navigator.vibrate : on compense par du feedback visuel
-  try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) { /* ignore */ }
+  if (window.sodHapticsOff) return;
+  try {
+    if (navigator.vibrate) { navigator.vibrate(pattern); return; }
+    // iPhone : un tic par "vibration" du motif (on ignore les pauses)
+    const pulses = Array.isArray(pattern) ? Math.ceil(pattern.length / 2) : 1;
+    for (let i = 0; i < Math.min(pulses, 3); i++) setTimeout(iosTick, i * 110);
+  } catch (e) { /* ignore */ }
 }
 /** Rejoue une animation CSS en retirant/remettant la classe */
 function replay(el, cls) {

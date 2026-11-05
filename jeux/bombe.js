@@ -8,6 +8,7 @@ addGame(class {
   /* LA BOMBE                                                                */
   /* ---------------------------------------------------------------------- */
   bombTurn() {
+    this.beginTurn('bombTurn');
     const g = this.game;
     if (this.checkEnd()) { this.finish(); return; }
     const theme = g.deck.draw();

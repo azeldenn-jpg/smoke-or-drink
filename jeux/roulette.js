@@ -8,6 +8,7 @@ addGame(class {
   /* ROULETTE (jeu autonome)                                                 */
   /* ---------------------------------------------------------------------- */
   rouletteTurn() {
+    this.beginTurn('rouletteTurn');
     const g = this.game;
     const p = g.players[g.turn];
     $('#roulette-quit').hidden = false;

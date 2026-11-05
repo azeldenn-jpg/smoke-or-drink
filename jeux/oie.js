@@ -76,6 +76,7 @@ addGame(class {
   /* ---------------------------------------------------------------------- */
   oieStart() {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     g.board = buildOieBoard(this.isMashup);
     g.busy = false;
     g.mult = OIE.MULT[this.settings.intensity] || 2;
@@ -93,6 +94,7 @@ addGame(class {
   /** Coordonnées (en px) du centre d'une case : serpent de bas en haut */
   oieXY(i) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const { COLS } = OIE;
     const r = Math.floor(i / COLS);
     let c = i % COLS;
@@ -102,15 +104,16 @@ addGame(class {
 
   oieBuildBoard() {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const boardEl = $('#oie-board');
     const width = $('#oie-viewport').clientWidth || Math.min(window.innerWidth - 36, 524);
     const rows = Math.ceil((OIE.LAST + 1) / OIE.COLS);
     g.pad = 10;
     g.colW = (width - g.pad * 2) / OIE.COLS;
-    g.rowH = Math.max(66, g.colW * 0.95);
+    g.rowH = Math.min(96, Math.max(66, g.colW * 0.95));
     g.boardH = rows * g.rowH + g.pad * 2;
     g.width = width;
-    const cs = Math.min(g.colW, g.rowH) - 12;
+    const cs = Math.min(84, Math.min(g.colW, g.rowH) - 12);
     boardEl.style.height = `${g.boardH}px`;
     boardEl.style.setProperty('--cs', `${cs}px`);
 
@@ -138,7 +141,7 @@ addGame(class {
     });
     g.pawns = new Map();
     const pawns = g.players.map((p) => {
-      const el = h('div', { class: 'pawn', style: { '--pc': p.color }, text: p.name.charAt(0).toUpperCase(), 'aria-label': p.name });
+      const el = h('div', { class: 'pawn', style: { '--pc': p.color }, text: p.emoji || p.name.charAt(0).toUpperCase(), 'aria-label': p.name });
       g.pawns.set(p.id, el);
       return el;
     });
@@ -157,6 +160,7 @@ addGame(class {
   /** Place tous les pions (décalés quand plusieurs sont sur la même case) */
   oiePlacePawns() {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const current = g.players[g.turn];
     const byCell = new Map();
     g.players.forEach((p) => { const list = byCell.get(p.pos) || []; list.push(p); byCell.set(p.pos, list); });
@@ -190,7 +194,9 @@ addGame(class {
   /* TOUR DE JEU                                                             */
   /* ---------------------------------------------------------------------- */
   oieTurn() {
+    this.beginTurn('oieTurn');
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     if (!g || g.over) return;
     const p = g.players[g.turn];
     g.busy = false;
@@ -226,6 +232,7 @@ addGame(class {
 
   oieNext() {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     if (!g || g.over) return;
     g.count += 1;
     g.turn += 1;
@@ -242,6 +249,7 @@ addGame(class {
 
   async oieRoll() {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     if (!g || g.over || g.busy) return;
     g.busy = true;
     this.sound.unlock();
@@ -259,6 +267,7 @@ addGame(class {
       dies.forEach((d) => this.oieDie(d, randInt(1, 6)));
       this.sound.tick(0.3);
       await wait(70);
+      if (this.game !== g || g.epoch !== ep) return;
     }
     this.oieDie(dies[0], d1);
     haptic(20);
@@ -269,7 +278,9 @@ addGame(class {
     const surplus = Math.max(0, p.pos + total - OIE.LAST);
     this.oiePanel({ icon: '🎲', title: `${total}`, text: `${p.name} avance de ${plural(total, 'case')}…` });
     await wait(350);
+    if (this.game !== g || g.epoch !== ep) return;
     await this.oieMove(p, total);
+    if (this.game !== g || g.epoch !== ep) return;
     if (surplus) {
       this.sound.bad();
       g.pending.push(`↩️ Rebond de ${surplus} : ${this.oieMalus(p, surplus)}`);
@@ -281,6 +292,7 @@ addGame(class {
   /** Déplace un pion case par case (avec rebond si on dépasse 63) */
   async oieMove(p, steps) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     let dir = steps >= 0 ? 1 : -1;
     let left = Math.abs(steps);
     const pawn = g.pawns.get(p.id);
@@ -294,6 +306,7 @@ addGame(class {
       this.sound.tick(p.pos / OIE.LAST);
       this.oieCamera(p.pos);
       await wait(reducedMotion.matches ? 30 : 210);
+      if (this.game !== g || g.epoch !== ep) return;
     }
     const cell = $(`.oie-cell[data-i="${p.pos}"]`);
     replay(cell, 'hit');
@@ -303,11 +316,13 @@ addGame(class {
   /** Saut direct (pont, labyrinthe, tête de mort, échange) */
   async oieJump(p, to) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     p.pos = to;
     this.oiePlacePawns();
     replay(g.pawns.get(p.id), 'hop');
     this.oieCamera(to);
     await wait(reducedMotion.matches ? 50 : 650);
+    if (this.game !== g || g.epoch !== ep) return;
   }
 
   /* ---------------------------------------------------------------------- */
@@ -315,6 +330,7 @@ addGame(class {
   /* ---------------------------------------------------------------------- */
   async oieResolve(p, depth) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     if (!g || g.over) return;
     const type = g.board[p.pos];
     const t = OIE.CELL_TYPES[type];
@@ -340,7 +356,9 @@ addGame(class {
         this.oieBonus(p, 2, base, `Tu distribues 2 malus, puis tu avances encore de ${plural(g.lastRoll, 'case')}.`, async () => {
           this.oiePanel({ ...base, text: `En avant de ${plural(g.lastRoll, 'case')} !` });
           await wait(500);
+          if (this.game !== g || g.epoch !== ep) return;
           await this.oieMove(p, g.lastRoll);
+          if (this.game !== g || g.epoch !== ep) return;
           this.oieResolve(p, depth + 1);
         }, { keep: false });
         return;
@@ -350,7 +368,9 @@ addGame(class {
         this.oieBonus(p, 1, base, 'Tu distribues 1 malus, puis direction la case 12.', async () => {
           this.oiePanel({ ...base, text: 'Tu traverses le pont…' });
           await wait(400);
+          if (this.game !== g || g.epoch !== ep) return;
           await this.oieJump(p, 12);
+          if (this.game !== g || g.epoch !== ep) return;
           this.oieResolve(p, depth + 1);
         }, { keep: false });
         return;
@@ -360,7 +380,9 @@ addGame(class {
         flash();
         this.oiePanel({ ...base, text: t.text });
         await wait(800);
+        if (this.game !== g || g.epoch !== ep) return;
         await this.oieJump(p, 30);
+        if (this.game !== g || g.epoch !== ep) return;
         this.oiePanel({ ...base, text: 'Te voilà case 30.', effects: [this.oieMalus(p, 4)], actions: [done()] });
         return;
       }
@@ -394,7 +416,9 @@ addGame(class {
         this.fx.flash('rgba(255,94,126,.45)');
         this.oiePanel({ ...base, text: t.text });
         await wait(900);
+        if (this.game !== g || g.epoch !== ep) return;
         await this.oieJump(p, 0);
+        if (this.game !== g || g.epoch !== ep) return;
         const fx = this.oieMalus(p, 2);
         this.oiePanel({ ...base, text: 'Retour à la case départ.', effects: [fx], actions: [done()] });
         return;
@@ -404,7 +428,9 @@ addGame(class {
         if (depth >= 3) { this.oiePanel({ ...base, text: 'On en reste là pour ce tour.', actions: [done()] }); return; }
         this.oiePanel({ ...base, text: t.text });
         await wait(700);
+        if (this.game !== g || g.epoch !== ep) return;
         await this.oieMove(p, type === 'avance' ? 3 : -3);
+        if (this.game !== g || g.epoch !== ep) return;
         this.oieResolve(p, depth + 1);
         return;
       }
@@ -491,6 +517,7 @@ addGame(class {
    */
   oieVerite(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const others = g.players.filter((x) => x.id !== p.id);
     const chips = h('div', { class: 'chips' });
     this.renderChips(chips, others, {
@@ -553,6 +580,7 @@ addGame(class {
   /* ---------------------------------------------------------------------- */
   oieQuiz(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const q = g.quiz.draw();
     if (!q) { this.oieResolveFallback(p, base); return; }
     const value = (CONFIG.DIFFS[q.diff] || CONFIG.DIFFS.medium).value;
@@ -591,6 +619,7 @@ addGame(class {
 
   oieJamais(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const text = g.jamais.draw() || 'chanté sous la douche';
     const chips = h('div', { class: 'chips' });
     const validate = h('button', { class: 'btn-primary', text: 'PERSONNE →' });
@@ -611,6 +640,7 @@ addGame(class {
 
   oieProbable(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const text = g.probable.draw() || 'devenir célèbre';
     const chips = h('div', { class: 'chips' });
     const validate = h('button', { class: 'btn-primary', text: 'VALIDER', disabled: true });
@@ -629,6 +659,7 @@ addGame(class {
 
   oieTheme(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const theme = g.themes.draw() || 'Fruits';
     const startBtn = h('button', { class: 'btn-primary pulse', text: '⏱ GO (5 s)' });
     const body = h('div', { class: 'op-body' }, startBtn);
@@ -642,6 +673,7 @@ addGame(class {
         replay(num, 'bump-num');
         this.sound.beep();
         await wait(1000);
+        if (this.game !== g || g.epoch !== ep) return;
       }
       this.sound.alarm();
       num.textContent = 'STOP';
@@ -660,6 +692,7 @@ addGame(class {
 
   oieDuel(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const others = g.players.filter((x) => x.id !== p.id);
     const chips = h('div', { class: 'chips' });
     const go = h('button', { class: 'btn-primary', text: 'DUEL !', disabled: true });
@@ -682,6 +715,7 @@ addGame(class {
           this.oiePanel({ ...base, text: `${winner.name} gagne et vole une case à ${loser.name} !`, effects: [fx] });
           (async () => {
             await wait(500);
+            if (this.game !== g || g.epoch !== ep) return;
             if (winner.pos < OIE.LAST) await this.oieMove(winner, 1);
             if (loser.pos > 0) await this.oieMove(loser, -1);
             this.renderScores('oie');
@@ -699,6 +733,7 @@ addGame(class {
   /** Pause clope : +2 de jauge pour chaque fumeur, 1 malus pour chaque buveur */
   oieClope(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const effects = [];
     const lucky = [];
     g.players.forEach((x) => {
@@ -723,6 +758,7 @@ addGame(class {
   /** Santé ! : les buveurs boivent 1 (cul sec facultatif), puis chaque fumeur distribue 1 malus */
   oieSante(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const drinkers = g.players.filter((x) => x.camp === 'alcool');
     const smokers = g.players.filter((x) => x.camp === 'fumette');
     const effects = drinkers.map((x) => this.oieMalus(x, 1));
@@ -751,6 +787,7 @@ addGame(class {
 
   oieExchange(p, base) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     const others = g.players.filter((x) => x.id !== p.id);
     const chips = h('div', { class: 'chips' });
     let swapped = false;
@@ -771,6 +808,7 @@ addGame(class {
         replay(g.pawns.get(other.id), 'hop');
         this.oieCamera(p.pos);
         await wait(700);
+        if (this.game !== g || g.epoch !== ep) return;
         this.renderScores('oie');
         this.oiePanel({ ...base, text: `${p.name} passe case ${p.pos}, ${other.name} case ${other.pos}.`,
           actions: [h('button', { class: 'btn-primary', text: 'JOUEUR SUIVANT →', onclick: once(() => this.oieNext()) })] });
@@ -784,6 +822,7 @@ addGame(class {
   /* ---------------------------------------------------------------------- */
   oiePanel({ icon = '', title = '', color: c = null, text = '', big = '', effects = [], body = null, actions = [] }) {
     const g = this.game;
+    const ep = g ? g.epoch : 0;
     if (g && g.pending && g.pending.length) { effects = [...g.pending, ...effects]; g.pending = []; }
     const card = h('div', { class: 'op-card', style: c ? { '--cc': c } : {} },
       h('div', { class: 'op-head' }, icon ? h('span', { class: 'op-icon', text: icon }) : null, h('span', { class: 'op-title', text: title })),

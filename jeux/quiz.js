@@ -8,6 +8,7 @@ addGame(class {
   /* QUIZ                                                                    */
   /* ---------------------------------------------------------------------- */
   quizTurn() {
+    this.beginTurn('quizTurn');
     const g = this.game;
     if (this.checkEnd()) { this.finish(); return; }
     const p = g.players[g.turn];

@@ -26,6 +26,8 @@ const CORE = [
   './js/roulette.js',
   './js/seance.js',
   './js/app.js',
+  './js/extras.js',
+  './js/soiree.js',
   './js/main.js',
   './jeux/quiz.js',
   './jeux/cartes.js',

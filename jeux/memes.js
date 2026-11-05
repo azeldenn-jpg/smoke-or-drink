@@ -81,6 +81,7 @@ addGame(class {
   }
 
   async memesTurn(first = false) {
+    this.beginTurn('memesTurn');
     const g = this.game;
     if (!g || g.over) return;
     if (this.checkEnd()) { this.finish(); return; }

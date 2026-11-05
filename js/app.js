@@ -10,8 +10,8 @@ class SmokeOrDrinkApp {
   constructor() {
     const saved = Store.load();
     this.players = Array.isArray(saved.players) && saved.players.length
-      ? saved.players.slice(0, CONFIG.MAX_PLAYERS).map((p) => ({ id: p.id || uid(), name: String(p.name || ''), camp: p.camp === 'alcool' ? 'alcool' : 'fumette' }))
-      : [{ id: uid(), name: '', camp: 'fumette' }, { id: uid(), name: '', camp: 'alcool' }];
+      ? saved.players.slice(0, CONFIG.MAX_PLAYERS).map((p, i) => ({ id: p.id || uid(), name: String(p.name || ''), camp: p.camp === 'alcool' ? 'alcool' : 'fumette', emoji: p.emoji || CONFIG.AVATARS[i % CONFIG.AVATARS.length] }))
+      : [{ id: uid(), name: '', camp: 'fumette', emoji: CONFIG.AVATARS[0] }, { id: uid(), name: '', camp: 'alcool', emoji: CONFIG.AVATARS[1] }];
     this.settings = {
       sound: true,
       cats: ['all'],
@@ -48,7 +48,10 @@ class SmokeOrDrinkApp {
   /* ---------------------------------------------------------------------- */
   async init() {
     document.body.classList.toggle('is-muted', !this.sound.enabled);
+    document.body.classList.toggle('big-text', Boolean(this.settings.bigText));
+    this.installGameButtons();
     this.bindEvents();
+    this.refreshRecapButtons();
     this.registerServiceWorker();
     await this.loadData();
     this.offerResume();
@@ -110,6 +113,7 @@ class SmokeOrDrinkApp {
     const secure = location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
     if (!secure) return;
     const register = () => navigator.serviceWorker.register('service-worker.js')
+      .then((reg) => this.watchUpdates(reg))
       .catch((err) => console.warn('[PWA] Service Worker :', err));
     if (document.readyState === 'complete') register();
     else window.addEventListener('load', register, { once: true });
@@ -117,7 +121,7 @@ class SmokeOrDrinkApp {
 
   save() {
     Store.save({
-      players: this.players.map((p) => ({ id: p.id, name: p.name, camp: p.camp })),
+      players: this.players.map((p) => ({ id: p.id, name: p.name, camp: p.camp, emoji: p.emoji })),
       settings: this.settings,
     });
   }
@@ -139,6 +143,10 @@ class SmokeOrDrinkApp {
       if (action === 'back') this.router.back();
       else if (action === 'toggle-sound') this.toggleSound();
       else if (action === 'quit') this.askQuit();
+      else if (action === 'undo') this.undo();
+      else if (action === 'toggle-big') this.toggleBig();
+      else if (action === 'recap') this.openRecap();
+      else if (action === 'rules') this.showRules();
       else if (btn.classList.contains('mode-card')) this.chooseMode(btn.dataset.mode);
       else if (btn.classList.contains('game-card')) this.chooseGame(btn.dataset.game);
     });
@@ -152,6 +160,8 @@ class SmokeOrDrinkApp {
     $('#end-restart').addEventListener('click', () => this.startGame(true));
     $('#end-hub').addEventListener('click', () => this.goHub());
     $('#end-home').addEventListener('click', () => this.goHome());
+    $('#recap-share').addEventListener('click', () => this.shareRecap());
+    $('#recap-new').addEventListener('click', () => this.newSoiree());
 
     // Retour au premier plan : on réactive l'écran allumé si une partie tourne
     document.addEventListener('visibilitychange', () => {
@@ -160,6 +170,14 @@ class SmokeOrDrinkApp {
         if (this.game.kind === 'seance') this.seance.tick(); // rattrape une taff tombée pendant la veille
       }
     });
+  }
+
+  /** Mode gros texte (lisible à 3 h du mat) */
+  toggleBig() {
+    this.settings.bigText = !this.settings.bigText;
+    document.body.classList.toggle('big-text', this.settings.bigText);
+    this.save();
+    this.toast(this.settings.bigText ? '🔠 Gros texte activé' : '🔡 Texte normal');
   }
 
   toggleSound() {
@@ -356,7 +374,7 @@ class SmokeOrDrinkApp {
         }, h('span', { text: p.camp === 'fumette' ? '🌿' : '🥃' }), p.camp === 'fumette' ? 'fume' : 'boit')
         : null;
       const row = h('div', { class: 'player-row', style: { '--pc': color } },
-        h('span', { class: 'pdot' }), input, camp,
+        h('button', { class: 'avatar-btn', 'aria-label': 'Changer d’avatar', text: p.emoji, onclick: () => this.pickAvatar(p) }), input, camp,
         this.players.length > 1
           ? h('button', { class: 'remove', 'aria-label': `Retirer ${p.name || `le joueur ${i + 1}`}`, text: '×', onclick: () => this.removePlayer(p.id, row) })
           : null);
@@ -373,7 +391,9 @@ class SmokeOrDrinkApp {
   addPlayer() {
     if (this.players.length >= CONFIG.MAX_PLAYERS) return;
     const last = this.players[this.players.length - 1];
-    this.players.push({ id: uid(), name: '', camp: last ? last.camp : 'fumette' });
+    const used = new Set(this.players.map((p) => p.emoji));
+    const emoji = CONFIG.AVATARS.find((e) => !used.has(e)) || CONFIG.AVATARS[0];
+    this.players.push({ id: uid(), name: '', camp: last ? last.camp : 'fumette', emoji });
     this.save();
     this.renderPlayers(this.players.length - 1);
     this.validateSetup();
@@ -570,7 +590,7 @@ class SmokeOrDrinkApp {
       id: g.id, kind: g.kind, end: endOpt,
       players: this.players.map((p, i) => ({
         id: p.id, name: p.name.trim(), color: CONFIG.PLAYER_COLORS[i % CONFIG.PLAYER_COLORS.length],
-        camp: this.isMashup ? p.camp : this.mode,
+        camp: this.isMashup ? p.camp : this.mode, emoji: p.emoji,
         score: 0, taffs: 0, given: 0, taken: 0, streak: 0, time: 0, gauge: 0, sabotaged: 0, pos: 0, skip: 0,
       })),
       turn: 0, round: 1, count: 0, over: false,
@@ -661,7 +681,8 @@ class SmokeOrDrinkApp {
     const ranked = [...g.players].sort((a, b) => conf.key(b) - conf.key(a) || a.taken - b.taken);
     $('#end-kicker').textContent = conf.kicker;
     $('#end-title').textContent = fum || this.isMashup ? 'FIN DE PARTIE' : "C'EST FINI";
-    $('#winner').replaceChildren(conf.crown, h('b', { text: `👑 ${ranked[0].name}` }));
+    $('#winner').replaceChildren(conf.crown, h('b', { text: `👑 ${ranked[0].emoji ? ranked[0].emoji + ' ' : ''}${ranked[0].name}` }));
+    this.soireeRecord(g, ranked);
 
     $('#podium').replaceChildren(...ranked.map((p, i) => {
       let main, sub = '';
@@ -688,7 +709,7 @@ class SmokeOrDrinkApp {
       }
       return h('li', { class: i === 0 ? 'first' : '', style: { '--i': i, '--pc': p.color } },
         h('span', { class: 'rank', text: String(i + 1) }),
-        h('span', { class: 'pname', text: this.isMashup ? `${p.camp === 'fumette' ? '🌿' : '🥃'} ${p.name}` : p.name }),
+        h('span', { class: 'pname', text: `${p.emoji ? p.emoji + ' ' : ''}${p.name}${this.isMashup ? (p.camp === 'fumette' ? ' 🌿' : ' 🥃') : ''}` }),
         h('span', { class: 'pscore' }, main, sub ? h('small', { text: sub }) : null));
     }));
 
@@ -702,8 +723,29 @@ class SmokeOrDrinkApp {
   /* ---------------------------------------------------------------------- */
   /* AFFICHAGE COMMUN : joueur actif + tableau des scores                    */
   /* ---------------------------------------------------------------------- */
+  /** Pastille d'un joueur : son emoji s'il en a un, sinon un point de couleur */
+  avatar(p, cls) {
+    return p.emoji ? h('span', { class: `${cls} emo`, style: { '--pc': p.color }, text: p.emoji }) : h('span', { class: cls, style: { '--pc': p.color } });
+  }
+
+  /** Choix de l'avatar d'un joueur */
+  pickAvatar(p) {
+    const taken = new Set(this.players.filter((x) => x.id !== p.id).map((x) => x.emoji));
+    const sheet = $('#avatar-sheet');
+    const close = () => { sheet.classList.add('closing'); setTimeout(() => { sheet.hidden = true; sheet.classList.remove('closing'); }, 220); };
+    $('#avatar-grid').replaceChildren(...CONFIG.AVATARS.map((e) => h('button', {
+      class: `avatar-pick${e === p.emoji ? ' is-on' : ''}`, text: e, disabled: taken.has(e),
+      onclick: () => { p.emoji = e; this.save(); this.renderPlayers(); haptic(10); close(); },
+    })));
+    $$('[data-avatar="close"]', sheet).forEach((b) => { b.onclick = close; });
+    sheet.hidden = false;
+    sheet.classList.remove('closing');
+  }
+
   setTurnName(el, player) {
     el.style.setProperty('--pc', player.color);
+    const dot = $('.dot', el);
+    if (dot) { dot.textContent = player.emoji || ''; dot.classList.toggle('emo', Boolean(player.emoji)); }
     $('.name', el).textContent = player.name;
     replay(el, 'swap');
   }
@@ -753,13 +795,14 @@ class SmokeOrDrinkApp {
       const line = this.scoreLine(p);
       const gauge = showGauge(p);
       return h('li', { class: `score-row${current && p.id === current.id && g.kind !== 'cards' ? ' current' : ''}${gauge ? ' has-gauge' : ''}`, dataset: { id: p.id, v: line.v, g: gauge ? p.gauge : '' }, style: { '--pc': p.color } },
-        h('span', { class: 'sdot' }),
+        this.avatar(p, 'sdot'),
         h('span', { class: 'sname', text: this.isMashup ? `${p.camp === 'fumette' ? '🌿' : '🥃'} ${p.name}` : p.name }),
         h('span', { class: 'sval' }, line.main, line.small ? h('small', { text: line.small }) : null),
         gauge ? h('span', { class: 'gauge', 'aria-label': `Jauge ${p.gauge} sur ${this.gaugeMax}` },
           ...Array.from({ length: this.gaugeMax }, (_, k) => h('i', { class: k < p.gauge ? 'on' : '' }))) : null);
     }));
 
+    this.refreshUndo();
     if (reducedMotion.matches) return;
     [...list.children].forEach((li) => {
       const old = before.get(li.dataset.id);
@@ -769,6 +812,7 @@ class SmokeOrDrinkApp {
       if (old.v !== li.dataset.v) replay($('.sval', li), 'pop-val');
       if (old.g !== undefined && old.g !== '' && li.dataset.g !== '' && Number(li.dataset.g) < Number(old.g)) replay($('.gauge', li), 'drain');
     });
+    this.refreshUndo();
   }
 
   /** Pastilles joueurs sélectionnables (multi ou simple) */
@@ -776,7 +820,7 @@ class SmokeOrDrinkApp {
     const selected = new Set();
     container.replaceChildren(...players.map((p, i) => {
       const chip = h('button', { class: 'chip', style: { '--pc': p.color, '--i': i }, dataset: { id: p.id }, 'aria-pressed': 'false' },
-        h('span', { class: 'cdot' }), labelOf ? labelOf(p) : p.name, counters ? h('span', { class: 'cbadge', text: '0' }) : null);
+        this.avatar(p, 'cdot'), labelOf ? labelOf(p) : p.name, counters ? h('span', { class: 'cbadge', text: '0' }) : null);
       chip.addEventListener('click', () => {
         haptic(10);
         if (counters) { counters(p, chip); return; }
