@@ -79,7 +79,7 @@
 
       <button class="recap-btn stagger" data-action="recap" style="--i:3" hidden>🏆 Récap de la soirée <span class="rc-count pixel"></span></button>
 
-      <p class="home-foot pixel dim">v4.7 · hors-ligne ready</p>
+      <p class="home-foot pixel dim">v4.8 · hors-ligne ready</p>
     </section>
 
     <!-- ================= CHOIX DU JEU ================= -->
@@ -161,6 +161,21 @@
       <div class="setup-section" data-for="bombe">
         <h3 class="section-label">Variante</h3>
         <div class="pill-grid cols-2" id="bombopt-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="course">
+        <h3 class="section-label">Format</h3>
+        <div class="pill-grid cols-2" id="coursemode-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="course">
+        <h3 class="section-label">Mises et gages</h3>
+        <div class="pill-grid" id="coursestake-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="course">
+        <h3 class="section-label">Vue de la course</h3>
+        <div class="pill-grid cols-2" id="courseview-grid"></div>
       </div>
 
       <div class="setup-section" data-for="memes">
@@ -381,6 +396,33 @@
       </section>
     </section>
 
+    <!-- ================= HIPPODROME ================= -->
+    <section class="screen" data-screen="course">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="course-round"></span>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
+      </header>
+
+      <div class="course-stage" id="course-stage">
+        <canvas id="course-cv" aria-label="Course de chevaux en direct"></canvas>
+        <div class="course-views" role="group" aria-label="Vue de la course">
+          <button class="cv-btn" id="course-vA" aria-pressed="true">Profil</button>
+          <button class="cv-btn" id="course-vB" aria-pressed="false">Dessus</button>
+        </div>
+        <div class="course-overlay" id="course-overlay"></div>
+        <div class="course-ticker"><span class="live">EN DIRECT</span><span class="msg" id="course-msg"></span></div>
+      </div>
+
+      <div class="course-board" id="course-board" hidden></div>
+      <div class="course-panel" id="course-panel" aria-live="polite"></div>
+
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Gains</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
     <!-- ================= SÉANCE ================= -->
     <section class="screen" data-screen="seance">
       <header class="game-top">
@@ -533,6 +575,7 @@
   <script src="jeux/roulette.js" defer></script>
   <script src="jeux/oie.js" defer></script>
   <script src="jeux/memes.js" defer></script>
+  <script src="jeux/course.js" defer></script>
   <script src="js/editeur.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>

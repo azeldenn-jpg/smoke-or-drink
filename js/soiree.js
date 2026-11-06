@@ -18,6 +18,9 @@ const TROPHIES = [
   { id: 'smoker', icon: '🌿', title: 'Le plus gros fumeur',   unit: (n) => plural(n, 'taff'),             key: (s) => s.smokes },
   { id: 'brain',  icon: '🧠', title: 'Le cerveau',            unit: (n) => plural(n, 'point') + ' au quiz', key: (s) => s.points },
   { id: 'boss',   icon: '😈', title: 'Le bourreau',           unit: (n) => `${n} distribué${n > 1 ? 's' : ''}`, key: (s) => s.given },
+  { id: 'turf',   icon: '🏇', title: 'Meilleur parieur',     unit: (n) => `${n} pts de gains`,           key: (s) => s.bets },
+  { id: 'jackpot', icon: '💰', title: 'Plus gros gain',       unit: (n) => `${n} en un pari`,             key: (s) => s.bigWin },
+  { id: 'tocard', icon: '🐴', title: 'Abonné aux tocards',    unit: (n) => `${plural(n, 'pari')} sur un tocard`, key: (s) => s.tocards },
   { id: 'target', icon: '🎯', title: 'Le plus saboté',        unit: (n) => `${n} sabotage${n > 1 ? 's' : ''} subi${n > 1 ? 's' : ''}`, key: (s) => s.sabotaged },
 ];
 
@@ -56,6 +59,9 @@ addGame(class {
           points: g.id === 'quiz' ? p.score : 0,
           given: p.given || 0,
           sabotaged: p.sabotaged || 0,
+          bets: g.id === 'course' ? p.score : 0,
+          bigWin: p.bigWin || 0,
+          tocards: p.tocards || 0,
         };
       }),
     });
@@ -68,10 +74,11 @@ addGame(class {
     const map = new Map();
     s.games.forEach((game) => game.players.forEach((p) => {
       const key = p.name.toLowerCase();
-      const cur = map.get(key) || { name: p.name, emoji: p.emoji, color: p.color, camps: new Set(), drinks: 0, smokes: 0, points: 0, given: 0, sabotaged: 0, wins: 0, games: 0 };
+      const cur = map.get(key) || { name: p.name, emoji: p.emoji, color: p.color, camps: new Set(), drinks: 0, smokes: 0, points: 0, given: 0, sabotaged: 0, bets: 0, tocards: 0, bigWin: 0, wins: 0, games: 0 };
       cur.emoji = p.emoji || cur.emoji;
       cur.camps.add(p.camp);
-      ['drinks', 'smokes', 'points', 'given', 'sabotaged'].forEach((k) => { cur[k] += p[k] || 0; });
+      ['drinks', 'smokes', 'points', 'given', 'sabotaged', 'bets', 'tocards'].forEach((k) => { cur[k] += p[k] || 0; });
+      cur.bigWin = Math.max(cur.bigWin, p.bigWin || 0);
       cur.games += 1;
       if (game.winner === p.id) cur.wins += 1;
       map.set(key, cur);

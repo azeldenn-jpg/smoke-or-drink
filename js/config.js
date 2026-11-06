@@ -7,7 +7,7 @@
    1. CONFIG
    ========================================================================== */
 const CONFIG = {
-  VERSION: '4.7.0',
+  VERSION: '4.8.0',
   STORAGE_KEY: 'sod_v3',
   MAX_PLAYERS: 10,
   AVATARS: ['😎', '🤠', '👽', '🦊', '🐸', '🐼', '🦁', '🐙', '🦄', '🐯', '👻', '🤖', '🍕', '🌵', '🔥', '⚡', '🍄', '🐲', '🦩', '🐵', '🥑', '💀', '🧠', '🍉', '🐻', '🦈', '😈', '🤡', '🧙', '🎸'],
@@ -65,6 +65,10 @@ const CONFIG = {
   },
 
   GAMES: [
+    { id: 'course', short: 'HIPPODROME', icon: '🏇', title: 'L’Hippodrome', min: 2, kind: 'course', isNew: true, mashup: true,
+      desc: { fumette: 'Six chevaux, des cotes, vos paris. Ton cheval gagne : mise × cote en jetons pour ta jauge.',
+              alcool:  'Six chevaux, des cotes, vos paris. Ton cheval gagne : tu distribues mise × cote. Il perd : tu bois ta mise.',
+              mashup:  'Six chevaux, vos paris : les buveurs distribuent leurs gains, les fumeurs remplissent leur jauge.' } },
     { id: 'memes', short: 'MEMES', icon: '🖼️', title: 'Le meme de la soirée', min: 3, kind: 'memes', isNew: true, mashup: true,
       desc: { fumette: 'Un meme apparaît, tout le monde pointe celui à qui il colle le mieux. Le plus désigné prend une taff.',
               alcool:  'Un meme apparaît, tout le monde pointe celui à qui il colle le mieux. Le plus désigné boit 2 gorgées.',

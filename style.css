@@ -860,7 +860,17 @@ body.big-text .btn-primary { font-size: 17px; padding: 18px; }
    ========================================================================== */
 @media (min-width: 900px) and (orientation: landscape) {
   .app { max-width: 1180px; padding-left: calc(32px + var(--safe-l)); padding-right: calc(32px + var(--safe-r)); }
-  .screen:not([data-screen="oie"]):not([data-screen="home"]) { max-width: 640px; width: 100%; margin: 0 auto; }
+  .screen:not([data-screen="oie"]):not([data-screen="home"]):not([data-screen="course"]) { max-width: 640px; width: 100%; margin: 0 auto; }
+  /* Hippodrome : la piste à gauche, les paris et les comptes à droite */
+  .screen[data-screen="course"].is-active {
+    display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(340px, .75fr); column-gap: 28px; row-gap: 14px; align-items: start;
+    grid-template-areas: "top top" "stage board" "stage panel" "scores panel"; grid-template-rows: auto auto auto 1fr;
+  }
+  .screen[data-screen="course"] .game-top { grid-area: top; }
+  .screen[data-screen="course"] .course-stage { grid-area: stage; }
+  .screen[data-screen="course"] .course-board { grid-area: board; }
+  .screen[data-screen="course"] .course-panel { grid-area: panel; }
+  .screen[data-screen="course"] .scoreboard { grid-area: scores; margin-top: 0; }
   .mode-grid { grid-template-columns: repeat(3, 1fr); }
   .screen[data-screen="home"] .hero { padding-top: 4vh; }
   /* Jeu de l'oie : plateau à gauche, dé + panneau + scores à droite */
@@ -933,3 +943,88 @@ body.big-text .btn-primary { font-size: 17px; padding: 18px; }
 .ed-empty { justify-content: center; opacity: .6; font-size: 13px; text-align: center; }
 .ed-note { margin: 14px 2px; font-size: 12px; line-height: 1.45; opacity: .65; }
 .ed-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ==========================================================================
+   L'HIPPODROME
+   ========================================================================== */
+.course-stage { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line-strong); background: #2d4a22;
+  box-shadow: 0 18px 40px -24px rgba(0,0,0,.85); scroll-margin-top: 12px; }
+.course-stage canvas { display: block; width: 100%; }
+.course-views { position: absolute; top: 8px; left: 8px; display: flex; padding: 3px; border-radius: 999px; background: rgba(10,6,18,.8); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.cv-btn { font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px; color: rgba(244,236,216,.72); transition: background .2s, color .2s; }
+.cv-btn.is-on { background: #f3c534; color: #151002; }
+.course-ticker { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 10px; padding: 18px 12px 9px;
+  background: linear-gradient(transparent, rgba(8,6,12,.86) 45%); pointer-events: none; font-weight: 600; font-size: 14px; }
+.course-ticker .live { flex: none; font-family: var(--font-pixel); font-size: 15px; letter-spacing: .12em; background: #d6342c; color: #fff; padding: 2px 6px 1px; border-radius: 3px; }
+.course-ticker .msg { min-width: 0; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: opacity .2s, transform .2s; }
+.course-ticker .msg.swap { opacity: 0; transform: translateY(5px); }
+.course-overlay { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.course-podium { width: min(300px, 84%); padding: 14px 14px 0; border-radius: 14px; background: rgba(10,6,18,.9); border: 1px solid var(--line-strong);
+  text-align: center; animation: pop .5s var(--ease-spring) both; transition: opacity .6s, transform .6s; }
+.course-podium.fade { opacity: 0; transform: scale(.94); }
+.cpod-title { font-family: var(--font-display); color: #f3c534; font-size: 20px; margin-bottom: 10px; }
+.cpod-steps { display: grid; grid-template-columns: repeat(3, 1fr); align-items: end; gap: 6px; }
+.cpod-step { display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0; }
+.cpod-silk { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; font-weight: 700; font-size: 13px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+.cpod-name { font-size: 11.5px; font-weight: 600; line-height: 1.15; text-wrap: balance; }
+.cpod-blk { width: 100%; border-radius: 6px 6px 0 0; background: rgba(255,255,255,.08); font-family: var(--font-display); font-size: 22px; padding-top: 6px; color: var(--ink-dim); }
+.cpod-step.p1 .cpod-blk { height: 64px; background: #f3c534; color: #151002; }
+.cpod-step.p2 .cpod-blk { height: 46px; }
+.cpod-step.p3 .cpod-blk { height: 34px; }
+
+.course-board { position: relative; height: calc(6 * 34px); }
+.cb-row { position: absolute; left: 0; right: 0; top: 0; height: 30px; display: grid; grid-template-columns: 22px 24px minmax(0, 1fr) auto; align-items: center; gap: 9px;
+  padding: 0 10px; border-radius: 9px; background: var(--surface); border: 1px solid var(--line); transition: transform .3s var(--ease-out), border-color .3s; }
+.cb-rk { font-family: var(--font-pixel); font-size: 20px; color: var(--ink-dim); text-align: center; }
+.cb-row.first { border-color: rgba(243,197,52,.6); }
+.cb-row.first .cb-rk { color: #f3c534; }
+.cb-silk { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: 11px; font-weight: 700; box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); }
+.cb-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cb-val { font-family: var(--font-pixel); font-size: 19px; font-variant-numeric: tabular-nums; }
+
+.course-panel:empty { display: none; }
+.cp-head { text-align: center; margin-bottom: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.cp-title { font-family: var(--font-display); font-size: clamp(18px, 5.5vw, 22px); line-height: 1.15; text-wrap: balance; }
+.cp-hint { text-align: center; color: var(--ink-dim); font-size: 16px; }
+.horse-list { display: flex; flex-direction: column; gap: 7px; }
+.horse-card { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; text-align: left;
+  background: var(--surface); border: 1px solid var(--line); transition: transform .18s var(--ease-spring), border-color .2s, background .2s, box-shadow .2s; }
+.horse-card:not(:disabled):active { transform: scale(.98); }
+.horse-card.is-on { border-color: #f3c534; background: rgba(243,197,52,.12); box-shadow: 0 0 22px -8px #f3c534; }
+.horse-card:disabled { cursor: default; }
+.hc-num { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: 17px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 4px 10px -4px rgba(0,0,0,.6); }
+.hc-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hc-name { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hc-tag { font-size: 12px; color: var(--ink-dim); font-style: italic; }
+.hc-bets { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.hc-bet { font-size: 11.5px; padding: 2px 7px; border-radius: 999px; background: color-mix(in srgb, var(--pc) 22%, transparent); border: 1px solid color-mix(in srgb, var(--pc) 60%, transparent); }
+.hc-bet b { font-family: var(--font-pixel); font-weight: 400; font-size: 14px; }
+.hc-side { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.hc-cote { font-family: var(--font-pixel); font-size: 26px; line-height: .9; color: #f3c534; white-space: nowrap; }
+.hc-cote small { font-size: 13px; color: var(--ink-dim); margin-right: 4px; letter-spacing: .08em; }
+.hc-form { display: flex; gap: 2px; font-size: 10px; }
+.hc-form i { font-style: normal; }
+.hc-form .up { color: var(--good); }
+.hc-form .down { color: var(--bad); }
+.stake { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.stake-label { font-weight: 600; display: flex; flex-direction: column; }
+.stake-label small { font-size: 12px; color: var(--ink-dim); font-weight: 400; }
+.stake-ctl { display: flex; align-items: center; gap: 14px; }
+.stake-btn { width: 44px; height: 44px; border-radius: 12px; font-size: 24px; background: var(--surface-2); border: 1px solid var(--line-strong); transition: transform .15s var(--ease-spring); }
+.stake-btn:active { transform: scale(.9); }
+.stake-btn:disabled { opacity: .3; }
+.stake-val { font-family: var(--font-pixel); font-size: 38px; min-width: 28px; text-align: center; color: var(--accent); }
+.stake-gain { margin-top: 10px; text-align: center; font-size: 13.5px; color: var(--ink-dim); line-height: 1.4; }
+.stake-gain b { color: var(--ink); }
+.course-lines { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.course-lines li { display: flex; flex-direction: column; gap: 1px; padding: 9px 12px; border-radius: 12px; background: var(--surface); border-left: 3px solid var(--pc);
+  animation: rise .4s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.course-lines li.good { background: rgba(126,224,122,.08); }
+.course-lines li.bad { background: rgba(255,94,126,.06); }
+.course-lines li.gage { background: rgba(166,103,212,.12); border-left-color: #a667d4; }
+.cl-main { font-weight: 600; font-size: 14.5px; }
+.cl-sub { font-size: 12.5px; color: var(--ink-dim); }
+.course-area .result { margin-top: 14px; }
+body.big-text .hc-name, body.big-text .cl-main { font-size: 1.15em; }
+.silk-n > span { background: var(--c1); border-radius: 999px; min-width: 1.45em; line-height: 1.45em; text-align: center; box-shadow: 0 0 0 1px rgba(0,0,0,.18); }

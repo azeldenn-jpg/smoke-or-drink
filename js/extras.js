@@ -46,6 +46,14 @@ const RULES = {
     'Séance : entre la durée du film, l’appli tire tout le plan et sonne quand c’est ton tour.',
     'Mode alcool : la roue décide combien tu bois (6 % de cul sec).',
   ],
+  course: [
+    'Six chevaux au départ, avec leur cote : plus elle est haute, moins il a de chances… et plus il rapporte.',
+    'Chacun son tour, choisis un cheval et ta mise. Les paris sont visibles, et le premier parieur change à chaque course.',
+    '🥃 Ton cheval gagne : tu distribues mise × cote (au-delà de 10 : un cul sec à offrir). Il perd : tu bois ta mise.',
+    '🌿 Ton cheval gagne : mise × cote en jetons (12 max) pour ta jauge, ou pour saboter. Il perd : ta mise sort de ta jauge.',
+    '🎭 Tu as misé sur le dernier : un gage en plus. Égalité parfaite à l’arrivée : les deux chevaux sont gagnants.',
+    '🏆 Grand Prix : 3 courses. Le meilleur parieur est sacré roi et offre un cul sec ; le dernier prend un gage.',
+  ],
   oie: [
     'Lance le dé et avance. Il faut tomber pile sur la dernière case : si tu dépasses, tu rebondis avec un malus du surplus.',
     'Arriver sur une case occupée : le dernier arrivé prend un malus.',

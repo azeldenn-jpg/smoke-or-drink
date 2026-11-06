@@ -23,6 +23,9 @@ class SmokeOrDrinkApp {
       end: { quiz: 'free', cards: 'free', bombe: 'free' },
       intensity: 'normal',    // jeu de l'oie : 'soft' | 'normal' | 'hard'
       memeLevel: 'soiree',    // ambiance des memes, Je n'ai jamais, Qui pourrait… : 'chill' | 'soiree' | 'hot' (cumulatif)
+      courseMode: 'single',   // hippodrome : 'single' (courses à la suite) | 'gp' (Grand Prix en 3 courses)
+      courseStake: 'soiree',  // hippodrome : mises et gages 'chill' | 'soiree' | 'hot'
+      courseView: 'A',        // hippodrome : 'A' profil | 'B' vue de dessus
       ...(saved.settings || {}),
     };
     this.mode = null;          // 'fumette' | 'alcool'
@@ -215,6 +218,7 @@ class SmokeOrDrinkApp {
   onLeave(from) {
     if (from === 'roulette') this.roulette.cancel();
     if (from === 'bomb') this.bombStop();
+    if (from === 'course' && typeof this.courseStop === 'function') this.courseStop();
   }
 
   later(fn, ms) {
@@ -347,6 +351,7 @@ class SmokeOrDrinkApp {
     if (['memes', 'jamais', 'probable', 'oie', 'bombe'].includes(g.id)) this.renderMemeLevel();
     if (g.id === 'bombe') this.renderBombOptions();
     if (g.id === 'memes') this.renderMemeMode();
+    if (g.id === 'course') this.renderCourseOptions();
     this.renderCustomButton();
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
@@ -530,6 +535,22 @@ class SmokeOrDrinkApp {
         onClick: () => { this.settings.bombLetter = true; this.save(); this.renderBombOptions(); } }));
   }
 
+  renderCourseOptions() {
+    const grid = (id, opts, key) => $(id).replaceChildren(...opts.map((o) => this.pill({
+      on: this.settings[key] === o.id, emoji: o.emoji, label: o.label, small: o.small,
+      onClick: () => { this.settings[key] = o.id; this.save(); this.renderCourseOptions(); this.validateSetup(); },
+    })));
+    grid('#coursemode-grid', [
+      { id: 'single', emoji: '🏇', label: 'Courses libres', small: 'une course, puis une autre…' },
+      { id: 'gp', emoji: '🏆', label: 'Grand Prix', small: '3 courses · roi + gage final' },
+    ], 'courseMode');
+    grid('#coursestake-grid', Object.entries(COURSE_STAKES).map(([id, s]) => ({ id, ...s })), 'courseStake');
+    grid('#courseview-grid', [
+      { id: 'A', emoji: '🐎', label: 'De profil', small: 'on voit le galop' },
+      { id: 'B', emoji: '🏟️', label: 'Vue de dessus', small: 'tout l’hippodrome' },
+    ], 'courseView');
+  }
+
   renderOieSize() {
     const opts = [
       { id: 'classic', emoji: '🦢', label: 'Classique', small: '63 cases · ~40 min' },
@@ -610,6 +631,7 @@ class SmokeOrDrinkApp {
     info.textContent = !this.dataReady ? '' : g.id === 'quiz'
       ? `// ${count} questions dispo${mix}`
       : g.id === 'memes' ? this.memesInfo()
+      : g.id === 'course' ? `// 6 chevaux · ${COURSE_D} m · ${this.settings.courseMode === 'gp' ? '3 courses' : 'courses libres'} · mises 1 à ${(COURSE_STAKES[this.settings.courseStake] || COURSE_STAKES.soiree).max}${mix}`
       : g.id === 'oie' ? `// ${this.settings.oieSize === 'express' ? '32 cases · ~15 min' : '63 cases · ~40 min'} · 1 dé · jauge de ${OIE.GAUGE} pour une taff`
       : this.isSeance ? this.seanceEstimate()
       : g.kind === 'roulette' ? '// 50 cases · 70 / 24 / 6 %' : `// ${count} cartes dans le paquet`;
@@ -639,7 +661,7 @@ class SmokeOrDrinkApp {
     $$('[data-game-tag]').forEach((el) => { el.textContent = `${this.unitEmoji} ${g.short}`; });
     this.keepAwake(true);
     const kind = this.isSeance ? 'seance' : g.kind;
-    const target = { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette', seance: 'seance', oie: 'oie', memes: 'memes' }[kind];
+    const target = { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette', seance: 'seance', oie: 'oie', memes: 'memes', course: 'course' }[kind];
 
     if (g.kind === 'quiz') {
       const pool = this.quizPool();
@@ -661,6 +683,8 @@ class SmokeOrDrinkApp {
       this.memesStart();
     } else if (kind === 'oie') {
       this.oieStart();
+    } else if (kind === 'course') {
+      this.courseStart();
     } else if (kind === 'seance') {
       this.game.id = 'seance';
       this.game.kind = 'seance';
@@ -695,6 +719,7 @@ class SmokeOrDrinkApp {
   endGame() {
     if (this.isMashup) this.setTheme('mashup');
     if (this.game && this.game.kind === 'oie') this.oieClearSave();
+    if (this.game && this.game.kind === 'course') this.courseStop();
     if (this.game && this.game.kind === 'seance') this.seance.clear();
     this.clearTimers();
     this.bombStop();
@@ -717,6 +742,7 @@ class SmokeOrDrinkApp {
       seance:   { kicker: '// séance', crown: 'Le plus gros fumeur', key: (p) => p.taffs },
       oie:      { kicker: "// jeu de l'oie", crown: 'Premier arrivé', key: (p) => p.pos },
       memes:    { kicker: '// le meme de la soirée', crown: 'Le meme vivant', key: (p) => p.taken },
+      course:   { kicker: g.gp ? '// grand prix de l’hippodrome' : '// hippodrome', crown: 'Le roi de l’hippodrome', key: (p) => p.score },
     }[g.id];
 
     const ranked = [...g.players].sort((a, b) => conf.key(b) - conf.key(a) || a.taken - b.taken);
@@ -741,6 +767,9 @@ class SmokeOrDrinkApp {
       } else if (g.id === 'oie') {
         main = p.pos >= g.cfg.LAST ? `🏆 ${g.cfg.LAST}` : `case ${p.pos}`;
         sub = p.camp === 'fumette' ? `🌿 ${plural(p.taffs, 'taff')} · jauge ${p.gauge}/${this.gaugeMax}` : `🥃 ${p.taken} bues · ${p.given} données`;
+      } else if (g.id === 'course') {
+        main = `${p.score} pts`;
+        sub = p.camp === 'fumette' ? `🌿 ${plural(p.taffs, 'taff')} · jauge ${p.gauge}/${this.gaugeMax}` : `🥃 ${p.given} données · ${p.taken} bues`;
       } else if (g.id === 'seance') {
         main = `${p.taffs} 🌿`;
         sub = plural(p.taffs, 'taff');
@@ -799,6 +828,11 @@ class SmokeOrDrinkApp {
         ? { v: `${p.pos}|${p.gauge}|${p.taffs}`, main: `case ${p.pos}`, small: ` · ${p.taffs} 🌿` }
         : { v: `${p.pos}|${p.taken}|${p.given}`, main: `case ${p.pos}`, small: ` · ${p.given}↗ ${p.taken}↘` };
     }
+    if (g.id === 'course') {
+      return p.camp === 'fumette'
+        ? { v: `${p.score}|${p.gauge}|${p.taffs}`, main: `${p.score} pts`, small: ` · ${p.taffs} 🌿` }
+        : { v: `${p.score}|${p.given}|${p.taken}`, main: `${p.score} pts`, small: ` · ${p.given}↗ ${p.taken}↘` };
+    }
     if (g.id === 'quiz' && this.isMashup) {
       return p.camp === 'fumette'
         ? { v: `${p.score}|${p.gauge}|${p.taffs}`, main: `${p.score} pts`, small: ` · ${p.taffs} 🌿` }
@@ -824,11 +858,11 @@ class SmokeOrDrinkApp {
     const list = $('[data-score-list]', screen);
     const title = $('[data-score-title]', screen);
     const fum = this.mode === 'fumette';
-    title.textContent = g.id === 'oie' ? (this.isMashup ? 'Position · jauge 🌿 · gorgées 🥃' : fum ? 'Position · jauge 🌿' : 'Position · données ↗ bues ↘') : g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Taffs' : 'Gorgées') : this.isMashup ? 'Taffs 🌿 · gorgées 🥃' : (fum ? 'Taffs prises' : 'Gorgées bues');
+    title.textContent = g.id === 'course' ? (this.isMashup ? 'Gains · jauge 🌿 · gorgées 🥃' : fum ? 'Gains · jauge 🌿' : 'Gains · données ↗ bues ↘') : g.id === 'oie' ? (this.isMashup ? 'Position · jauge 🌿 · gorgées 🥃' : fum ? 'Position · jauge 🌿' : 'Position · données ↗ bues ↘') : g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Taffs' : 'Gorgées') : this.isMashup ? 'Taffs 🌿 · gorgées 🥃' : (fum ? 'Taffs prises' : 'Gorgées bues');
 
     const before = new Map([...list.children].map((li) => [li.dataset.id, { top: li.getBoundingClientRect().top, v: li.dataset.v, g: li.dataset.g }]));
-    const showGauge = (p) => (g.id === 'oie' || (this.isMashup && g.id === 'quiz')) && p.camp === 'fumette';
-    const sortKey = (p) => (g.id === 'oie' ? p.pos : g.id === 'quiz' ? p.score : g.id === 'roulette' && fum ? p.taffs : p.taken);
+    const showGauge = (p) => (g.id === 'oie' || g.id === 'course' || (this.isMashup && g.id === 'quiz')) && p.camp === 'fumette';
+    const sortKey = (p) => (g.id === 'oie' ? p.pos : g.id === 'quiz' || g.id === 'course' ? p.score : g.id === 'roulette' && fum ? p.taffs : p.taken);
     const sorted = [...g.players].sort((a, b) => sortKey(b) - sortKey(a));
     const current = g.players[g.turn];
 
