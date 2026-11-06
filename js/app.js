@@ -769,7 +769,8 @@ class SmokeOrDrinkApp {
         sub = p.camp === 'fumette' ? `🌿 ${plural(p.taffs, 'taff')} · jauge ${p.gauge}/${this.gaugeMax}` : `🥃 ${p.taken} bues · ${p.given} données`;
       } else if (g.id === 'course') {
         main = `${p.score} pts`;
-        sub = p.camp === 'fumette' ? `🌿 ${plural(p.taffs, 'taff')} · jauge ${p.gauge}/${this.gaugeMax}` : `🥃 ${p.given} données · ${p.taken} bues`;
+        const log = (p.betLog || []).slice(-8).map((b) => `${b.w ? '✅' : '❌'} ${String(b.c).replace('.', ',')}`).join('  ');
+        sub = `${p.camp === 'fumette' ? `🌿 ${plural(p.taffs, 'taff')} · jauge ${p.gauge}/${this.gaugeMax}` : `🥃 ${p.given} données · ${p.taken} bues`}${log ? `\n🏇 cotes : ${log}` : ''}`;
       } else if (g.id === 'seance') {
         main = `${p.taffs} 🌿`;
         sub = plural(p.taffs, 'taff');

@@ -1030,3 +1030,5 @@ body.big-text .hc-name, body.big-text .cl-main { font-size: 1.15em; }
 .silk-n > span { background: var(--c1); border-radius: 999px; min-width: 1.45em; line-height: 1.45em; text-align: center; box-shadow: 0 0 0 1px rgba(0,0,0,.18); }
 .cb-bets { margin-left: 8px; font-size: 13px; letter-spacing: 1px; }
 .cpod-bets { font-size: 14px; min-height: 1.1em; letter-spacing: 1px; }
+.podium .pscore small { white-space: pre-line; }
+.cp-sub { font-size: 13.5px; color: var(--ink-dim); text-wrap: balance; }

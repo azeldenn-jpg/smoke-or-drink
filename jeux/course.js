@@ -554,7 +554,17 @@ addGame(class {
     const race = g.race;
     const rk = courseRank(race.runners);
     // Dead-heat : moins d'un centième d'écart, les deux gagnent
-    const winners = new Set(rk.filter((r) => r.time - rk[0].time < 0.01).map((r) => r.i));
+    let winners = new Set(rk.filter((r) => r.time - rk[0].time < 0.01).map((r) => r.i));
+    // Personne sur le gagnant : c'est le cheval parié le mieux placé qui encaisse
+    const betOn = new Set(Object.values(g.bets).map((b) => b.h));
+    let proxy = null;
+    if (![...winners].some((i) => betOn.has(i))) {
+      const best = rk.find((r) => betOn.has(r.i));
+      if (best) {
+        winners = new Set(rk.filter((r) => betOn.has(r.i) && Math.abs(r.time - best.time) < 0.01).map((r) => r.i));
+        proxy = { h: best.h, place: rk.indexOf(best) + 1 };
+      }
+    }
     const last = rk[rk.length - 1].i;
     const lvl = COURSE_LEVELS[this.settings.courseStake] || COURSE_LEVELS.soiree;
     const gages = shuffle(lvl.flatMap((l) => COURSE_GAGES[l]));
@@ -567,13 +577,14 @@ addGame(class {
       const hs = race.field[bet.h];
       p.bets += 1;
       if (hs.cote >= 8) p.tocards += 1;
-      const tag = `${hs.n} · ${hs.name}`;
+      const tag = `${hs.n} · ${hs.name} (cote ${courseCote(hs.cote)})`;
+      p.betLog = [...(p.betLog || []), { c: hs.cote, w: winners.has(bet.h) }];
       if (winners.has(bet.h)) {
         const gain = Math.round(bet.m * hs.cote);
         p.score += gain;
         p.bigWin = Math.max(p.bigWin || 0, gain);
         queue.push({ p, gain, hs, bet });
-        lines.push({ p, ok: true, text: `✅ ${p.name} · n°${tag}`, sub: `${bet.m} × ${courseCote(hs.cote)} = ${gain}${p.camp === 'fumette' ? ' jetons' : ` → ${courseReward(gain).label}`}` });
+        lines.push({ p, ok: true, text: `${proxy ? `🥈 ${p.name} · le plus proche (${proxy.place}e)` : `✅ ${p.name}`} · n°${tag}`, sub: `${bet.m} × ${courseCote(hs.cote)} = ${gain}${p.camp === 'fumette' ? ' jetons' : ` → ${courseReward(gain).label}`}` });
       } else if (p.camp === 'alcool') {
         const loss = courseLoss(bet.m);
         p.taken += loss.n;
@@ -610,7 +621,8 @@ addGame(class {
     const area = h('div', { class: 'course-area' });
     panel.replaceChildren(h('div', { class: 'cp-head' },
       h('p', { class: 'turn-label pixel', text: `// gagnant : n°${rk[0].h.n} ${rk[0].h.name} · cote ${courseCote(rk[0].h.cote)}` }),
-      h('p', { class: 'cp-title', text: queue.length ? `${plural(queue.length, 'parieur')} encaisse${queue.length > 1 ? 'nt' : ''} !` : 'Personne n’avait le bon cheval…' })),
+      h('p', { class: 'cp-title', text: proxy ? '🥈 Le plus proche encaisse !' : `${plural(queue.length, 'parieur')} encaisse${queue.length > 1 ? 'nt' : ''} !` }),
+      proxy ? h('p', { class: 'cp-sub', text: `Personne sur le gagnant : c’est ${proxy.h.name} (${proxy.place}e) qui rapporte.` }) : null),
       listEl, area);
     if (queue.length) this.courseCash(); else this.sound.bad();
     this.renderScores('course');

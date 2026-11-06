@@ -12,7 +12,7 @@
  * incrémente simplement VERSION.
  * ==============================================================================
  */
-const VERSION = 'sod-v4.8.1';
+const VERSION = 'sod-v4.8.2';
 const NETWORK_TIMEOUT = 2500;
 // Cache séparé pour les images de memes : il survit aux mises à jour de l'appli
 const IMG_CACHE = 'sod-images-v1';
