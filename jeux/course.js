@@ -17,7 +17,18 @@
 const COURSE_D = 400;            // longueur de la course (m)
 const COURSE_GP = 3;             // courses du Grand Prix
 const COURSE_SIMS = 500;         // courses simulées pour les cotes
-const COURSE_CAP_DRINK = 10;     // au-delà : cul sec à offrir
+const COURSE_CAP_DRINK = 12;     // au-delà : cul sec à offrir
+const COURSE_LOSS_MAX = 8;       // pari perdu : 2 × la mise, au-delà de 8 c'est un cul sec
+
+/** Ce que rapporte un gain à un buveur : gorgées, 1 ou 2 culs secs, ou la traversée du désert */
+function courseReward(gain) {
+  if (gain >= 22) return { kind: 'desert', label: 'la TRAVERSÉE DU DÉSERT à offrir 🏜️' };
+  if (gain >= 18) return { kind: 'cs', n: 2, label: '2 CULS SECS à offrir 🥃🥃' };
+  if (gain > COURSE_CAP_DRINK) return { kind: 'cs', n: 1, label: 'un CUL SEC à offrir 🥃' };
+  return { kind: 'drink', n: gain, label: `${plural(gain, 'gorgée')} à distribuer 🥃` };
+}
+/** Pari perdu d'un buveur : il reboit 2 × sa mise (cul sec si ça dépasse 8) */
+const courseLoss = (m) => (m * 2 > COURSE_LOSS_MAX ? { cs: true, n: 5, label: 'CUL SEC' } : { cs: false, n: m * 2, label: plural(m * 2, 'gorgée') });
 const COURSE_CAP_TOKENS = 12;    // plafond des jetons d'un fumeur
 
 // Couleur de casaque par numéro (code couleur des tapis de course : lisible, jamais deux pareilles)
@@ -306,13 +317,15 @@ addGame(class {
       minus.disabled = stake <= 1;
       plus.disabled = stake >= max;
       cards.forEach((c) => { const on = Number(c.dataset.i) === pick; c.classList.toggle('is-on', on); c.setAttribute('aria-pressed', on); });
-      if (pick < 0) { gainEl.textContent = smoker ? `Si tu perds : −${unitWord(stake)} de jauge.` : `Si tu perds : tu bois ${unitWord(stake)}.`; return; }
+      const loss = courseLoss(stake);
+      const lose = smoker ? `Si tu perds : −${unitWord(stake)} de jauge.` : `Tu bois tes ${unitWord(stake)} maintenant pour valider. Si tu perds : ${loss.cs ? 'CUL SEC' : `tu en bois ${loss.n} de plus`} (×2).`;
+      if (pick < 0) { gainEl.textContent = lose; return; }
       const hs = race.field[pick];
       const gain = Math.round(stake * hs.cote);
-      const win = smoker ? `${Math.min(gain, COURSE_CAP_TOKENS)} jetons 🌿 pour ta jauge` : gain > COURSE_CAP_DRINK ? 'un CUL SEC à offrir 🥃' : `${unitWord(gain)} à distribuer 🥃`;
-      gainEl.replaceChildren('Si ', h('b', { text: hs.name }), ` gagne : ${stake} × ${courseCote(hs.cote)} = `, h('b', { text: win }), '.');
+      const win = smoker ? `${Math.min(gain, COURSE_CAP_TOKENS)} jetons 🌿 pour ta jauge` : courseReward(gain).label;
+      gainEl.replaceChildren('Si ', h('b', { text: hs.name }), ` gagne : ${stake} × ${courseCote(hs.cote)} = `, h('b', { text: win }), '.', h('br'), lose);
       validate.disabled = false;
-      validate.textContent = `PARIER ${stake} SUR LE N°${hs.n}`;
+      validate.textContent = smoker ? `PARIER ${stake} SUR LE N°${hs.n}` : `🥃 J’AI BU ${stake} · PARIER SUR LE N°${hs.n}`;
     };
     cards.forEach((c) => c.addEventListener('click', () => { pick = Number(c.dataset.i); haptic(10); refresh(); }));
     minus.addEventListener('click', () => { if (stake > 1) { stake -= 1; haptic(8); refresh(); } });
@@ -320,6 +333,7 @@ addGame(class {
     validate.addEventListener('click', once(() => {
       if (pick < 0) return;
       g.bets[p.id] = { h: pick, m: stake };
+      if (!smoker) p.taken += stake;   // les gorgées pariées se boivent tout de suite
       g.betIdx += 1;
       this.sound.tick(0.5);
       haptic(20);
@@ -392,7 +406,6 @@ addGame(class {
       if (race.count <= 0) {
         race.state = 'race'; race.t = 0;
         this.courseBell(1.3);
-        this.courseCrowd(0.05);
         this.courseSay('Et c’est parti !', true);
         haptic(40);
       }
@@ -422,12 +435,10 @@ addGame(class {
     }
     // Enregistrement des dernières secondes pour le ralenti
     const lead = courseRank(race.runners)[0];
-    if (lead.d > COURSE_D - 32 && (!race.finish.length || race.t < race.finish[0].time + 1.2)) {
+    if (lead.d > COURSE_D - 45 && (!race.finish.length || race.t < race.finish[0].time + 1.2)) {
       race.rec.push({ t: race.t, r: race.runners.map((r) => [r.d, r.v, r.phase, r.off]) });
     }
     if (race.state === 'race') this.courseCommentary();
-    const prog = lead.d / COURSE_D;
-    if (race.state === 'race') this.courseCrowd(prog > 0.75 ? 0.05 + 0.16 * Math.min(1, (prog - 0.75) / 0.25) : 0.05);
     if (race.finish.length === race.runners.length && race.t > race.finish[race.finish.length - 1].time + 1.6) {
       race.state = 'done';
       this.courseResults();
@@ -447,8 +458,6 @@ addGame(class {
     this.later(() => { if (this.game === g && g.race === race) race.tsT = 1; }, 700);
     this.courseBell(0.7);
     this.courseFanfare();
-    this.courseCrowd(0.24);
-    this.later(() => { if (this.game === g) this.courseCrowd(0.05); }, 1800);
     haptic([80, 50, 80, 50, 160]);
   }
 
@@ -489,7 +498,7 @@ addGame(class {
         if (!f[`up${r.i}`] && race.rankAt60[r.i] - k >= 2) { f[`up${r.i}`] = 1; this.courseSay(`${r.h.name} remonte comme une flèche !`); }
       });
     }
-    if (!f.photo && rk[0].d > COURSE_D - 9 && rk[1].d > rk[0].d - 1.1) {
+    if (!f.photo && rk[0].d > COURSE_D - 14 && rk[1].d > rk[0].d - 1.1) {
       f.photo = 1; race.tsT = 0.3;
       this.courseSay('Photo-finish !', true);
       this.courseClick();
@@ -504,12 +513,18 @@ addGame(class {
       const el = h('div', { class: 'cb-row' },
         h('span', { class: 'cb-rk' }),
         h('span', { class: 'cb-silk silk-n', style: { background: courseSilkBg(hs), color: hs.ink, '--c1': hs.c1 } }, h('span', { text: String(hs.n) })),
-        h('span', { class: 'cb-name', text: hs.name }),
+        h('span', { class: 'cb-name' }, hs.name, h('span', { class: 'cb-bets', text: this.courseBettors(hs.i) })),
         h('span', { class: 'cb-val' }));
       return { el, rk: el.children[0], val: el.children[3] };
     });
     board.replaceChildren(...race.rows.map((r) => r.el));
     this.courseUpdateBoard();
+  }
+
+  /** Emojis des joueurs qui ont parié sur un cheval */
+  courseBettors(i) {
+    const g = this.game;
+    return g.players.filter((x) => g.bets[x.id] && g.bets[x.id].h === i).map((x) => x.emoji || x.name.slice(0, 1)).join(' ');
   }
 
   courseUpdateBoard() {
@@ -537,7 +552,6 @@ addGame(class {
   courseResults() {
     const g = this.game;
     const race = g.race;
-    this.courseCrowd(0.03);
     const rk = courseRank(race.runners);
     // Dead-heat : moins d'un centième d'écart, les deux gagnent
     const winners = new Set(rk.filter((r) => r.time - rk[0].time < 0.01).map((r) => r.i));
@@ -559,10 +573,11 @@ addGame(class {
         p.score += gain;
         p.bigWin = Math.max(p.bigWin || 0, gain);
         queue.push({ p, gain, hs, bet });
-        lines.push({ p, ok: true, text: `✅ ${p.name} · n°${tag}`, sub: `${bet.m} × ${courseCote(hs.cote)} = ${gain}${p.camp === 'fumette' ? ' jetons' : gain > COURSE_CAP_DRINK ? ' → cul sec à offrir' : ' à distribuer'}` });
+        lines.push({ p, ok: true, text: `✅ ${p.name} · n°${tag}`, sub: `${bet.m} × ${courseCote(hs.cote)} = ${gain}${p.camp === 'fumette' ? ' jetons' : ` → ${courseReward(gain).label}`}` });
       } else if (p.camp === 'alcool') {
-        p.taken += bet.m;
-        lines.push({ p, ok: false, text: `🥃 ${p.name} boit ${bet.m}`, sub: `misé sur n°${tag}` });
+        const loss = courseLoss(bet.m);
+        p.taken += loss.n;
+        lines.push({ p, ok: false, text: loss.cs ? `🥃 ${p.name} : CUL SEC !` : `🥃 ${p.name} boit ${loss.n}`, sub: `misé ${bet.m} sur n°${tag} · perdu = ×2${loss.cs ? ' (plus de 8 : cul sec)' : ''}` });
       } else {
         const lost = Math.min(p.gauge, bet.m);
         p.gauge -= lost;
@@ -582,10 +597,11 @@ addGame(class {
         return h('div', { class: `cpod-step p${k + 1}` },
           h('span', { class: 'cpod-silk silk-n', style: { background: courseSilkBg(r.h), color: r.h.ink, '--c1': r.h.c1 } }, h('span', { text: String(r.h.n) })),
           h('span', { class: 'cpod-name', text: r.h.name }),
+          h('span', { class: 'cpod-bets', text: this.courseBettors(r.i) }),
           h('span', { class: 'cpod-blk', text: String(k + 1) }));
       })));
+    race.pod = pod;   // il reste affiché jusqu'à la course suivante
     $('#course-overlay').replaceChildren(pod);
-    this.later(() => { const o = $('#course-overlay'); if (o && o.firstChild === pod) pod.classList.add('fade'); }, 4200);
 
     $('#course-board').hidden = true;
     const panel = $('#course-panel');
@@ -626,9 +642,18 @@ addGame(class {
       });
       return;
     }
-    if (gain > COURSE_CAP_DRINK) {
-      head.append(h('p', { class: 'sub', text: 'Trop gros pour des gorgées : tu offres un CUL SEC. À qui ?' }));
-      this.courseCulSec(area, p, next);
+    const rw = courseReward(gain);
+    if (rw.kind === 'desert') {
+      head.append(h('p', { class: 'sub', text: 'Jackpot : tu offres la TRAVERSÉE DU DÉSERT 🏜️ (à jouer avec un jeu de cartes). Qui la fait ?' }));
+      this.courseCulSec(area, p, next, { desert: true });
+      return;
+    }
+    if (rw.kind === 'cs') {
+      head.append(h('p', { class: 'sub', text: rw.n === 2 ? 'Tu offres 2 CULS SECS : à une ou deux personnes. Premier cul sec, à qui ?' : 'Trop gros pour des gorgées : tu offres un CUL SEC. À qui ?' }));
+      this.courseCulSec(area, p, rw.n === 2 ? () => {
+        area.replaceChildren(h('div', { class: 'result good' }, h('p', { class: 'verdict', text: 'Deuxième cul sec' }), h('p', { class: 'sub', text: 'À qui ? (la même personne, si tu veux)' })));
+        this.courseCulSec(area, p, next);
+      } : next);
       return;
     }
     head.append(h('p', { class: 'sub', text: `Tu distribues ${plural(gain, 'gorgée')}` }));
@@ -636,19 +661,26 @@ addGame(class {
   }
 
   /** Cul sec offert : un buveur le boit, un fumeur voit sa jauge vidée */
-  courseCulSec(area, giver, then) {
+  courseCulSec(area, giver, then, { desert = false } = {}) {
     const g = this.game;
     const others = g.players.filter((x) => x.id !== giver.id);
-    const ok = h('button', { class: 'btn-primary', text: 'OFFRIR LE CUL SEC', disabled: true });
+    const ok = h('button', { class: 'btn-primary', text: desert ? '🏜️ LANCER LA TRAVERSÉE' : 'OFFRIR LE CUL SEC', disabled: true });
     const chips = h('div', { class: 'chips' });
     const sel = this.renderChips(chips, others, {
-      labelOf: this.isMashup ? (t) => h('span', { class: 'chip-main' }, t.name, h('small', { text: t.camp === 'alcool' ? '🥃 cul sec' : '🌿 jauge vidée' })) : null,
+      labelOf: this.isMashup && !desert ? (t) => h('span', { class: 'chip-main' }, t.name, h('small', { text: t.camp === 'alcool' ? '🥃 cul sec' : '🌿 jauge vidée' })) : null,
       onChange: (s) => { ok.disabled = !s.size; },
     });
     ok.addEventListener('click', once(() => {
       const v = others.find((x) => sel.has(x.id));
       if (!v) return;
       giver.given += 5;
+      if (desert) {
+        this.toast(`🏜️ ${v.name} fait la traversée du désert !`, 'bad');
+        this.fx.shake();
+        this.sound.bad();
+        then();
+        return;
+      }
       if (v.camp === 'alcool') { v.taken += 5; this.toast(`🥃 ${v.name} : CUL SEC !`, 'bad'); }
       else { v.sabotaged += 5; v.gauge = 0; this.toast(`🔻 ${v.name} : jauge vidée !`, 'bad'); }
       this.fx.shake();
@@ -721,9 +753,10 @@ addGame(class {
     if (race.state !== 'done' || race.rec.length < 2) return;
     race.final = race.runners.map((r) => [r.d, r.v, r.phase, r.off]);
     race.state = 'replay';
-    race.rp = 0;
-    race.rpT = race.rec[0].t;
-    race.camX = race.rec[0].r.reduce((m, x) => Math.max(m, x[0]), 0) - 10;
+    // On démarre le ralenti ~22 m avant la ligne, quand tout le monde est encore à l'image
+    const start = Math.max(0, race.rec.findIndex((f) => f.r.some((x) => x[0] >= COURSE_D - 22)));
+    race.rp = start;
+    race.rpT = race.rec[start].t;
     $('#course-overlay').replaceChildren();
     this.courseSay('Le ralenti de l’arrivée…', true);
     this.courseClick();
@@ -733,13 +766,14 @@ addGame(class {
 
   courseReplayTick(dt) {
     const race = this.game.race;
-    race.rpT += dt * 0.35;
+    race.rpT += dt * 0.3;
     while (race.rp < race.rec.length - 1 && race.rec[race.rp + 1].t <= race.rpT) race.rp += 1;
     const fr = race.rec[race.rp];
     race.runners.forEach((r, i) => { [r.d, r.v, r.phase, r.off] = fr.r[i]; });
     if (race.rp >= race.rec.length - 1) {
       race.runners.forEach((r, i) => { [r.d, r.v, r.phase, r.off] = race.final[i]; });
       race.state = 'done';
+      if (race.pod) { race.pod.style.animation = 'none'; $('#course-overlay').replaceChildren(race.pod); }
       const w = courseRank(race.runners)[0];
       this.courseSay(`${w.h.name} au poteau, cote ${courseCote(w.h.cote)}.`, true);
       this.courseDraw(0);
@@ -776,7 +810,7 @@ addGame(class {
       ctx.fillStyle = 'rgba(214,52,44,.92)';
       ctx.beginPath(); ctx.roundRect(10, 44, 104, 22, 5); ctx.fill();
       ctx.fillStyle = '#fff'; ctx.font = `700 11px ${COURSE_FONT}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText('● RALENTI ×0,35', 18, 55.5);
+      ctx.fillText('● RALENTI ×0,3', 18, 55.5);
     }
     ctx.restore();
     if (race.state !== 'idle') this.courseUpdateBoard();
@@ -870,8 +904,10 @@ addGame(class {
     const rk = courseRank(race.runners), lead = rk[0];
     const idle = race.state === 'idle' || race.state === 'countdown';
     const minCam = -W * 0.36 / ppm;
-    const camT = idle ? minCam : Math.min(lead.d, COURSE_D + 14) - W * 0.62 / ppm;
-    race.camX += (Math.max(camT, minCam) - race.camX) * (dt ? Math.min(1, dt * 4) : 1);
+    // La caméra suit la tête puis s'arrête avec la ligne d'arrivée aux 4/5 de l'écran
+    const camT = idle ? minCam : Math.min(lead.d - W * 0.62 / ppm, COURSE_D - W * 0.8 / ppm);
+    if (race.state === 'replay') race.camX = Math.max(camT, minCam);
+    else race.camX += (Math.max(camT, minCam) - race.camX) * (dt ? Math.min(1, dt * 4) : 1);
     if (!dt && idle) race.camX = minCam;
     const camX = race.camX;
     const sx = (m) => (m - camX) * ppm;

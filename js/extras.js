@@ -49,7 +49,8 @@ const RULES = {
   course: [
     'Six chevaux au départ, avec leur cote : plus elle est haute, moins il a de chances… et plus il rapporte.',
     'Chacun son tour, choisis un cheval et ta mise. Les paris sont visibles, et le premier parieur change à chaque course.',
-    '🥃 Ton cheval gagne : tu distribues mise × cote (au-delà de 10 : un cul sec à offrir). Il perd : tu bois ta mise.',
+    '🥃 Tu bois ta mise tout de suite pour valider ton pari. Ton cheval perd : tu rebois le double (au-delà de 8 : cul sec).',
+    '🥃 Ton cheval gagne : tu distribues mise × cote. Plus de 12 : un cul sec à offrir · 18 : deux culs secs · 22 : la traversée du désert 🏜️.',
     '🌿 Ton cheval gagne : mise × cote en jetons (12 max) pour ta jauge, ou pour saboter. Il perd : ta mise sort de ta jauge.',
     '🎭 Tu as misé sur le dernier : un gage en plus. Égalité parfaite à l’arrivée : les deux chevaux sont gagnants.',
     '🏆 Grand Prix : 3 courses. Le meilleur parieur est sacré roi et offre un cul sec ; le dernier prend un gage.',
