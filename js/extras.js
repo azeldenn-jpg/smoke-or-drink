@@ -46,6 +46,20 @@ const RULES = {
     'Séance : entre la durée du film, l’appli tire tout le plan et sonne quand c’est ton tour.',
     'Mode alcool : la roue décide combien tu bois (6 % de cul sec).',
   ],
+  plusmoins: [
+    'Une carte est posée. Annonce si la suivante sera PLUS haute, PLUS basse, ou ÉGALE. L’As est la plus forte.',
+    'Bonne réponse : ta série continue. Les pourcentages affichés t’aident : ils sont calculés sur les cartes qui restent.',
+    'Raté : tu bois la pile, c’est-à-dire 1 + ta série. Carte égale sans l’avoir annoncée : cul sec !',
+    'Égalité annoncée et juste : tu offres un cul sec.',
+    '✋ Dès 3 bonnes réponses, tu peux passer la main au joueur suivant et distribuer ta série.',
+  ],
+  kings: [
+    'Chacun son tour, tire une carte : sa règle s’affiche. L’app retient les rôles (maître du pouce, des questions, binômes) et les règles inventées.',
+    'As : cascade · 2 : tu donnes 2 · 3 : tu bois 3 · 4 : par terre · 5 : maître du pouce · 6 : le ciel · 7 : tout le monde boit.',
+    '8 : binôme · 9 : rimes · 10 : catégorie · Valet : maître des questions · Dame : je n’ai jamais · Roi : nouvelle règle.',
+    '👑 Au 4e Roi, celui qui le tire boit la coupe (cul sec) et la partie est finie.',
+    'Dans la configuration, touche une carte pour changer sa règle.',
+  ],
   duel: [
     'Posez le téléphone à plat entre vous deux : chacun son côté de l’écran (celui du haut est retourné).',
     'Tapez chacun sur votre moitié pour dire « prêt ». La tension monte… puis « FEU ! » : le premier qui tape gagne.',

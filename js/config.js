@@ -65,6 +65,14 @@ const CONFIG = {
   },
 
   GAMES: [
+    { id: 'kings', short: "KING'S CUP", icon: '👑', title: 'King’s Cup', min: 2, kind: 'kings', since: '5.0', mashup: true,
+      desc: { fumette: 'Chaque carte a sa règle : cascade, maître du pouce, binômes… Au 4e Roi, taff de pompier.',
+              alcool:  'Chaque carte a sa règle : cascade, maître du pouce, binômes… L’app retient tout. Au 4e Roi : cul sec.',
+              mashup:  'Chaque carte a sa règle, l’app retient les rôles. Au 4e Roi : cul sec ou taff de pompier.' } },
+    { id: 'plusmoins', short: 'PLUS OU MOINS', icon: '🃏', title: 'Plus ou moins', min: 2, kind: 'plusmoins', since: '5.0', mashup: true,
+      desc: { fumette: 'Plus haut ou plus bas ? Enchaîne les bonnes réponses… ou tire la taff de la pile.',
+              alcool:  'Plus haut ou plus bas ? Raté : tu bois la pile. Carte égale : cul sec. Série de 3 : tu passes la main.',
+              mashup:  'Plus haut ou plus bas ? Raté : tu paies la pile, en gorgées ou en taffs.' } },
     { id: 'duel', short: 'DUEL', icon: '🤠', title: 'Duel au saloon', min: 2, kind: 'duel', since: '5.0', mashup: true,
       desc: { fumette: 'Téléphone à plat, face à face. Au « FEU ! », le plus rapide gagne. Tire trop tôt et c’est la taff.',
               alcool:  'Téléphone à plat, face à face. Au « FEU ! », le plus rapide gagne. Le plus lent boit, le tricheur aussi.',

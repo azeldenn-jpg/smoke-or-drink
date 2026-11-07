@@ -1077,3 +1077,73 @@ body.big-text .hc-name, body.big-text .cl-main { font-size: 1.15em; }
 .dm-champ { width: 100%; display: flex; flex-direction: column; gap: 8px; }
 .screen[data-screen="duel"] .scoreboard { margin-top: 14px; }
 @keyframes pulse { 50% { transform: scale(1.18); } }
+
+/* ==========================================================================
+   CARTES À JOUER (Plus ou moins, King's Cup)
+   ========================================================================== */
+.pcard { width: 140px; aspect-ratio: 5 / 7; perspective: 900px; flex: none; }
+.pcard.small { width: 104px; }
+.pcard-inner { position: relative; width: 100%; height: 100%; transition: transform .6s var(--ease-spring); transform-style: preserve-3d; }
+.pcard.flipped .pcard-inner { transform: rotateY(180deg); }
+.pcard.instant .pcard-inner { transition: none; }
+.pcard-face { position: absolute; inset: 0; border-radius: 12px; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 14px 30px -12px rgba(0,0,0,.75); overflow: hidden; }
+.pcard-face.back { display: grid; place-items: center; border: 4px solid #f4ecd8;
+  background: radial-gradient(circle, transparent 30%, rgba(0,0,0,.25)), repeating-linear-gradient(45deg, #3d1f63 0 7px, #2a1546 7px 14px); }
+.pc-logo { font-size: 38px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+.pcard-face.front { transform: rotateY(180deg); background: #fbf7ee; color: #161616; border: 1px solid #d8d0bf; }
+.pcard-face.front.red { color: #cf2538; }
+.pc-corner { position: absolute; display: flex; flex-direction: column; align-items: center; line-height: 1; font-family: Georgia, 'Times New Roman', serif; }
+.pc-corner b { font-size: 21px; }
+.pc-corner i { font-style: normal; font-size: 17px; }
+.pc-corner.tl { top: 8px; left: 9px; }
+.pc-corner.br { bottom: 8px; right: 9px; transform: rotate(180deg); }
+.pc-center { position: absolute; inset: 0; display: grid; place-items: center; font-size: 62px; font-family: Georgia, 'Times New Roman', serif; }
+.court .pc-center { font-size: 56px; font-weight: 700; padding-bottom: 26px; }
+.pc-suit { position: absolute; left: 50%; bottom: 20%; transform: translateX(-50%); font-size: 30px; }
+.pcard.good .pcard-face.front { box-shadow: 0 0 0 3px var(--good), 0 0 30px -4px var(--good); }
+.pcard.bad .pcard-face.front { box-shadow: 0 0 0 3px var(--bad), 0 0 30px -4px var(--bad); }
+.pcard.is-next { cursor: default; }
+.turn-name#pm-name, .turn-name#kc-name { margin-bottom: 8px; }
+
+.pm-table { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 10px 0 6px; }
+.pm-arrow { font-family: var(--font-pixel); font-size: 34px; color: var(--ink-dim); }
+.pm-streak { text-align: center; min-height: 24px; margin: 6px 0 10px; }
+.pm-fire { font-weight: 700; color: #ffb547; }
+.pm-fire small { font-weight: 500; color: var(--ink-dim); }
+.pm-hint { color: var(--ink-dim); font-size: 13.5px; }
+.pm-btns { display: grid; grid-template-columns: 1fr .62fr 1fr; gap: 8px; }
+.pm-btn { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 14px 6px; border-radius: 16px; border: 1px solid var(--line-strong);
+  background: var(--surface); transition: transform .15s var(--ease-spring); }
+.pm-btn:active { transform: scale(.95); }
+.pm-btn b { font-family: var(--font-display); font-size: 17px; letter-spacing: .04em; }
+.pm-btn small { font-family: var(--font-pixel); font-size: 18px; color: var(--ink-dim); }
+.pm-btn.up { background: linear-gradient(160deg, rgba(126,224,122,.22), rgba(126,224,122,.06)); border-color: rgba(126,224,122,.5); }
+.pm-btn.down { background: linear-gradient(160deg, rgba(255,94,126,.22), rgba(255,94,126,.06)); border-color: rgba(255,94,126,.5); }
+.pm-btn.eq b { font-size: 24px; }
+.pm-area > .btn-ghost { width: 100%; margin-top: 10px; }
+.pm-area .result, .kc-area .result { margin-top: 0; }
+
+.kc-crowns { display: flex; justify-content: center; gap: 10px; font-size: 26px; margin: 2px 0 6px; }
+.kc-crowns span { filter: grayscale(1) opacity(.3); transition: filter .4s, transform .4s var(--ease-spring); }
+.kc-crowns span.on { filter: none; transform: scale(1.15); }
+.kc-stage { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 16px; margin: 8px 0 14px; }
+.kc-card .pcard { width: 128px; cursor: pointer; }
+.kc-rule { display: flex; flex-direction: column; gap: 6px; }
+.kc-wait { color: var(--ink-dim); font-size: 14px; }
+.kc-icon { font-size: 34px; line-height: 1; }
+.kc-title { font-family: var(--font-display); font-size: 20px; line-height: 1.1; text-wrap: balance; }
+.kc-text { font-size: 14.5px; line-height: 1.45; }
+.kc-quote { margin-top: 4px; padding: 10px 12px; border-radius: 12px; background: var(--surface); border-left: 3px solid var(--accent); font-weight: 600; }
+.kc-input { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; margin-bottom: 10px; }
+.kc-roles { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.kc-roles ul { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.kc-roles li { font-size: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+.kc-roles li b { font-weight: 600; color: var(--accent); }
+.kings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.kc-rule.custom, .kc-rule { }
+.kings-grid .kc-rule { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); text-align: left; }
+.kings-grid .kc-rule.custom { border-color: var(--accent); }
+.kc-rank { flex: none; width: 28px; height: 36px; border-radius: 6px; background: #fbf7ee; color: #161616; font-family: Georgia, serif; font-weight: 700; display: grid; place-items: center; font-size: 15px; }
+.kc-rname { font-size: 12.5px; line-height: 1.2; min-width: 0; }
+.kc-rname i { font-style: normal; margin-right: 4px; }
+.kc-reset { grid-column: 1 / -1; padding: 8px; font-size: 13px; color: var(--ink-dim); }

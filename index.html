@@ -163,6 +163,11 @@
         <div class="pill-grid cols-2" id="bombopt-grid"></div>
       </div>
 
+      <div class="setup-section" data-for="kings">
+        <h3 class="section-label">Règles des cartes</h3>
+        <div class="kings-grid" id="kings-grid"></div>
+      </div>
+
       <div class="setup-section" data-for="duel">
         <h3 class="section-label">Format</h3>
         <div class="pill-grid cols-2" id="duelmode-grid"></div>
@@ -406,6 +411,46 @@
       </section>
     </section>
 
+    <!-- ================= PLUS OU MOINS ================= -->
+    <section class="screen" data-screen="plusmoins">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="pm-round"></span>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
+      </header>
+      <p class="turn-label pixel">// à toi de deviner</p>
+      <p class="turn-name" id="pm-name"></p>
+      <div class="pm-table" id="pm-table"></div>
+      <p class="pm-streak" id="pm-streak"></p>
+      <div class="pm-area" id="pm-area" aria-live="polite"></div>
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Séries</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
+    <!-- ================= KING'S CUP ================= -->
+    <section class="screen" data-screen="kings">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="kc-round"></span>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
+      </header>
+      <div class="kc-crowns" id="kc-crowns" aria-label="Rois tirés"></div>
+      <p class="turn-label pixel">// à toi de tirer</p>
+      <p class="turn-name" id="kc-name"></p>
+      <div class="kc-stage">
+        <div class="kc-card" id="kc-card"></div>
+        <div class="kc-rule" id="kc-rule" aria-live="polite"></div>
+      </div>
+      <div class="kc-area" id="kc-area"></div>
+      <div class="kc-roles" id="kc-roles" hidden></div>
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Gorgées</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
     <!-- ================= DUEL AU SALOON ================= -->
     <section class="screen" data-screen="duel">
       <header class="game-top">
@@ -604,6 +649,7 @@
   <script src="js/extras.js" defer></script>
   <script src="js/soiree.js" defer></script>
   <script src="js/party.js" defer></script>
+  <script src="js/deck52.js" defer></script>
   <script src="jeux/quiz.js" defer></script>
   <script src="jeux/cartes.js" defer></script>
   <script src="jeux/bombe.js" defer></script>
@@ -612,6 +658,8 @@
   <script src="jeux/memes.js" defer></script>
   <script src="jeux/course.js" defer></script>
   <script src="jeux/duel.js" defer></script>
+  <script src="jeux/plusmoins.js" defer></script>
+  <script src="jeux/kings.js" defer></script>
   <script src="js/editeur.js" defer></script>
   <script src="js/infos.js" defer></script>
   <script src="js/main.js" defer></script>

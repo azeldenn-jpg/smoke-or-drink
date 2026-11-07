@@ -11,6 +11,11 @@ on:
 permissions:
   contents: write
 
+# Un seul envoi à la fois : un nouvel envoi annule le précédent encore en test
+concurrency:
+  group: publication
+  cancel-in-progress: true
+
 jobs:
   tests:
     runs-on: ubuntu-latest
