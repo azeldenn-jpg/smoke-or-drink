@@ -65,6 +65,10 @@ const CONFIG = {
   },
 
   GAMES: [
+    { id: 'duel', short: 'DUEL', icon: '🤠', title: 'Duel au saloon', min: 2, kind: 'duel', since: '5.0', mashup: true,
+      desc: { fumette: 'Téléphone à plat, face à face. Au « FEU ! », le plus rapide gagne. Tire trop tôt et c’est la taff.',
+              alcool:  'Téléphone à plat, face à face. Au « FEU ! », le plus rapide gagne. Le plus lent boit, le tricheur aussi.',
+              mashup:  'Téléphone à plat, face à face. Au « FEU ! », le plus rapide gagne. Le perdant paie dans sa monnaie.' } },
     { id: 'course', short: 'HIPPODROME', icon: '🏇', title: 'L’Hippodrome', min: 2, kind: 'course', since: '4.8', mashup: true,
       desc: { fumette: 'Six chevaux, des cotes, vos paris. Ton cheval gagne : mise × cote en jetons pour ta jauge.',
               alcool:  'Six chevaux, des cotes, vos paris. Bois ta mise pour parier : ton cheval gagne, tu distribues mise × cote ; il perd, tu rebois le double.',
@@ -133,3 +137,14 @@ const FALLBACK = {
   probable: ['devenir célèbre', "s'endormir en premier ce soir", 'rater son vol', 'devenir millionnaire'],
   bombe: ['Fruits', 'Pays d’Europe', 'Marques de voiture', 'Pokémon'],
 };
+
+/**
+ * Branchement des nouveaux jeux : chaque fichier de jeu déclare ici ce dont l'appli a besoin
+ * (écran, démarrage, réglages, tableau des scores, classement final). Plus besoin de toucher
+ * à app.js pour ajouter un jeu.
+ *   GAME_HOOKS[kind] = { screen, start(), setup(), info(mix), stop(),
+ *                        score: { title(), line(p), key(p), gauge(p) },
+ *                        end: { kicker(), crown, key(p), line(p) } }
+ */
+const GAME_HOOKS = {};
+

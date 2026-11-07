@@ -46,6 +46,13 @@ const RULES = {
     'Séance : entre la durée du film, l’appli tire tout le plan et sonne quand c’est ton tour.',
     'Mode alcool : la roue décide combien tu bois (6 % de cul sec).',
   ],
+  duel: [
+    'Posez le téléphone à plat entre vous deux : chacun son côté de l’écran (celui du haut est retourné).',
+    'Tapez chacun sur votre moitié pour dire « prêt ». La tension monte… puis « FEU ! » : le premier qui tape gagne.',
+    'Tirer avant le FEU, ou sur un faux mot (FEUILLE, FÊTE…), c’est un faux départ : tu perds et tu prends 3 gorgées (1 taff).',
+    'Le plus lent boit 2 gorgées (1 taff pour un fumeur). Ton temps de réaction s’affiche en millisecondes.',
+    '🏆 Tournoi : élimination directe. Le champion désigne qui prend autant de gorgées qu’il y a de joueurs.',
+  ],
   course: [
     'Six chevaux au départ, avec leur cote : plus elle est haute, moins il a de chances… et plus il rapporte.',
     'Chacun son tour, choisis un cheval et ta mise. Les paris sont visibles, et le premier parieur change à chaque course.',

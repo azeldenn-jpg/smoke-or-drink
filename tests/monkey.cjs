@@ -41,7 +41,7 @@ async function play(page, mode, game, errors) {
     // feuille de dialogue ouverte : on valide
     const sheetOk = await page.$('#sheet:not([hidden]) [data-sheet=ok]');
     if (sheetOk && await sheetOk.isVisible()) { await sheetOk.click().catch(() => {}); await page.waitForTimeout(300); continue; }
-    const btns = await page.$$(`.screen.is-active button:not([disabled]):not(${SKIP})`);
+    const btns = await page.$$(`.screen.is-active button:not([disabled]):not(${SKIP}), .screen.is-active [role="button"]`);
     const visible = [];
     for (const b of btns) if (await b.isVisible().catch(() => false)) visible.push(b);
     if (!visible.length) { await page.waitForTimeout(1200); continue; }

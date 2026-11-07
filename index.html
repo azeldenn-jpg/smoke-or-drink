@@ -163,6 +163,16 @@
         <div class="pill-grid cols-2" id="bombopt-grid"></div>
       </div>
 
+      <div class="setup-section" data-for="duel">
+        <h3 class="section-label">Format</h3>
+        <div class="pill-grid cols-2" id="duelmode-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="duel">
+        <h3 class="section-label">Faux mots</h3>
+        <div class="pill-grid cols-2" id="dueltraps-grid"></div>
+      </div>
+
       <div class="setup-section" data-for="course">
         <h3 class="section-label">Format</h3>
         <div class="pill-grid cols-2" id="coursemode-grid"></div>
@@ -396,6 +406,24 @@
       </section>
     </section>
 
+    <!-- ================= DUEL AU SALOON ================= -->
+    <section class="screen" data-screen="duel">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="duel-round"></span>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
+      </header>
+      <div class="duel-arena">
+        <div class="duel-side top" id="duel-top" role="button" aria-label="Zone de tir du joueur d’en face"></div>
+        <div class="duel-mid" id="duel-mid" aria-live="polite"></div>
+        <div class="duel-side bottom" id="duel-bottom" role="button" aria-label="Zone de tir du joueur de ce côté"></div>
+      </div>
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Victoires</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
     <!-- ================= HIPPODROME ================= -->
     <section class="screen" data-screen="course">
       <header class="game-top">
@@ -575,6 +603,7 @@
   <script src="js/app.js" defer></script>
   <script src="js/extras.js" defer></script>
   <script src="js/soiree.js" defer></script>
+  <script src="js/party.js" defer></script>
   <script src="jeux/quiz.js" defer></script>
   <script src="jeux/cartes.js" defer></script>
   <script src="jeux/bombe.js" defer></script>
@@ -582,6 +611,7 @@
   <script src="jeux/oie.js" defer></script>
   <script src="jeux/memes.js" defer></script>
   <script src="jeux/course.js" defer></script>
+  <script src="jeux/duel.js" defer></script>
   <script src="js/editeur.js" defer></script>
   <script src="js/infos.js" defer></script>
   <script src="js/main.js" defer></script>

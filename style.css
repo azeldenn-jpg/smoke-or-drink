@@ -1042,3 +1042,38 @@ body.big-text .hc-name, body.big-text .cl-main { font-size: 1.15em; }
 .about-tools { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
 .about-note { font-size: 12.5px; color: var(--ink-dim); line-height: 1.4; margin-bottom: 6px; }
 .btn-ghost.danger-ghost { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+
+/* ==========================================================================
+   DUEL AU SALOON
+   ========================================================================== */
+.duel-arena { display: grid; grid-template-rows: 1fr auto 1fr; height: calc(100dvh - 130px - var(--safe-t, 0px) - var(--safe-b, 0px)); min-height: 460px;
+  border-radius: 18px; overflow: hidden; border: 1px solid var(--line-strong); background: #160c06;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: none; }
+.duel-side { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px; text-align: center; cursor: pointer;
+  background: radial-gradient(circle at 50% 65%, color-mix(in srgb, var(--pc) 24%, #2a170c), #140a05 75%); transition: background .12s; }
+.duel-side.top { transform: rotate(180deg); }
+.ds-name { font-family: var(--font-display); font-size: clamp(22px, 7vw, 30px); color: var(--pc); line-height: 1; }
+.ds-msg { font-size: 16px; font-weight: 600; color: rgba(244,236,216,.7); text-wrap: balance; max-width: 22ch; }
+.ds-msg.big { font-family: var(--font-pixel); font-weight: 400; font-size: clamp(52px, 17vw, 92px); line-height: .9; max-width: none; white-space: nowrap; letter-spacing: .04em; }
+.duel-side.is-armed { background: radial-gradient(circle at 50% 65%, color-mix(in srgb, var(--pc) 40%, #2a170c), #140a05 80%); }
+.duel-side.is-armed .ds-msg { color: var(--good); font-family: var(--font-pixel); font-size: 26px; }
+.duel-side.is-wait .ds-msg { color: #ffcf3f; letter-spacing: .12em; font-family: var(--font-pixel); font-size: 28px; }
+.duel-side.is-trap { background: #3a2a08; }
+.duel-side.is-trap .ds-msg { color: #ffcf3f; }
+.duel-side.is-fire { background: #d6342c; }
+.duel-side.is-fire .ds-msg, .duel-side.is-fire .ds-name { color: #fff; }
+.duel-side.is-win { background: linear-gradient(160deg, #24823f, #0f3b1c); }
+.duel-side.is-lose { background: linear-gradient(160deg, #6a1626, #2a0a10); }
+.duel-side.is-win .ds-msg, .duel-side.is-lose .ds-msg { color: #fff; }
+.duel-mid { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 14px; text-align: center;
+  background: rgba(10,6,18,.94); border-block: 1px solid var(--line-strong); }
+.dm-vs { font-family: var(--font-display); font-size: 20px; }
+.dm-hint { font-size: 14px; color: var(--ink-dim); }
+.dm-cactus { font-size: 30px; animation: pulse 1s ease-in-out infinite; }
+.dm-bang { font-size: 34px; }
+.dm-title { font-weight: 700; font-size: 16px; text-wrap: balance; }
+.dm-lines { font-size: 13.5px; color: var(--ink-dim); }
+.dm-next { width: 100%; }
+.dm-champ { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.screen[data-screen="duel"] .scoreboard { margin-top: 14px; }
+@keyframes pulse { 50% { transform: scale(1.18); } }

@@ -221,6 +221,7 @@ class SmokeOrDrinkApp {
     if (from === 'roulette') this.roulette.cancel();
     if (from === 'bomb') this.bombStop();
     if (from === 'course' && typeof this.courseStop === 'function') this.courseStop();
+    Object.values(GAME_HOOKS).forEach((hk) => { if (hk.screen === from && hk.stop) hk.stop.call(this); });
   }
 
   later(fn, ms) {
@@ -354,6 +355,7 @@ class SmokeOrDrinkApp {
     if (g.id === 'bombe') this.renderBombOptions();
     if (g.id === 'memes') this.renderMemeMode();
     if (g.id === 'course') this.renderCourseOptions();
+    if (GAME_HOOKS[g.kind] && GAME_HOOKS[g.kind].setup) GAME_HOOKS[g.kind].setup.call(this);
     this.renderCustomButton();
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
@@ -633,6 +635,7 @@ class SmokeOrDrinkApp {
     info.textContent = !this.dataReady ? '' : g.id === 'quiz'
       ? `// ${count} questions dispo${mix}`
       : g.id === 'memes' ? this.memesInfo()
+      : GAME_HOOKS[g.kind] && GAME_HOOKS[g.kind].info ? GAME_HOOKS[g.kind].info.call(this, mix)
       : g.id === 'course' ? `// 6 chevaux · ${COURSE_D} m · ${this.settings.courseMode === 'gp' ? '3 courses' : 'courses libres'} · mises 1 à ${(COURSE_STAKES[this.settings.courseStake] || COURSE_STAKES.soiree).max}${mix}`
       : g.id === 'oie' ? `// ${this.settings.oieSize === 'express' ? '32 cases · ~15 min' : '63 cases · ~40 min'} · 1 dé · jauge de ${OIE.GAUGE} pour une taff`
       : this.isSeance ? this.seanceEstimate()
@@ -664,7 +667,7 @@ class SmokeOrDrinkApp {
     $$('[data-game-tag]').forEach((el) => { el.textContent = `${this.unitEmoji} ${g.short}`; });
     this.keepAwake(true);
     const kind = this.isSeance ? 'seance' : g.kind;
-    const target = { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette', seance: 'seance', oie: 'oie', memes: 'memes', course: 'course' }[kind];
+    const target = (GAME_HOOKS[kind] && GAME_HOOKS[kind].screen) || { quiz: 'quiz', cards: 'cards', bombe: 'bomb', roulette: 'roulette', seance: 'seance', oie: 'oie', memes: 'memes', course: 'course' }[kind];
 
     if (g.kind === 'quiz') {
       const pool = this.quizPool();
@@ -688,6 +691,8 @@ class SmokeOrDrinkApp {
       this.oieStart();
     } else if (kind === 'course') {
       this.courseStart();
+    } else if (GAME_HOOKS[kind]) {
+      GAME_HOOKS[kind].start.call(this);
     } else if (kind === 'seance') {
       this.game.id = 'seance';
       this.game.kind = 'seance';
@@ -723,6 +728,7 @@ class SmokeOrDrinkApp {
     if (this.isMashup) this.setTheme('mashup');
     if (this.game && this.game.kind === 'oie') this.oieClearSave();
     if (this.game && this.game.kind === 'course') this.courseStop();
+    if (this.game && GAME_HOOKS[this.game.kind] && GAME_HOOKS[this.game.kind].stop) GAME_HOOKS[this.game.kind].stop.call(this);
     if (this.game && this.game.kind === 'seance') this.seance.clear();
     this.clearTimers();
     this.bombStop();
@@ -736,7 +742,8 @@ class SmokeOrDrinkApp {
     if (!g) return;
     this.endGame();
     const fum = this.mode === 'fumette';
-    const conf = {
+    const hook = GAME_HOOKS[g.kind] && GAME_HOOKS[g.kind].end;
+    const conf = hook ? { kicker: hook.kicker.call(this), crown: hook.crown, key: (p) => hook.key.call(this, p) } : {
       quiz:     { kicker: this.isMashup ? '// mashup · fumeurs vs buveurs' : fum ? '// classement des taffeurs' : '// le bourreau de la soirée', crown: 'Le cerveau de la soirée', key: (p) => p.score },
       jamais:   { kicker: "// je n'ai jamais", crown: 'La vie la plus remplie', key: (p) => p.taken },
       probable: { kicker: '// qui pourrait…', crown: 'La star du groupe', key: (p) => p.taken },
@@ -756,7 +763,9 @@ class SmokeOrDrinkApp {
 
     $('#podium').replaceChildren(...ranked.map((p, i) => {
       let main, sub = '';
-      if (g.id === 'quiz' && this.isMashup) {
+      if (hook) {
+        ({ main, sub } = hook.line.call(this, p));
+      } else if (g.id === 'quiz' && this.isMashup) {
         main = `${p.score} pts`;
         sub = p.camp === 'fumette'
           ? `🌿 ${plural(p.taffs, 'taff')} · ${plural(p.given, 'balancé')} · ${p.sabotaged} subi${p.sabotaged > 1 ? 's' : ''}`
@@ -827,6 +836,8 @@ class SmokeOrDrinkApp {
   scoreLine(p) {
     const g = this.game;
     const fum = this.mode === 'fumette';
+    const hk = GAME_HOOKS[g.kind] && GAME_HOOKS[g.kind].score;
+    if (hk) return hk.line.call(this, p);
     if (g.id === 'oie') {
       return p.camp === 'fumette'
         ? { v: `${p.pos}|${p.gauge}|${p.taffs}`, main: `case ${p.pos}`, small: ` · ${p.taffs} 🌿` }
@@ -862,11 +873,12 @@ class SmokeOrDrinkApp {
     const list = $('[data-score-list]', screen);
     const title = $('[data-score-title]', screen);
     const fum = this.mode === 'fumette';
-    title.textContent = g.id === 'course' ? (this.isMashup ? 'Gains · jauge 🌿 · gorgées 🥃' : fum ? 'Gains · jauge 🌿' : 'Gains · données ↗ bues ↘') : g.id === 'oie' ? (this.isMashup ? 'Position · jauge 🌿 · gorgées 🥃' : fum ? 'Position · jauge 🌿' : 'Position · données ↗ bues ↘') : g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Taffs' : 'Gorgées') : this.isMashup ? 'Taffs 🌿 · gorgées 🥃' : (fum ? 'Taffs prises' : 'Gorgées bues');
+    const hk = GAME_HOOKS[g.kind] && GAME_HOOKS[g.kind].score;
+    title.textContent = hk ? hk.title.call(this) : g.id === 'course' ? (this.isMashup ? 'Gains · jauge 🌿 · gorgées 🥃' : fum ? 'Gains · jauge 🌿' : 'Gains · données ↗ bues ↘') : g.id === 'oie' ? (this.isMashup ? 'Position · jauge 🌿 · gorgées 🥃' : fum ? 'Position · jauge 🌿' : 'Position · données ↗ bues ↘') : g.id === 'quiz' && this.isMashup ? 'Scores · jauge 🌿 · gorgées 🥃' : g.id === 'quiz' ? (fum ? 'Scores & taffs' : 'Scores · données ↗ bues ↘') : g.id === 'roulette' ? (fum ? 'Taffs' : 'Gorgées') : this.isMashup ? 'Taffs 🌿 · gorgées 🥃' : (fum ? 'Taffs prises' : 'Gorgées bues');
 
     const before = new Map([...list.children].map((li) => [li.dataset.id, { top: li.getBoundingClientRect().top, v: li.dataset.v, g: li.dataset.g }]));
-    const showGauge = (p) => (g.id === 'oie' || g.id === 'course' || (this.isMashup && g.id === 'quiz')) && p.camp === 'fumette';
-    const sortKey = (p) => (g.id === 'oie' ? p.pos : g.id === 'quiz' || g.id === 'course' ? p.score : g.id === 'roulette' && fum ? p.taffs : p.taken);
+    const showGauge = (p) => (hk ? Boolean(hk.gauge && hk.gauge.call(this, p)) : g.id === 'oie' || g.id === 'course' || (this.isMashup && g.id === 'quiz')) && p.camp === 'fumette';
+    const sortKey = (p) => (hk ? hk.key.call(this, p) : g.id === 'oie' ? p.pos : g.id === 'quiz' || g.id === 'course' ? p.score : g.id === 'roulette' && fum ? p.taffs : p.taken);
     const sorted = [...g.players].sort((a, b) => sortKey(b) - sortKey(a));
     const current = g.players[g.turn];
 
