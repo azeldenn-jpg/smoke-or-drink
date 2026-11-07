@@ -46,6 +46,13 @@ const RULES = {
     'Séance : entre la durée du film, l’appli tire tout le plan et sonne quand c’est ton tour.',
     'Mode alcool : la roue décide combien tu bois (6 % de cul sec).',
   ],
+  timesup: [
+    'Deux équipes (un joueur sur deux dans la liste, ou au hasard). Les mêmes mots servent pour les 3 manches.',
+    'À ton tour, tu as 30 s pour faire deviner un max de mots à ton équipe. ✓ quand c’est trouvé, ✗ pour passer (le mot revient plus tard).',
+    'Manche 1 : décris sans dire le mot. Manche 2 : un seul mot. Manche 3 : mime, sans un bruit.',
+    'Une manche se termine quand tous les mots sont trouvés. L’équipe qui perd la manche boit l’écart (5 max).',
+    'À la fin, l’équipe perdante boit 3. Le classement des joueurs compte les mots trouvés en faisant deviner.',
+  ],
   preferes: [
     'Le lecteur lit le dilemme à voix haute. Appuyez sur « Votez ! » : 3, 2, 1…',
     'Au signal, tout le monde pointe en même temps : à gauche pour A, à droite pour B. Pas le droit d’hésiter !',

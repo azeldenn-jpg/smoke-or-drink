@@ -45,6 +45,8 @@ const CORE = [
   './jeux/kings.js',
   './jeux/preferes-data.js',
   './jeux/preferes.js',
+  './jeux/timesup-data.js',
+  './jeux/timesup.js',
   './memes.json',
   './data.json',
   './cards.json',

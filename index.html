@@ -163,6 +163,21 @@
         <div class="pill-grid cols-2" id="bombopt-grid"></div>
       </div>
 
+      <div class="setup-section" data-for="timesup">
+        <h3 class="section-label">Équipes</h3>
+        <div class="pill-grid cols-2" id="tuteams-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="timesup">
+        <h3 class="section-label">Nombre de mots</h3>
+        <div class="pill-grid" id="tucards-grid"></div>
+      </div>
+
+      <div class="setup-section" data-for="timesup">
+        <h3 class="section-label">Temps par tour</h3>
+        <div class="pill-grid cols-2" id="tutime-grid"></div>
+      </div>
+
       <div class="setup-section" data-for="kings">
         <h3 class="section-label">Règles des cartes</h3>
         <div class="kings-grid" id="kings-grid"></div>
@@ -407,6 +422,21 @@
 
       <section class="scoreboard">
         <h3 class="section-label" data-score-title>Positions</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
+    <!-- ================= TIME'S UP ================= -->
+    <section class="screen" data-screen="timesup">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="tu-round"></span>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
+      </header>
+      <div class="tu-teams" id="tu-teams"></div>
+      <div class="tu-main" id="tu-main" aria-live="polite"></div>
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Mots trouvés</h3>
         <ol class="score-list" data-score-list></ol>
       </section>
     </section>
@@ -678,6 +708,8 @@
   <script src="jeux/kings.js" defer></script>
   <script src="jeux/preferes-data.js" defer></script>
   <script src="jeux/preferes.js" defer></script>
+  <script src="jeux/timesup-data.js" defer></script>
+  <script src="jeux/timesup.js" defer></script>
   <script src="js/editeur.js" defer></script>
   <script src="js/infos.js" defer></script>
   <script src="js/main.js" defer></script>

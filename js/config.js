@@ -65,6 +65,10 @@ const CONFIG = {
   },
 
   GAMES: [
+    { id: 'timesup', short: "TIME'S UP", icon: '⏱️', title: 'Time’s Up', min: 4, kind: 'timesup', since: '5.0', mashup: true,
+      desc: { fumette: 'Deux équipes, 30 secondes, les mêmes mots sur 3 manches : décrire, un seul mot, mimer.',
+              alcool:  'Deux équipes, 30 secondes, les mêmes mots sur 3 manches : décrire, un seul mot, mimer. Les perdants boivent l’écart.',
+              mashup:  'Deux équipes, 30 secondes, 3 manches : décrire, un seul mot, mimer. Les perdants paient l’écart.' } },
     { id: 'preferes', short: 'TU PRÉFÈRES', icon: '🤔', title: 'Tu préfères…', min: 3, kind: 'preferes', since: '5.0', mashup: true,
       desc: { fumette: 'Deux choix impossibles, tout le monde pointe en même temps. La minorité tire une taff.',
               alcool:  'Deux choix impossibles, tout le monde pointe en même temps. La minorité boit.',

@@ -1169,3 +1169,43 @@ body.big-text .hc-name, body.big-text .cl-main { font-size: 1.15em; }
 .pf-bar span { display: grid; place-items: center; transition: width .6s var(--ease-out); white-space: nowrap; overflow: hidden; }
 .pf-bar .pa { background: rgba(255,94,158,.55); }
 .pf-bar .pb { background: rgba(109,199,232,.55); }
+
+/* ==========================================================================
+   TIME'S UP
+   ========================================================================== */
+.tu-teams { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.tu-team { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2px 8px; padding: 10px 12px; border-radius: 14px;
+  background: color-mix(in srgb, var(--tc) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--tc) 35%, transparent); transition: box-shadow .3s, border-color .3s; }
+.tu-team.is-on { border-color: var(--tc); box-shadow: 0 0 24px -8px var(--tc); }
+.tu-tname { font-weight: 700; font-size: 14px; }
+.tu-tmem { grid-column: 1; font-size: 13px; letter-spacing: 1px; }
+.tu-tpts { grid-column: 2; grid-row: 1 / 3; font-family: var(--font-pixel); font-weight: 400; font-size: 40px; color: var(--tc); }
+.tu-rule { padding: 16px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line-strong); text-align: center; margin-bottom: 14px; }
+.tu-rule.fresh { animation: pop .5s var(--ease-spring) both; }
+.tu-rnum { color: var(--ink-dim); font-size: 16px; }
+.tu-rtitle { font-family: var(--font-display); font-size: 26px; margin: 4px 0 6px; }
+.tu-rtext { font-size: 14.5px; line-height: 1.45; color: var(--ink); text-wrap: balance; }
+.tu-hint { text-align: center; color: var(--ink-dim); font-size: 14px; margin: 6px 0 4px; }
+.tu-timer { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; margin-bottom: 14px; }
+.tu-bar { height: 12px; border-radius: 999px; background: var(--surface); overflow: hidden; border: 1px solid var(--line); }
+.tu-fill { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--good), #d4ff5e); transition: width .1s linear; }
+.tu-fill.hurry { background: linear-gradient(90deg, var(--bad), #ff8a5e); }
+.tu-secs { font-family: var(--font-pixel); font-weight: 400; font-size: 44px; min-width: 2ch; text-align: right; }
+.tu-word { min-height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 22px 16px; border-radius: 22px;
+  background: #fbf7ee; color: #161616; box-shadow: 0 20px 40px -18px rgba(0,0,0,.8); text-align: center; }
+.tu-cat { font-size: 13px; font-weight: 600; color: #6a6257; text-transform: uppercase; letter-spacing: .08em; }
+.tu-w { font-family: var(--font-display); font-size: clamp(28px, 9vw, 44px); line-height: 1.05; text-wrap: balance; }
+.tu-left { text-align: center; color: var(--ink-dim); margin: 10px 0 12px; font-size: 16px; }
+.tu-btns { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
+.tu-btn { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 18px 10px; border-radius: 18px; border: 1px solid var(--line-strong); transition: transform .12s var(--ease-spring); }
+.tu-btn:active { transform: scale(.95); }
+.tu-btn b { font-size: 34px; line-height: 1; }
+.tu-btn small { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.tu-btn.pass { background: rgba(255,94,126,.14); border-color: rgba(255,94,126,.45); color: var(--bad); }
+.tu-btn.ok { background: linear-gradient(160deg, var(--good), #3fb86a); color: #0c2a14; border: 0; }
+.tu-found { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.tu-found span { padding: 5px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; }
+.tu-score { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.tu-score div { display: flex; flex-direction: column; align-items: center; padding: 12px; border-radius: 14px; background: color-mix(in srgb, var(--tc) 12%, var(--surface)); border: 1px solid color-mix(in srgb, var(--tc) 45%, transparent); }
+.tu-score b { font-family: var(--font-pixel); font-weight: 400; font-size: 48px; color: var(--tc); line-height: 1; }
+.tu-word.pop-val { animation: pop .3s var(--ease-spring); }
