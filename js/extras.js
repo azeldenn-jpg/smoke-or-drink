@@ -46,6 +46,13 @@ const RULES = {
     'Séance : entre la durée du film, l’appli tire tout le plan et sonne quand c’est ton tour.',
     'Mode alcool : la roue décide combien tu bois (6 % de cul sec).',
   ],
+  preferes: [
+    'Le lecteur lit le dilemme à voix haute. Appuyez sur « Votez ! » : 3, 2, 1…',
+    'Au signal, tout le monde pointe en même temps : à gauche pour A, à droite pour B. Pas le droit d’hésiter !',
+    'Tapez ensuite qui a choisi A. La minorité boit 2 gorgées (1 taff pour un fumeur).',
+    'Égalité parfaite : tout le monde boit 1. Unanimité : personne ne boit.',
+    'L’ambiance (Chill, Soirée, Hot) choisit les dilemmes. Ajoute les tiens avec « Mes cartes » : sépare les deux choix par « ou ».',
+  ],
   plusmoins: [
     'Une carte est posée. Annonce si la suivante sera PLUS haute, PLUS basse, ou ÉGALE. L’As est la plus forte.',
     'Bonne réponse : ta série continue. Les pourcentages affichés t’aident : ils sont calculés sur les cartes qui restent.',

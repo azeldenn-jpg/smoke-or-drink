@@ -351,7 +351,7 @@ class SmokeOrDrinkApp {
     if (this.isRouletteFumette) { this.renderRType(); this.renderDurations(); }
     if (this.isSeance) { this.renderFilm(); this.renderJoint(); }
     if (g.id === 'oie') { this.renderIntensity(); this.renderOieSize(); }
-    if (['memes', 'jamais', 'probable', 'oie', 'bombe'].includes(g.id)) this.renderMemeLevel();
+    if (['memes', 'jamais', 'probable', 'oie', 'bombe', 'preferes'].includes(g.id)) this.renderMemeLevel();
     if (g.id === 'bombe') this.renderBombOptions();
     if (g.id === 'memes') this.renderMemeMode();
     if (g.id === 'course') this.renderCourseOptions();

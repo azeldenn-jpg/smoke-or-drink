@@ -15,6 +15,7 @@ const CUSTOM_TYPES = {
   jamais:   { label: 'Jamais', emoji: '🙊', prefix: "Je n'ai jamais…", ph: 'dormi dans une baignoire' },
   probable: { label: 'Qui pourrait', emoji: '👉', prefix: 'Qui est le plus susceptible de…', ph: 'finir la soirée en pyjama' },
   bombe:    { label: 'Bombe', emoji: '💣', prefix: 'Thème :', ph: 'Marques de chips' },
+  preferes: { label: 'Préfères', emoji: '🤔', prefix: 'Tu préfères… (sépare les deux choix par « ou »)', ph: 'être riche ou être célèbre' },
 };
 const REPO_ISSUES = 'https://github.com/azeldenn-jpg/smoke-or-drink/issues/new';
 
@@ -23,7 +24,7 @@ addGame(class {
     if (this._custom) return this._custom;
     let c = null;
     try { c = JSON.parse(localStorage.getItem(CUSTOM_KEY) || 'null'); } catch (e) { /* ignore */ }
-    this._custom = { jamais: [], probable: [], bombe: [], ...(c || {}) };
+    this._custom = { jamais: [], probable: [], bombe: [], preferes: [], ...(c || {}) };
     return this._custom;
   }
 
@@ -33,7 +34,7 @@ addGame(class {
 
   get customCount() {
     const c = this.customCards();
-    return c.jamais.length + c.probable.length + c.bombe.length;
+    return c.jamais.length + c.probable.length + c.bombe.length + c.preferes.length;
   }
 
   /** Bouton « Mes cartes » dans l'écran de configuration */
@@ -69,7 +70,9 @@ addGame(class {
     const add = () => {
       let t = input.value.trim().replace(/\s+/g, ' ');
       if (!t) { input.focus(); return; }
-      if (cur !== 'bombe') t = t.replace(/^(je n'?ai jamais|qui (est le plus susceptible de|pourrait)|de)\s*/i, '').replace(/[?.!…]+$/, '');
+      if (cur === 'preferes') t = t.replace(/^tu préf[eè]res?\s*/i, '').replace(/[?.!…]+$/, '');
+      if (cur === 'preferes' && !/\s(ou|\/)\s/i.test(t)) { this.toast('Sépare les deux choix par « ou »'); input.focus(); return; }
+      else if (cur !== 'bombe') t = t.replace(/^(je n'?ai jamais|qui (est le plus susceptible de|pourrait)|de)\s*/i, '').replace(/[?.!…]+$/, '');
       const all = this.customCards()[cur];
       if (all.some((c) => c.t.toLowerCase() === t.toLowerCase())) { this.toast('Déjà dans tes cartes'); return; }
       all.unshift({ t, lvl, at: Date.now() });

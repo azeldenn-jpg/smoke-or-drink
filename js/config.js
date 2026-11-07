@@ -65,6 +65,10 @@ const CONFIG = {
   },
 
   GAMES: [
+    { id: 'preferes', short: 'TU PRÉFÈRES', icon: '🤔', title: 'Tu préfères…', min: 3, kind: 'preferes', since: '5.0', mashup: true,
+      desc: { fumette: 'Deux choix impossibles, tout le monde pointe en même temps. La minorité tire une taff.',
+              alcool:  'Deux choix impossibles, tout le monde pointe en même temps. La minorité boit.',
+              mashup:  'Deux choix impossibles, tout le monde pointe en même temps. La minorité paie dans sa monnaie.' } },
     { id: 'kings', short: "KING'S CUP", icon: '👑', title: 'King’s Cup', min: 2, kind: 'kings', since: '5.0', mashup: true,
       desc: { fumette: 'Chaque carte a sa règle : cascade, maître du pouce, binômes… Au 4e Roi, taff de pompier.',
               alcool:  'Chaque carte a sa règle : cascade, maître du pouce, binômes… L’app retient tout. Au 4e Roi : cul sec.',

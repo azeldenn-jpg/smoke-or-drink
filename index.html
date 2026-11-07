@@ -198,7 +198,7 @@
         <div class="pill-grid cols-2" id="mememode-grid"></div>
       </div>
 
-      <div class="setup-section" data-for="memes jamais probable oie bombe">
+      <div class="setup-section" data-for="memes jamais probable oie bombe preferes">
         <h3 class="section-label">Ambiance</h3>
         <div class="pill-grid" id="memelevel-grid"></div>
         <div class="custom-box" id="custom-cards-box" data-for-inner></div>
@@ -407,6 +407,22 @@
 
       <section class="scoreboard">
         <h3 class="section-label" data-score-title>Positions</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
+    <!-- ================= TU PRÉFÈRES ================= -->
+    <section class="screen" data-screen="preferes">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="pf-round"></span>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
+      </header>
+      <p class="turn-label pixel" id="pf-reader"></p>
+      <div class="pf-card" id="pf-card"></div>
+      <div class="pf-area" id="pf-area" aria-live="polite"></div>
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Minorité</h3>
         <ol class="score-list" data-score-list></ol>
       </section>
     </section>
@@ -660,6 +676,8 @@
   <script src="jeux/duel.js" defer></script>
   <script src="jeux/plusmoins.js" defer></script>
   <script src="jeux/kings.js" defer></script>
+  <script src="jeux/preferes-data.js" defer></script>
+  <script src="jeux/preferes.js" defer></script>
   <script src="js/editeur.js" defer></script>
   <script src="js/infos.js" defer></script>
   <script src="js/main.js" defer></script>
