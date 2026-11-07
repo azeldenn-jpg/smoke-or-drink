@@ -1,0 +1,35 @@
+# Tests automatiques : à chaque envoi sur la branche « dev », on joue à tous les jeux
+# dans un vrai navigateur. Si tout passe, la version est publiée (copiée sur « main »,
+# que GitHub Pages met en ligne). Si un jeu plante, rien n'est publié.
+name: Tests et publication
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installer le navigateur de test
+        run: |
+          npm install --no-save playwright@1.47.2
+          npx playwright install --with-deps chromium
+      - name: Jouer à tous les jeux
+        run: |
+          python3 -m http.server 8080 >/dev/null 2>&1 &
+          sleep 2
+          node tests/monkey.cjs http://localhost:8080/ 30
+      - name: Publier (dev → main)
+        run: git push origin HEAD:main
