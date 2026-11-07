@@ -15,6 +15,8 @@ const SKIP = '[data-action="quit"],[data-action="undo"],[data-action="rules"],[d
 async function fresh(page) {
   await page.goto(URL);
   await page.waitForTimeout(700);
+  // événements surprise fréquents pour les tester partout
+  await page.evaluate(() => { sodApp.settings.events = 'often'; sodApp.save(); });
   const ok = await page.$('#sheet:not([hidden]) [data-sheet=cancel]');
   if (ok) { await ok.click().catch(() => {}); await page.waitForTimeout(300); }
 }
@@ -38,6 +40,14 @@ async function play(page, mode, game, errors) {
   await page.waitForTimeout(900);
   const before = errors.length;
   for (let s = 0; s < STEPS; s++) {
+    // événement surprise : on clique dans la feuille
+    const ev = await page.$('#event-sheet:not([hidden])');
+    if (ev) {
+      const eb = await page.$$('#event-sheet:not([hidden]) button:not([disabled])');
+      if (eb.length) await eb[Math.floor(Math.random() * eb.length)].click({ timeout: 1500 }).catch(() => {});
+      await page.waitForTimeout(400);
+      continue;
+    }
     // feuille de dialogue ouverte : on valide
     const sheetOk = await page.$('#sheet:not([hidden]) [data-sheet=ok]');
     if (sheetOk && await sheetOk.isVisible()) { await sheetOk.click().catch(() => {}); await page.waitForTimeout(300); continue; }

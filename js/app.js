@@ -357,6 +357,7 @@ class SmokeOrDrinkApp {
     if (g.id === 'course') this.renderCourseOptions();
     if (GAME_HOOKS[g.kind] && GAME_HOOKS[g.kind].setup) GAME_HOOKS[g.kind].setup.call(this);
     this.renderCustomButton();
+    if (typeof this.renderEventsOption === 'function') this.renderEventsOption();
     if (CONFIG.END_OPTIONS[this.endKey]) this.renderEnds();
     this.validateSetup();
   }

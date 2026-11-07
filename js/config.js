@@ -65,6 +65,10 @@ const CONFIG = {
   },
 
   GAMES: [
+    { id: 'roue', short: 'LA ROUE', icon: '🎪', title: 'La Roue des défis', min: 2, kind: 'roue', since: '5.0', mashup: true,
+      desc: { fumette: 'Le mode soirée : la roue tire une manche de quiz, de Je n’ai jamais, de mime, de duel… à chaque tour.',
+              alcool:  'Le mode soirée : la roue tire une manche de quiz, de Je n’ai jamais, de mime, de duel… à chaque tour.',
+              mashup:  'Le mode soirée : à chaque tour, la roue tire une manche d’un autre jeu. Chacun paie dans sa monnaie.' } },
     { id: 'timesup', short: "TIME'S UP", icon: '⏱️', title: 'Time’s Up', min: 4, kind: 'timesup', since: '5.0', mashup: true,
       desc: { fumette: 'Deux équipes, 30 secondes, les mêmes mots sur 3 manches : décrire, un seul mot, mimer.',
               alcool:  'Deux équipes, 30 secondes, les mêmes mots sur 3 manches : décrire, un seul mot, mimer. Les perdants boivent l’écart.',

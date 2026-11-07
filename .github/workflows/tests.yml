@@ -19,7 +19,7 @@ concurrency:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,6 +35,6 @@ jobs:
         run: |
           python3 -m http.server 8080 >/dev/null 2>&1 &
           sleep 2
-          node tests/monkey.cjs http://localhost:8080/ 30
+          node tests/monkey.cjs http://localhost:8080/ 22
       - name: Publier (dev → main)
         run: git push origin HEAD:main

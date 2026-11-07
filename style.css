@@ -1209,3 +1209,38 @@ body.big-text .hc-name, body.big-text .cl-main { font-size: 1.15em; }
 .tu-score div { display: flex; flex-direction: column; align-items: center; padding: 12px; border-radius: 14px; background: color-mix(in srgb, var(--tc) 12%, var(--surface)); border: 1px solid color-mix(in srgb, var(--tc) 45%, transparent); }
 .tu-score b { font-family: var(--font-pixel); font-weight: 400; font-size: 48px; color: var(--tc); line-height: 1; }
 .tu-word.pop-val { animation: pop .3s var(--ease-spring); }
+
+/* Événements surprise */
+.ev-panel { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; max-height: 88vh; overflow-y: auto; }
+.ev-kicker { color: var(--accent); font-size: 17px; }
+.ev-reel { font-size: 84px; line-height: 1.1; min-height: 100px; }
+.ev-icon { font-size: 64px; line-height: 1; animation: pop .5s var(--ease-spring) both; }
+.ev-title { font-family: var(--font-display); font-size: 26px; text-wrap: balance; }
+.ev-text { font-size: 16px; line-height: 1.45; max-width: 34ch; text-wrap: balance; }
+.ev-area { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+.ev-sub { color: var(--ink-dim); font-size: 14px; }
+.ev-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ev-coin { font-size: 54px; font-weight: 700; font-family: var(--font-display); }
+.ev-coin.flip { animation: coinFlip .35s linear infinite; }
+@keyframes coinFlip { 50% { transform: rotateY(90deg) scale(.9); } }
+.ev-count { font-family: var(--font-pixel); font-size: 90px; line-height: 1; color: var(--accent); }
+
+/* Roue des défis */
+.roue-reel { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 150px; margin: 6px 0 14px; padding: 16px;
+  border-radius: 22px; background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--accent) 20%, var(--surface)), var(--surface)); border: 1px solid var(--line-strong); }
+.roue-reel .rr-icon { font-size: 66px; line-height: 1; }
+.roue-reel .rr-label { font-family: var(--font-display); font-size: 20px; text-align: center; }
+.roue-reel.spinning .rr-icon { filter: blur(.6px); }
+.roue-reel.landed { animation: pop .5s var(--ease-spring) both; border-color: var(--accent); box-shadow: 0 0 34px -10px var(--accent); }
+.roue-area { display: flex; flex-direction: column; gap: 10px; }
+.roue-card { padding: 16px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line-strong); text-align: center; display: flex; flex-direction: column; gap: 8px; }
+.rc-kicker { color: var(--ink-dim); font-size: 13.5px; }
+.rc-text { font-size: 18px; font-weight: 600; line-height: 1.35; text-wrap: balance; }
+.rc-or { font-family: var(--font-pixel); color: var(--ink-dim); font-size: 18px; }
+.rc-sub { color: var(--ink-dim); font-size: 14px; line-height: 1.4; text-wrap: balance; }
+.roue-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.roue-choice { padding: 14px 10px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line-strong); font-weight: 600; font-size: 14.5px; line-height: 1.25; }
+.roue-choice.good { border-color: var(--good); background: rgba(126,224,122,.15); }
+.roue-choice:disabled:not(.good) { opacity: .45; }
+.pm-btns.two { grid-template-columns: 1fr 1fr; }
+.roue-area .kc-stage .pcard { width: 118px; }

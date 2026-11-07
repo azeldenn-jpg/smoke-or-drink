@@ -46,6 +46,11 @@ const RULES = {
     'Séance : entre la durée du film, l’appli tire tout le plan et sonne quand c’est ton tour.',
     'Mode alcool : la roue décide combien tu bois (6 % de cul sec).',
   ],
+  roue: [
+    'À ton tour, fais tourner la roue : elle tombe sur une manche d’un des jeux de l’app.',
+    'Quiz, Je n’ai jamais, Qui pourrait, Tu préfères, Plus ou moins, thème de la Bombe, carte du King’s Cup, mime express, duel du regard ou événement surprise.',
+    'On joue une seule manche, avec ses règles habituelles, puis c’est au joueur suivant.',
+  ],
   timesup: [
     'Deux équipes (un joueur sur deux dans la liste, ou au hasard). Les mêmes mots servent pour les 3 manches.',
     'À ton tour, tu as 30 s pour faire deviner un max de mots à ton équipe. ✓ quand c’est trouvé, ✗ pour passer (le mot revient plus tard).',
@@ -113,6 +118,7 @@ addGame(class {
     g.history.push(this.snapshot());
     if (g.history.length > 40) g.history.shift();
     this.refreshUndo();
+    if (typeof this.maybeEvent === 'function') this.maybeEvent();
   }
 
   snapshot() {

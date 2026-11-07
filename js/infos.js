@@ -13,7 +13,13 @@
 
 /** Nouveautés, de la plus récente à la plus ancienne (clé = version majeure.mineure) */
 const CHANGELOG = [
-  { v: '5.0', title: 'La grosse mise à jour de nuit', items: [
+  { v: '5.0', title: '5 nouveaux jeux et des événements surprise', items: [
+    '🤠 Duel au saloon : téléphone à plat entre deux joueurs, le plus rapide au « FEU ! » gagne. Gare aux faux mots (FEUILLE, FÊTE…). Tournoi ou duels libres.',
+    '⏱️ Time’s Up : deux équipes, 30 s par tour, 3 manches (décrire, un seul mot, mimer), plus de 600 mots.',
+    '🤔 Tu préfères… : 238 dilemmes, tout le monde pointe en même temps, la minorité boit. Ajoute les tiens dans « Mes cartes ».',
+    '👑 King’s Cup : chaque carte a sa règle, l’app retient les rôles et les règles inventées. Règles modifiables carte par carte.',
+    '🃏 Plus ou moins : plus haut ou plus bas ? Raté, tu bois la pile. Les chances s’affichent selon les cartes restantes.',
+    '🎲 Événements surprise dans tous les jeux : tournée générale, duel du regard, pile ou face, silence total… Réglage Jamais / Rare / Souvent.',
     '🛡️ Tests automatiques : chaque jeu est joué par un robot avant chaque publication. Si quelque chose plante, la mise à jour n’arrive pas sur ton téléphone.',
     'ⓘ Ce menu Infos : version, nouveautés, et un bouton pour réparer l’app en cas de souci.',
     '🆕 Le badge NEW disparaît à la version suivante, ou dès que tu as joué au jeu une fois.',
@@ -59,7 +65,7 @@ addGame(class {
     const cur = minorOf(CONFIG.VERSION);
     try { localStorage.setItem(SEEN_KEY, cur); } catch (e) { /* ignore */ }
     // Première installation : rien à montrer. Version déjà vue : rien non plus.
-    const firstRun = !seen && !localStorage.getItem('sod_settings');
+    const firstRun = !seen && !localStorage.getItem(CONFIG.STORAGE_KEY);
     if (firstRun || seen === cur) return;
     this.later(() => this.openInfos(true), 900);
   }

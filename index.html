@@ -224,6 +224,11 @@
         <div class="pill-grid" id="end-grid"></div>
       </div>
 
+      <div class="setup-section" id="events-section">
+        <h3 class="section-label">Événements surprise 🎲</h3>
+        <div class="pill-grid" id="events-grid"></div>
+      </div>
+
       <div class="setup-foot">
         <button class="btn-primary" id="start-game">LANCER</button>
         <p class="pool-info pixel" id="pool-info"></p>
@@ -422,6 +427,23 @@
 
       <section class="scoreboard">
         <h3 class="section-label" data-score-title>Positions</h3>
+        <ol class="score-list" data-score-list></ol>
+      </section>
+    </section>
+
+    <!-- ================= ROUE DES DÉFIS ================= -->
+    <section class="screen" data-screen="roue">
+      <header class="game-top">
+        <span class="game-tag pixel" data-game-tag></span>
+        <span class="round-tag pixel" id="roue-round"></span>
+        <button class="quit-btn tool-btn" data-action="quit" aria-label="Quitter la partie">✕</button>
+      </header>
+      <p class="turn-label pixel">// à toi de tourner</p>
+      <p class="turn-name" id="roue-name"></p>
+      <div class="roue-reel" id="roue-reel"></div>
+      <div class="roue-area" id="roue-area" aria-live="polite"></div>
+      <section class="scoreboard">
+        <h3 class="section-label" data-score-title>Scores</h3>
         <ol class="score-list" data-score-list></ol>
       </section>
     </section>
@@ -661,6 +683,12 @@
     <div class="sheet-panel about-panel" role="dialog" aria-modal="true" id="about-body"></div>
   </div>
 
+  <!-- Événement surprise -->
+  <div class="sheet" id="event-sheet" hidden>
+    <div class="sheet-backdrop"></div>
+    <div class="sheet-panel ev-panel" role="dialog" aria-modal="true" aria-live="assertive" id="event-body"></div>
+  </div>
+
   <!-- Choix de l'avatar -->
   <div class="sheet" id="avatar-sheet" hidden>
     <div class="sheet-backdrop" data-avatar="close"></div>
@@ -696,6 +724,7 @@
   <script src="js/soiree.js" defer></script>
   <script src="js/party.js" defer></script>
   <script src="js/deck52.js" defer></script>
+  <script src="js/events.js" defer></script>
   <script src="jeux/quiz.js" defer></script>
   <script src="jeux/cartes.js" defer></script>
   <script src="jeux/bombe.js" defer></script>
@@ -710,6 +739,7 @@
   <script src="jeux/preferes.js" defer></script>
   <script src="jeux/timesup-data.js" defer></script>
   <script src="jeux/timesup.js" defer></script>
+  <script src="jeux/roue.js" defer></script>
   <script src="js/editeur.js" defer></script>
   <script src="js/infos.js" defer></script>
   <script src="js/main.js" defer></script>
