@@ -15,7 +15,7 @@ const SKIP = '[data-action="quit"],[data-action="undo"],[data-action="rules"],[d
 async function fresh(page) {
   await page.goto(URL);
   await page.waitForTimeout(700);
-  const ok = await page.$('.sheet.is-open [data-sheet=cancel], [data-sheet=cancel]:visible');
+  const ok = await page.$('#sheet:not([hidden]) [data-sheet=cancel]');
   if (ok) { await ok.click().catch(() => {}); await page.waitForTimeout(300); }
 }
 
@@ -39,7 +39,7 @@ async function play(page, mode, game, errors) {
   const before = errors.length;
   for (let s = 0; s < STEPS; s++) {
     // feuille de dialogue ouverte : on valide
-    const sheetOk = await page.$('.sheet.is-open [data-sheet=ok]');
+    const sheetOk = await page.$('#sheet:not([hidden]) [data-sheet=ok]');
     if (sheetOk && await sheetOk.isVisible()) { await sheetOk.click().catch(() => {}); await page.waitForTimeout(300); continue; }
     const btns = await page.$$(`.screen.is-active button:not([disabled]):not(${SKIP})`);
     const visible = [];
@@ -72,6 +72,8 @@ async function play(page, mode, game, errors) {
   page.on('console', (m) => { if (m.type() === 'error' && !/favicon|net::ERR|Failed to load resource/.test(m.text())) errors.push(m.text()); });
   await page.goto(URL);
   await page.evaluate(() => localStorage.clear());
+  // l'écran « quoi de neuf » ne doit pas gêner : on marque la version comme vue
+  await page.evaluate(() => localStorage.setItem('sod_seen_version', CONFIG.VERSION.split('.').slice(0, 2).join('.')));
   for (const mode of ['alcool', 'fumette', 'mashup']) {
     await fresh(page);
     await page.click(`.mode-card[data-mode=${mode}]`);

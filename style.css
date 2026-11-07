@@ -1032,3 +1032,13 @@ body.big-text .hc-name, body.big-text .cl-main { font-size: 1.15em; }
 .cpod-bets { font-size: 14px; min-height: 1.1em; letter-spacing: 1px; }
 .podium .pscore small { white-space: pre-line; }
 .cp-sub { font-size: 13.5px; color: var(--ink-dim); text-wrap: balance; }
+
+/* Menu Infos */
+.about-panel { max-height: 86vh; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.about-ver { color: var(--ink-dim); font-size: 16px; margin-top: -4px; }
+.about-block { padding: 12px 14px 2px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.about-h { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+.about-tag { font-size: 15px; padding: 1px 8px; border-radius: 999px; background: var(--accent); color: #140b1c; }
+.about-tools { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.about-note { font-size: 12.5px; color: var(--ink-dim); line-height: 1.4; margin-bottom: 6px; }
+.btn-ghost.danger-ghost { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }

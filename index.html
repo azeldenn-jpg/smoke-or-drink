@@ -36,6 +36,7 @@
     <!-- ================= ACCUEIL ================= -->
     <section class="screen is-active" data-screen="home">
       <div class="home-top">
+        <button class="icon-btn" data-action="info" aria-label="Infos, nouveautés et réparation">ⓘ</button>
         <button class="icon-btn" data-action="toggle-big" aria-label="Agrandir le texte"><span class="aa">Aa</span></button>
         <button class="icon-btn" data-action="toggle-sound" aria-label="Activer ou couper le son">
           <span class="snd-on">🔊</span><span class="snd-off">🔇</span>
@@ -69,7 +70,6 @@
         </button>
         <button class="mode-card mode-card-mashup stagger" data-mode="mashup" style="--i:2">
           <span class="mc-glow" aria-hidden="true"></span>
-          <span class="mc-new">NEW</span>
           <span class="mc-icon">🌿🥃</span>
           <span class="mc-title">MASHUP</span>
           <span class="mc-desc">Fumeurs et buveurs dans la même partie : chacun gagne et perd dans sa monnaie. Quiz et jeu de l’oie.</span>
@@ -79,7 +79,7 @@
 
       <button class="recap-btn stagger" data-action="recap" style="--i:3" hidden>🏆 Récap de la soirée <span class="rc-count pixel"></span></button>
 
-      <p class="home-foot pixel dim">v4.8 · hors-ligne ready</p>
+      <p class="home-foot pixel dim">v5.0 · hors-ligne ready</p>
     </section>
 
     <!-- ================= CHOIX DU JEU ================= -->
@@ -536,6 +536,12 @@
     </div>
   </div>
 
+  <!-- Infos : version, nouveautés, réparation -->
+  <div class="sheet" id="about-sheet" hidden>
+    <div class="sheet-backdrop" data-about="close"></div>
+    <div class="sheet-panel about-panel" role="dialog" aria-modal="true" id="about-body"></div>
+  </div>
+
   <!-- Choix de l'avatar -->
   <div class="sheet" id="avatar-sheet" hidden>
     <div class="sheet-backdrop" data-avatar="close"></div>
@@ -577,6 +583,7 @@
   <script src="jeux/memes.js" defer></script>
   <script src="jeux/course.js" defer></script>
   <script src="js/editeur.js" defer></script>
+  <script src="js/infos.js" defer></script>
   <script src="js/main.js" defer></script>
 </body>
 </html>

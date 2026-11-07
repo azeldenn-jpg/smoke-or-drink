@@ -58,6 +58,7 @@ class SmokeOrDrinkApp {
     this.registerServiceWorker();
     await this.loadData();
     this.offerResume();
+    this.maybeShowWhatsNew();
   }
 
   /** Une séance tournait quand l'appli a été fermée : on propose de la reprendre */
@@ -159,6 +160,7 @@ class SmokeOrDrinkApp {
       else if (action === 'toggle-big') this.toggleBig();
       else if (action === 'recap') this.openRecap();
       else if (action === 'rules') this.showRules();
+      else if (action === 'info') this.openInfos();
       else if (btn.classList.contains('mode-card')) this.chooseMode(btn.dataset.mode);
       else if (btn.classList.contains('game-card')) this.chooseGame(btn.dataset.game);
     });
@@ -303,7 +305,7 @@ class SmokeOrDrinkApp {
           h('span', { class: 'gc-title', text: g.title }),
           h('span', { class: 'gc-desc', text: g.desc[this.mode] })),
         h('span', { class: 'gc-tag pixel', text: `${g.min}+ 👤` }),
-        g.isNew ? h('span', { class: 'gc-new', text: 'NEW' }) : null)));
+        this.isNewGame(g) ? h('span', { class: 'gc-new', text: 'NEW' }) : null)));
   }
 
   chooseGame(id) {
@@ -646,6 +648,7 @@ class SmokeOrDrinkApp {
       if ($('#start-game').disabled) return;
     }
     const g = this.gameDef;
+    this.markPlayed(g.id);
     const endOpt = (CONFIG.END_OPTIONS[this.endKey] || []).find((o) => o.id === this.settings.end[this.endKey]) || { id: 'free' };
     this.clearTimers();
     this.game = {
